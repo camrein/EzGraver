@@ -4,9 +4,10 @@
 #
 #-------------------------------------------------
 
-#QT -= gui
 QT += gui
 QT += serialport
+
+CONFIG += c++11
 
 TARGET = EzGraverLib
 TEMPLATE = lib

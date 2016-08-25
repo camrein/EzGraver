@@ -8,7 +8,7 @@ build:
     - pacman -S --needed --noconfirm --noprogressbar mingw-w64-${target}-pkg-config mingw-w64-${target}-qt5
     - qmake "CONFIG+=release" EzGraver.pro
     - make
-    - windeployqt.exe --release --no-translations EzGraverLib/release/EzGraverLib.exe EzGraverUi/release/EzGraverUi.exe EzGraverCli/release/EzGraverCli.exe
+    - windeployqt.exe --release --no-translations EzGraverLib/release/EzGraverLib.dll EzGraverUi/release/EzGraverUi.exe EzGraverCli/release/EzGraverCli.exe
     
 #before_deploy:
     

@@ -9,17 +9,23 @@ os:
 before_install:
     - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update ; fi
     - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install qt55 ; fi
-#    - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo add-apt-repository --yes ppa:ubuntu-sdk-team/ppa ; fi
     - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo add-apt-repository --yes ppa:beineri/opt-qt551-trusty ; fi
     - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get update -qq ; fi
-#    - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get install -qq qt5-qmake qtbase5-dev libqt5serialport5-dev ; fi
     - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get install -qq qt55base qt55serialport ; fi
     - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get install -qq libudev-dev ; fi
-    
+    - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then source /opt/qt55/bin/qt55-env.sh ; fi
+
 script:
-    - source /opt/qt55/bin/qt55-env.sh
-#    - qmake -qt=qt5 -v
-#    - qmake -qt=qt5 "CONFIG+=release" EzGraver.pro
     - qmake -v
     - qmake "CONFIG+=release" EzGraver.pro
     - make
+
+deploy:
+    provider: releases
+    api_key:
+        secure: jIWIt+ocrCrp564ezeKQ9SAu1xo/22/6crqyhFRM7YqOZHFloJdqf1xTSS3IVrkxNmFJ6uyGX1ZJfCnrxilyXPdXi35qE3WoNYPtHypWaLo4szD/F8orsWvoG/QvAeEQwXDQ4010d0ao4RQSj07mxAPjrn88h8WrIfJ0N19et8O7qXGMGnCB0lMaaqlpN9uycEg3ZYJY0uxhljk9dMESFz/0t68KUNMVttAgoEvxXhTnWUrNheigIxD0fpssDdXRNUbg9r2RS/yZyOLR5yybi2xKfKx3WxsDtJQTNTVVfFtcwiwCozsbM3vwRZzZtmc22KxLediZyvSNZUJ7RUfSZnd88HHwKWAQHj04UaeBLgoj0lxRKorWEcWfBQPpFy1nT9c0nQGGpq6+LZHehd+ZAqmf17y5o1HxEYRszMsgHLNEgqZomEkgUG8cWkoylz7QRm0+Ia0wvoQz7C0Neg57VLUPi1OmlxPo4GQuskoUGptA5OFnDiLwtkPEWuLeLroxFiZtsSWqJicqWPUgg14bGNMG3/VVD3vf7M80MCIHCuHtyP+s78DiZlkxil0KH2f2ORhqkNocJOrjtFpuXriHfbKYwD4O2EAQTHB1mMLviL05oaJLvPaODYX/+ua5BAmPdIyC5Mil3M0+WBqFxf4Do1KhwQCId78AOUMGGqeLc74=
+    file: EzGraver.pro
+    skip_cleanup: true
+    on:
+        repo: camrein/EzGraver
+        tags: true

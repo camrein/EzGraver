@@ -8,7 +8,9 @@ build:
     - pacman -S --needed --noconfirm --noprogressbar mingw-w64-${target}-pkg-config mingw-w64-${target}-qt5
     - qmake "CONFIG+=release" EzGraver.pro
     - make
-    - windeployqt.exe release/EzGraverUi.exe
+    - windeployqt.exe --release EzGraver/EzGraverUi/release/EzGraverUi.exe
+    
+#before_deploy:
     
 matrix:
   arch:

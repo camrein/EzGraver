@@ -15,7 +15,8 @@ before_install:
     - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get install -qq qt5-qmake qtbase5-dev libqt5serialport5-dev ; fi
     
 script:
-    - qmake -qt=qt5
+    - qmake -v
+    - qmake -qt=qt5 "CONFIG+=release" EzGraver.pro
     - make
 
 matrix:

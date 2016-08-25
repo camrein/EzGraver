@@ -6,7 +6,7 @@ build:
     - if [ $$arch = 32 ]; then target=i686; fi
     - if [ $$arch = 64 ]; then target=x86_64; fi
     - pacman -S --needed --noconfirm --noprogressbar mingw-w64-${target}-pkg-config mingw-w64-${target}-qt5
-    - qmake -qt=qt5 EzGraver.pro
+    - qmake EzGraver.pro
     - make
     
 matrix:

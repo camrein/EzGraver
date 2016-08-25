@@ -23,7 +23,7 @@ void showHelp() {
 }
 
 void showAvailablePorts() {
-    auto ports {EzGraver::availablePorts()};
+    auto ports = EzGraver::availablePorts();
     std::cout << "Available Ports: ";
     std::ostream_iterator<QString> out{std::cout, " "};
     std::copy(ports.cbegin(), ports.cend(), out);
@@ -36,7 +36,7 @@ void uploadImage(std::shared_ptr<EzGraver>& engraver, QStringList const& argumen
         return;
     }
 
-    auto fileName{arguments[2]};
+    auto fileName = arguments[2];
     QImage image{};
     if(!image.load(fileName)) {
         std::cout << "Error while loading image '" << fileName << "'\n";
@@ -61,7 +61,7 @@ void handleArguments(QStringList const& arguments) {
     try {
         std::shared_ptr<EzGraver> engraver{EzGraver::create(arguments[0])};
 
-        auto argument{arguments[1][0].toLatin1()};
+        auto argument = arguments[1][0].toLatin1();
         switch(argument) {
         case 'a':
             showAvailablePorts();
@@ -99,15 +99,6 @@ int main(int argc, char *argv[]) {
     QCoreApplication app{argc, argv};
 
     QStringList arguments{};
-//    std::copy(argv, argv+argc, std::back_insert_iterator<QStringList>(arguments));
-    arguments.push_back("COM1");
-    arguments.push_back("u");
-    arguments.push_back("C:/Users/Christoph/Desktop/bi9ql1K.png");
+    std::copy(argv, argv+argc, std::back_insert_iterator<QStringList>(arguments));
     handleArguments(arguments);
-    /*for(auto i = 0; i < argc; ++i) {
-        arguments.push_back(argv[i]);
-    }*/
-
-
-    //return app.exec();
 }

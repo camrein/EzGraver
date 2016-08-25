@@ -121,8 +121,8 @@ EzGraver::~EzGraver() {
 }
 
 QStringList EzGraver::availablePorts() {
-    auto toPortName{[](QSerialPortInfo const& port) { return port.portName(); }};
-    auto ports{QSerialPortInfo::availablePorts()};
+    auto toPortName = [](QSerialPortInfo const& port) { return port.portName(); };
+    auto ports = QSerialPortInfo::availablePorts();
     QStringList result{};
 
     std::transform(ports.cbegin(), ports.cend(), std::back_inserter<QStringList>(result), toPortName);

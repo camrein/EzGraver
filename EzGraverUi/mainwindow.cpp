@@ -45,7 +45,7 @@ void MainWindow::setupBindings() {
     connect(this, &MainWindow::connectedChanged, _ui->pause, &QPushButton::setEnabled);
     connect(this, &MainWindow::connectedChanged, _ui->reset, &QPushButton::setEnabled);
 
-    auto uploadEnabled{[this]() { _ui->upload->setEnabled(_imageLoaded && _connected); }};
+    auto uploadEnabled = [this]() { _ui->upload->setEnabled(_imageLoaded && _connected); };
     connect(this, &MainWindow::connectedChanged, uploadEnabled);
     connect(this, &MainWindow::imageLoadedChanged, uploadEnabled);
 }

@@ -9,7 +9,8 @@ build:
     - qmake -v
     - qmake "CONFIG+=release" EzGraver.pro
     - make
-    - dir
+    - echo $PATH
+    - echo %PATH%
     - windeployqt.exe --release --no-translations EzGraverLib/release/EzGraverLib.dll
     - windeployqt.exe --release --no-translations EzGraverUi/release/EzGraverUi.exe
     - windeployqt.exe --release --no-translations EzGraverCli/release/EzGraverCli.exe

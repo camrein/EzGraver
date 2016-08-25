@@ -18,8 +18,10 @@ before_install:
     
 script:
     - source /opt/qt57/bin/qt57-env.sh
-    - qmake -qt=qt5 -v
-    - qmake -qt=qt5 "CONFIG+=release" EzGraver.pro
+#    - qmake -qt=qt5 -v
+#    - qmake -qt=qt5 "CONFIG+=release" EzGraver.pro
+    - qmake -v
+    - qmake "CONFIG+=release" EzGraver.pro
     - make
 
 matrix:

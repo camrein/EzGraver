@@ -12,10 +12,12 @@ before_install:
 #    - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo add-apt-repository --yes ppa:ubuntu-sdk-team/ppa ; fi
     - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo add-apt-repository --yes ppa:beineri/opt-qt57-trusty ; fi
     - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get update -qq ; fi
-    - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get install -qq qt5-qmake qtbase5-dev libqt5serialport5-dev ; fi
+#    - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get install -qq qt5-qmake qtbase5-dev libqt5serialport5-dev ; fi
+    - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get install -qq qt57base ; fi
     - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get install -qq libudev-dev ; fi
     
 script:
+    - source /opt/qt57/bin/qt57-env.sh
     - qmake -qt=qt5 -v
     - qmake -qt=qt5 "CONFIG+=release" EzGraver.pro
     - make

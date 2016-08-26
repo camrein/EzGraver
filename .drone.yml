@@ -3,16 +3,18 @@ build:
   shell: mingw$$arch
   pull: true
   commands:
-    - if [ $$arch = 32 ]; then target=i686; build_env=32; fi
-    - if [ $$arch = 64 ]; then target=x86_64; build_env=64; fi
+    - if [ $$arch = 32 ]; then target=i686; fi
+    - if [ $$arch = 64 ]; then target=x86_64; fi
     - pacman -S --needed --noconfirm --noprogressbar mingw-w64-${target}-pkg-config mingw-w64-${target}-qt5
     - qmake -v
     - qmake "CONFIG+=release" EzGraver.pro
     - make
     - echo Mingw/:
-    - ls -al /mingw${build_env}/bin
+    - if [ $$arch = 32 ]; then ls -al /mingw32/bin; fi
+    - if [ $$arch = 64 ]; then ls -al /mingw64/bin; fi
     - echo C/Mingw:
-    - ls -al C/msys${build_env}/mingw${build_env}/bin/
+    - if [ $$arch = 32 ]; then ls -al /C/msys32/mingw32/bin; fi
+    - if [ $$arch = 64 ]; then ls -al /C/msys64/mingw64/bin; fi
     - echo %PATH%
     - windeployqt.exe --release --no-translations EzGraverLib/release/EzGraverLib.dll
     - windeployqt.exe --release --no-translations EzGraverUi/release/EzGraverUi.exe

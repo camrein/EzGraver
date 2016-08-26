@@ -9,16 +9,6 @@ build:
     - qmake -v
     - qmake "CONFIG+=release" EzGraver.pro
     - make
-    - if [ $$arch = 32 ]; then ls -al /mingw32/bin; fi
-    - if [ $$arch = 64 ]; then ls -al /mingw64/bin; fi
-    - if [ $$arch = 32 ]; then ls -al /C/msys32/mingw32/bin; fi
-    - if [ $$arch = 64 ]; then ls -al /C/msys64/mingw64/bin; fi
-    - echo %PATH%
-    - windeployqt.exe --release --no-translations EzGraverLib/release/EzGraverLib.dll
-    - windeployqt.exe --release --no-translations EzGraverUi/release/EzGraverUi.exe
-    - windeployqt.exe --release --no-translations EzGraverCli/release/EzGraverCli.exe
-    
-#before_deploy:
     
 matrix:
   arch:

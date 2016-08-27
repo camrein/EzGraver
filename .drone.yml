@@ -12,13 +12,13 @@ build:
     - make
     # Dependency collection
     # windeployqt searches for icu*.dll instead of libicu*.dll
-    - mkdir deploy_libs
-    - cp /mingw$$arch/bin/libicudt*.dll deploy_libs/
-    - cp /mingw$$arch/bin/libicuin*.dll deploy_libs/
-    - cp /mingw$$arch/bin/libicuuc*.dll deploy_libs/
-    - ls -al deploy_libs/
-    - rename "s/lib//;" "$PWD/deploy_libs/*"
-    - PATH=$PATH:$PWD/deploy_libs
+    - mkdir dependencies
+    - cp /mingw$$arch/bin/libicudt*.dll dependencies/
+    - cp /mingw$$arch/bin/libicuin*.dll dependencies/
+    - cp /mingw$$arch/bin/libicuuc*.dll dependencies/
+    - ls -al dependencies/
+    - rename 's/lib//' dependencies/*
+    - PATH=$PATH:$PWD/dependencies
     # Deployment
     - mkdir deploy
     - cp EzGraverCli/release/EzGraverCli.exe deploy/

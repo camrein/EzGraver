@@ -17,7 +17,7 @@ build:
     - cp /mingw$$arch/bin/libicuin*.dll dependencies/
     - cp /mingw$$arch/bin/libicuuc*.dll dependencies/
     - ls -al dependencies/
-    - rename 's/lib//' dependencies/*
+    - for file in dependencies/lib* ; do mv "$file" "${file/lib/}" ; done
     - ls -al dependencies/
     - ls -al $PWD/dependencies/
     - PATH=$PATH:$PWD/dependencies

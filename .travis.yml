@@ -18,15 +18,19 @@ before_install:
 
 script:
     - qmake -v
-    - qmake "CONFIG+=release" EzGraver.pro
+    - qmake -config release EzGraver.pro
     - make
+    - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then mkdir deploy ; fi
+    - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then cp EzGraverUi/EzGraverUi.app deploy/ ; fi
+    - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then macdeployqt deploy/EzGraverUi.app -dmg ; fi
 
 deploy:
     provider: releases
     api_key:
         secure: jIWIt+ocrCrp564ezeKQ9SAu1xo/22/6crqyhFRM7YqOZHFloJdqf1xTSS3IVrkxNmFJ6uyGX1ZJfCnrxilyXPdXi35qE3WoNYPtHypWaLo4szD/F8orsWvoG/QvAeEQwXDQ4010d0ao4RQSj07mxAPjrn88h8WrIfJ0N19et8O7qXGMGnCB0lMaaqlpN9uycEg3ZYJY0uxhljk9dMESFz/0t68KUNMVttAgoEvxXhTnWUrNheigIxD0fpssDdXRNUbg9r2RS/yZyOLR5yybi2xKfKx3WxsDtJQTNTVVfFtcwiwCozsbM3vwRZzZtmc22KxLediZyvSNZUJ7RUfSZnd88HHwKWAQHj04UaeBLgoj0lxRKorWEcWfBQPpFy1nT9c0nQGGpq6+LZHehd+ZAqmf17y5o1HxEYRszMsgHLNEgqZomEkgUG8cWkoylz7QRm0+Ia0wvoQz7C0Neg57VLUPi1OmlxPo4GQuskoUGptA5OFnDiLwtkPEWuLeLroxFiZtsSWqJicqWPUgg14bGNMG3/VVD3vf7M80MCIHCuHtyP+s78DiZlkxil0KH2f2ORhqkNocJOrjtFpuXriHfbKYwD4O2EAQTHB1mMLviL05oaJLvPaODYX/+ua5BAmPdIyC5Mil3M0+WBqFxf4Do1KhwQCId78AOUMGGqeLc74=
-    file: EzGraver.pro
+    file: deploy/EzGraverUi.dmg
     skip_cleanup: true
     on:
         repo: camrein/EzGraver
+        condition: $TRAVIS_OS_NAME = osx
         tags: true

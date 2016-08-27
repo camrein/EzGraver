@@ -8,7 +8,7 @@ build:
     - if [ $$arch = 64 ]; then target=x86_64; fi
     - pacman -S --needed --noconfirm --noprogressbar mingw-w64-${target}-pkg-config mingw-w64-${target}-qt5 zip
     - qmake -v
-    - qmake "CONFIG+=release" EzGraver.pro
+    - qmake -config release EzGraver.pro
     - make
     # Dependency collection
     # windeployqt searches for icu*.dll instead of libicu*.dll
@@ -29,8 +29,16 @@ build:
     - windeployqt --release --no-translations --no-angle --no-opengl-sw deploy/EzGraverCli.exe
     - windeployqt --release --no-translations --no-angle --no-opengl-sw deploy/EzGraverLib.dll
     - windeployqt --release --no-translations --no-angle --no-opengl-sw deploy/EzGraverUi.exe
-    - zip -r EzGraver.zip deploy/
-    
+    - zip -r EzGraver_${target}.zip deploy/
+
+publish:
+  github_release:
+    api_key: $$GITHUB_RELEASES_TOKEN
+    files: EzGraver_${target}.zip
+    checksum: sha1   
+    when:
+      event: tag
+
 matrix:
   arch:
     - 64

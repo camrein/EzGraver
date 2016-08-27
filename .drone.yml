@@ -18,6 +18,8 @@ build:
     - cp /mingw$$arch/bin/libicuuc*.dll dependencies/
     - ls -al dependencies/
     - rename 's/lib//' dependencies/*
+    - ls -al dependencies/
+    - ls -al $PWD/dependencies/
     - PATH=$PATH:$PWD/dependencies
     # Deployment
     - mkdir deploy

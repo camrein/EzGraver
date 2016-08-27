@@ -16,6 +16,7 @@ build:
     - cp /mingw$$arch/bin/libicudt*.dll libs/
     - cp /mingw$$arch/bin/libicuin*.dll libs/
     - cp /mingw$$arch/bin/libicuuc*.dll libs/
+    - rename "s/lib//;" libs/*
     - PATH=$PATH:$PWD/libs
     # Deployment
     - mkdir deploy

@@ -22,6 +22,7 @@ script:
     - make
     - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then mkdir deploy ; fi
     - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then ls -alR ; fi
+    - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then make install ; fi
     - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then macdeployqt EzGraverUi/EzGraverUi.app -dmg ; fi
 
 deploy:

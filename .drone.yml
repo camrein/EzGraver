@@ -22,9 +22,9 @@ build:
     - cp EzGraverCli/release/EzGraverCli.exe deploy/
     - cp EzGraverLib/release/EzGraverLib.dll deploy/
     - cp EzGraverUi/release/EzGraverUi.exe deploy/
-    - windeployqt --release --no-translations --no-angle --no-opengl-sw deploy\EzGraverCli.exe
-    - windeployqt --release --no-translations --no-angle --no-opengl-sw deploy\EzGraverLib.dll
-    - windeployqt --release --no-translations --no-angle --no-opengl-sw deploy\EzGraverUi.exe
+    - windeployqt --release --no-translations --no-angle --no-opengl-sw deploy/EzGraverCli.exe
+    - windeployqt --release --no-translations --no-angle --no-opengl-sw deploy/EzGraverLib.dll
+    - windeployqt --release --no-translations --no-angle --no-opengl-sw deploy/EzGraverUi.exe
     - zip -r EzGraver.zip deploy/
     
 matrix:

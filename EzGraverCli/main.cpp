@@ -13,13 +13,14 @@ std::ostream& operator<<(std::ostream& rhv, QString const& lhv) {
 }
 
 void showHelp() {
+    std::cout << "Usage: EzGraverCli <option> [arguments...]\n\n";
     std::cout << "Available options:\n";
-    std::cout << "  <port> a - Shows the available ports\n";
-    std::cout << "  <port> h - Moves the engraver to the home position\n";
-    std::cout << "  <port> s [burnTime=60] - Starts the engraving process with the given burn time\n";
-    std::cout << "  <port> p - Pauses the engraver\n";
-    std::cout << "  <port> r - Resets the engraver\n";
-    std::cout << "  <port> u <image> - Uploads the given image to the engraver\n";
+    std::cout << "  a <port> - Shows the available ports\n";
+    std::cout << "  h <port> - Moves the engraver to the home position\n";
+    std::cout << "  s <port> [burnTime=60] - Starts the engraving process with the given burn time\n";
+    std::cout << "  p <port> - Pauses the engraver\n";
+    std::cout << "  r <port> - Resets the engraver\n";
+    std::cout << "  u <port> <image> - Uploads the given image to the engraver\n";
 }
 
 void showAvailablePorts() {
@@ -53,6 +54,17 @@ void uploadImage(std::shared_ptr<EzGraver>& engraver, QStringList const& argumen
 }
 
 void handleArguments(QStringList const& arguments) {
+    if(arguments.size() < 1) {
+        showHelp();
+        return;
+    }
+
+    auto argument = arguments[0][1].toLatin1();
+    if(argument == 'a') {
+        showAvailablePorts();
+        return;
+    }
+
     if(arguments.size() < 2) {
         showHelp();
         return;
@@ -61,11 +73,7 @@ void handleArguments(QStringList const& arguments) {
     try {
         std::shared_ptr<EzGraver> engraver{EzGraver::create(arguments[0])};
 
-        auto argument = arguments[1][0].toLatin1();
         switch(argument) {
-        case 'a':
-            showAvailablePorts();
-            break;
         case 'h':
             engraver->home();
             break;

@@ -21,8 +21,8 @@ script:
     - qmake -config release EzGraver.pro
     - make
     - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then mkdir deploy ; fi
-    - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then cp EzGraverUi/EzGraverUi.app deploy/ ; fi
-    - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then macdeployqt deploy/EzGraverUi.app -dmg ; fi
+    - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then ls -alR ; fi
+    - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then macdeployqt EzGraverUi/EzGraverUi.app -dmg ; fi
 
 deploy:
     provider: releases

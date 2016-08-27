@@ -29,7 +29,7 @@ build:
     - windeployqt --release --no-translations --no-angle --no-opengl-sw deploy/EzGraverCli.exe
     - windeployqt --release --no-translations --no-angle --no-opengl-sw deploy/EzGraverLib.dll
     - windeployqt --release --no-translations --no-angle --no-opengl-sw deploy/EzGraverUi.exe
-    - zip -r EzGraver_${target}.zip deploy/
+    - zip -r EzGraver_win_${target}.zip deploy/
 
 publish:
   github_release:

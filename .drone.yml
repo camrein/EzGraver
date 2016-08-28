@@ -6,7 +6,7 @@ build:
     # Compilation
     - if [ $$arch = 32 ]; then target=i686; fi
     - if [ $$arch = 64 ]; then target=x86_64; fi
-    - pacman -S --needed --noconfirm --noprogressbar mingw-w64-${target}-pkg-config mingw-w64-${target}-qt5 zip
+    - pacman -S --needed --noconfirm --noprogressbar mingw-w64-${target}-pkg-config mingw-w64-${target}-qt5-static zip
     - qmake -v
     - qmake -config release EzGraver.pro
     - make
@@ -29,6 +29,9 @@ build:
     - windeployqt --release --no-translations --no-angle --no-opengl-sw deploy/EzGraverCli.exe
     - windeployqt --release --no-translations --no-angle --no-opengl-sw deploy/EzGraverLib.dll
     - windeployqt --release --no-translations --no-angle --no-opengl-sw deploy/EzGraverUi.exe
+    # Add missing libraries. Seems like the qt version on this build server was built with freetype support.
+    
+    # Generate final zip
     - if [ $$arch = 32 ]; then zip -r EzGraver_win_x86.zip deploy/; fi
     - if [ $$arch = 64 ]; then zip -r EzGraver_win_x64.zip deploy/; fi
 
@@ -38,7 +41,6 @@ publish:
     files:
       - EzGraver_win_x86.zip
       - EzGraver_win_x64.zip
-    checksum: sha1   
     when:
       event: tag
 

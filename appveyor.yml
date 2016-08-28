@@ -14,6 +14,9 @@ before_build:
   - cd EzGraverUi & qmake -config release -tp vc -spec win32-msvc2015 EzGraverUi.pro & cd ..
   - qmake -config release -tp vc -spec win32-msvc2015 EzGraver.pro
 
+configuration:
+  - Release
+
 after_build:
   - mkdir deploy
   - copy EzGraverCli\release\EzGraverCli.exe deploy\EzGraverCli.exe
@@ -23,7 +26,7 @@ after_build:
   - windeployqt --release --no-translations --no-angle --no-opengl-sw deploy/EzGraverLib.dll
   - windeployqt --release --no-translations --no-angle --no-opengl-sw deploy/EzGraverUi.exe
   - 7z a EzGraver_%arch%.zip .\deploy\*
-
+  
 deploy:
   provider: GitHub
   auth_token:

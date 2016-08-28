@@ -3,13 +3,42 @@ build:
   shell: mingw$$arch
   pull: true
   commands:
+    # Compilation
     - if [ $$arch = 32 ]; then target=i686; fi
     - if [ $$arch = 64 ]; then target=x86_64; fi
-    - pacman -S --needed --noconfirm --noprogressbar mingw-w64-${target}-pkg-config mingw-w64-${target}-qt5
+    - pacman -S --needed --noconfirm --noprogressbar mingw-w64-${target}-pkg-config mingw-w64-${target}-qt5 zip
     - qmake -v
-    - qmake "CONFIG+=release" EzGraver.pro
+    - qmake -config release EzGraver.pro
     - make
-    
+    # Dependency collection
+    # windeployqt searches for icu*.dll instead of libicu*.dll
+    - mkdir dependencies
+    - cp /mingw$$arch/bin/libicudt*.dll dependencies/
+    - cp /mingw$$arch/bin/libicuin*.dll dependencies/
+    - cp /mingw$$arch/bin/libicuuc*.dll dependencies/
+    - ls -al dependencies/
+    - for file in dependencies/lib* ; do mv "$file" "${file/lib/}" ; done
+    - ls -al dependencies/
+    - ls -al $PWD/dependencies/
+    - PATH=$PATH:$PWD/dependencies
+    # Deployment
+    - mkdir deploy
+    - cp EzGraverCli/release/EzGraverCli.exe deploy/
+    - cp EzGraverLib/release/EzGraverLib.dll deploy/
+    - cp EzGraverUi/release/EzGraverUi.exe deploy/
+    - windeployqt --release --no-translations --no-angle --no-opengl-sw deploy/EzGraverCli.exe
+    - windeployqt --release --no-translations --no-angle --no-opengl-sw deploy/EzGraverLib.dll
+    - windeployqt --release --no-translations --no-angle --no-opengl-sw deploy/EzGraverUi.exe
+    - zip -r EzGraver_win_${target}.zip deploy/
+
+publish:
+  github_release:
+    api_key: $$GITHUB_RELEASES_TOKEN
+    files: EzGraver_${target}.zip
+    checksum: sha1   
+    when:
+      event: tag
+
 matrix:
   arch:
     - 64

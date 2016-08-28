@@ -1,9 +1,9 @@
 environment:
   matrix:
     - arch: x86
-      QT_DIR=C:\Qt\5.7\msvc2015_64
+      QT_DIR: C:\Qt\5.7\msvc2015_64
     - arch: x64
-      QT_DIR=C:\Qt\5.7\msvc2015
+      QT_DIR: C:\Qt\5.7\msvc2015
 
 install:
   - set PATH=%PATH%;{QT_DIR}\bin

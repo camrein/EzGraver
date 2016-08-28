@@ -64,7 +64,7 @@ qmake -qt=qt5 -v
 
 Now build EzGraver.
 ```bash
-qmake -qt=qt5 EzGraver.pro
+qmake -qt=qt5 -config release EzGraver.pro
 make
 ```
 

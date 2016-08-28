@@ -26,13 +26,15 @@ after_build:
   - windeployqt --release --no-translations --no-angle --no-opengl-sw deploy/EzGraverLib.dll
   - windeployqt --release --no-translations --no-angle --no-opengl-sw deploy/EzGraverUi.exe
   - 7z a EzGraver_%arch%.zip .\deploy\*
+
+artifacts:
+  - path: EzGraver_$(arch).zip
   
 deploy:
   provider: GitHub
   auth_token:
     secure: kQ5w9sYhOflgqli0RP05IzEMc946SuYcK7nyhsOivYd5MoC6QLgg9tknjt8ALkTn
-  artifacts:
-    - path: EzGraver_$(arch).zip
+  artifact: EzGraver_$(arch).zip
   draft: false
   prerelease: false
   on:

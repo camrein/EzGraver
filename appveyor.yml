@@ -6,7 +6,7 @@ environment:
       QT_DIR: C:\Qt\5.7\msvc2015
 
 install:
-  - set PATH=%PATH%;{QT_DIR}\bin
+  - set PATH=%PATH%;%QT_DIR%\bin
 
 before_build:
   - cd EzGraverCli & qmake -config release -tp vc -spec win32-msvc2015 EzGraverCli.pro & cd ..
@@ -22,13 +22,13 @@ after_build:
   - windeployqt --release --no-translations --no-angle --no-opengl-sw deploy/EzGraverCli.exe
   - windeployqt --release --no-translations --no-angle --no-opengl-sw deploy/EzGraverLib.dll
   - windeployqt --release --no-translations --no-angle --no-opengl-sw deploy/EzGraverUi.exe
-  - 7z a EzGraver_{arch}.zip .\deploy\*
+  - 7z a EzGraver_%arch%.zip .\deploy\*
 
 deploy:
   provider: GitHub
   auth_token:
     secure: kQ5w9sYhOflgqli0RP05IzEMc946SuYcK7nyhsOivYd5MoC6QLgg9tknjt8ALkTn
-  artifact: EzGraver_{arch}.zip
+  artifact: EzGraver_%arch%.zip
   draft: false
   prerelease: false
   on:

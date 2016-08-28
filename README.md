@@ -20,7 +20,8 @@ Available options:
 # Build Status
 | Linux / OSX | Windows |
 |-------------|---------|
-|[![Build Status](https://travis-ci.org/camrein/EzGraver.svg?branch=master)](https://travis-ci.org/camrein/EzGraver)|[![Build Status](https://tea-ci.org/api/badges/camrein/EzGraver/status.svg)](https://tea-ci.org/camrein/EzGraver)|
+|[![Build Status](https://travis-ci.org/camrein/EzGraver.svg?branch=master)](https://travis-ci.org/camrein/EzGraver)|[![Build Status](https://ci.appveyor.com/api/projects/status/g98wrysmliq4t8d9/branch/master?svg=true)](https://ci.appveyor.com/project/camrein/ezgraver/branch/master)|
+
 
 # Building
 EzGraver was developed with QT 5.7. The lowest known API-Requirement is [QT 5.4](http://doc.qt.io/qt-5.7/qtimer.html#singleShot-4). Continuous integration on Travis-CI and Tea-CI is done with at least QT 5.5.

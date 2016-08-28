@@ -11,7 +11,7 @@ Usage: EzGraverCli <option> [arguments...]
 Available options:
   a - Shows the available ports
   h <port> - Moves the engraver to the home position
-  s <port> [burnTime=60] - Starts the engraving process with the given burn time
+  s <port> - Starts the engraving process with the burn time 60
   p <port> - Pauses the engraver
   r <port> - Resets the engraver
   u <port> <image> - Uploads the given image to the engraver

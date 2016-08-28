@@ -1,5 +1,5 @@
 # About
-EzGraver is an open source software allowing users to use with laser engravers by NEJE. It supports Linux, OSX and Windows. It provides both a command line interface and a graphical user interface.
+EzGraver is an open source software allowing users to use with laser engravers by NEJE. It supports Linux, OSX and Windows. It provides both a command line interface and a graphical user interface. The latest release is available on the [releases page](https://github.com/camrein/EzGraver/releases/latest).
 
 ![](screenshot.png)
 

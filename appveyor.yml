@@ -31,7 +31,8 @@ deploy:
   provider: GitHub
   auth_token:
     secure: kQ5w9sYhOflgqli0RP05IzEMc946SuYcK7nyhsOivYd5MoC6QLgg9tknjt8ALkTn
-  artifact: EzGraver_$(arch).zip
+  artifacts:
+    - path: EzGraver_$(arch).zip
   draft: false
   prerelease: false
   on:

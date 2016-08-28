@@ -34,7 +34,7 @@ build:
 publish:
   github_release:
     api_key: $$GITHUB_RELEASES_TOKEN
-    files: EzGraver_${target}.zip
+    files: EzGraver_win_${target}.zip
     checksum: sha1   
     when:
       event: tag

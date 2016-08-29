@@ -11,7 +11,7 @@
 #include <stdexcept>
 #include <functional>
 
-MainWindow::MainWindow(QWidget *parent)
+MainWindow::MainWindow(QWidget* parent)
         :  QMainWindow{parent}, _ui{new Ui::MainWindow},
           _portTimer{}, _ezGraver{}, _connected{false}, _imageLoaded{false} {
     _ui->setupUi(this);
@@ -25,6 +25,7 @@ MainWindow::MainWindow(QWidget *parent)
 }
 
 MainWindow::~MainWindow() {
+    delete _ui;
 }
 
 void MainWindow::setupBindings() {

@@ -50,7 +50,7 @@ protected:
     void dropEvent(QDropEvent* event);
 
 private:
-    std::shared_ptr<Ui::MainWindow> _ui;
+    Ui::MainWindow* _ui;
     QTimer _portTimer;
 
     std::shared_ptr<EzGraver> _ezGraver;

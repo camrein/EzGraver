@@ -29,7 +29,7 @@ MainWindow::~MainWindow() {
 }
 
 void MainWindow::setupBindings() {
-    connect(_ui->burnTime, &QSlider::valueChanged, [this](const int& v) { _ui->burnTimeLabel->setText(QString::number(v)); });
+    connect(_ui->burnTime, &QSlider::valueChanged, [this](int const& v) { _ui->burnTimeLabel->setText(QString::number(v)); });
 
     connect(this, &MainWindow::connectedChanged, _ui->ports, &QComboBox::setDisabled);
     connect(this, &MainWindow::connectedChanged, _ui->connect, &QPushButton::setDisabled);

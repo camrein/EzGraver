@@ -9,6 +9,7 @@ install:
   - set PATH=%PATH%;%QT_DIR%\bin
 
 before_build:
+  - set EZ_VERSION=%APPVEYOR_REPO_TAG_NAME%
   - cd EzGraverCli & qmake -config release -tp vc -spec win32-msvc2015 EzGraverCli.pro & cd ..
   - cd EzGraverLib & qmake -config release -tp vc -spec win32-msvc2015 EzGraverLib.pro & cd ..
   - cd EzGraverUi & qmake -config release -tp vc -spec win32-msvc2015 EzGraverUi.pro & cd ..

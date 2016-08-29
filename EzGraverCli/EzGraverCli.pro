@@ -1,3 +1,5 @@
+include(../common.pri)
+
 QT += core
 QT += gui
 

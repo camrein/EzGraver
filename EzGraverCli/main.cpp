@@ -15,7 +15,8 @@ std::ostream& operator<<(std::ostream& rhv, QString const& lhv) {
 void showHelp() {
     std::cout << "Usage: EzGraverCli <option> [arguments...]\n\n";
     std::cout << "Available options:\n";
-    std::cout << "  a <port> - Shows the available ports\n";
+    std::cout << "  v - Prints the version information\n";
+    std::cout << "  a - Shows the available ports\n";
     std::cout << "  h <port> - Moves the engraver to the home position\n";
     std::cout << "  s <port> - Starts the engraving process with the burn time 60\n";
     std::cout << "  p <port> - Pauses the engraver\n";
@@ -60,8 +61,12 @@ void handleArguments(QStringList const& arguments) {
     }
 
     auto argument = arguments[1][0].toLatin1();
-    if(argument == 'a') {
+    switch(argument) {
+    case 'a':
         showAvailablePorts();
+        return;
+    case 'v':
+        std::cout << "EzGraver " << EZ_VERSION << '\n';
         return;
     }
 

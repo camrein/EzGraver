@@ -3,6 +3,7 @@
 # Project created by QtCreator 2016-08-22T09:05:45
 #
 #-------------------------------------------------
+include(../common.pri)
 
 QT += gui
 QT += serialport

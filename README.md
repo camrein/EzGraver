@@ -9,6 +9,7 @@ Beside the graphical user interface, EzGraver provides a pure command line inter
 Usage: EzGraverCli <option> [arguments...]
 
 Available options:
+  v - Prints the version information
   a - Shows the available ports
   h <port> - Moves the engraver to the home position
   s <port> - Starts the engraving process with the burn time 60

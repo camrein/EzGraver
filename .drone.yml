@@ -4,6 +4,7 @@ build:
   pull: true
   commands:
     # Compilation
+    - EZ_VERSION=$CI_TAG
     - if [ $$arch = 32 ]; then target=i686; fi
     - if [ $$arch = 64 ]; then target=x86_64; fi
     - pacman -S --needed --noconfirm --noprogressbar mingw-w64-${target}-pkg-config mingw-w64-${target}-qt5 zip

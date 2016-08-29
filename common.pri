@@ -1,0 +1,1 @@
+DEFINES += EZ_VERSION=\\\"$$(EZ_VERSION)\\\"

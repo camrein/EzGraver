@@ -3,6 +3,7 @@
 # Project created by QtCreator 2016-08-22T09:16:50
 #
 #-------------------------------------------------
+include(../common.pri)
 
 QT += core
 QT += gui
@@ -30,3 +31,5 @@ else:unix: LIBS += -L$$OUT_PWD/../EzGraverLib/ -lEzGraverLib
 
 INCLUDEPATH += $$PWD/../EzGraverLib
 DEPENDPATH += $$PWD/../EzGraverLib
+
+DISTFILES +=

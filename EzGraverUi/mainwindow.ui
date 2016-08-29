@@ -31,6 +31,9 @@
           <height>512</height>
          </size>
         </property>
+        <property name="frameShape">
+         <enum>QFrame::StyledPanel</enum>
+        </property>
         <property name="text">
          <string>No Image Loaded</string>
         </property>

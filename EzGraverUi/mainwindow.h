@@ -15,17 +15,14 @@ class MainWindow;
 class MainWindow : public QMainWindow {
     Q_OBJECT
     Q_PROPERTY(bool connected READ connected NOTIFY connectedChanged)
-    Q_PROPERTY(bool imageLoaded READ imageLoaded NOTIFY imageLoadedChanged)
 
 public:
     explicit MainWindow(QWidget* parent = NULL);
     ~MainWindow();
 
     bool connected() const;
-    bool imageLoaded() const;
 signals:
     void connectedChanged(bool connected);
-    void imageLoadedChanged(bool connected);
 
 private slots:
     void on_connect_clicked();
@@ -52,14 +49,15 @@ protected:
 private:
     Ui::MainWindow* _ui;
     QTimer _portTimer;
+    QImage _image;
 
     std::shared_ptr<EzGraver> _ezGraver;
     bool _connected;
-    bool _imageLoaded;
 
-    void setupBindings();
+    void initBindings();
+    void initConversionFlags();
+
     void setConnected(bool connected);
-    void setImageLoaded(bool imageLoaded);
     void printVerbose(QString const& verbose);
     void loadImage(QString const& fileName);
 };

@@ -16,6 +16,10 @@ public:
      * \param parent The parent of the label.
      */
     explicit ClickLabel(QWidget* parent=NULL);
+
+    /*!
+     * Frees all required resources upon deconstruction.
+     */
     virtual ~ClickLabel();
 
 signals:

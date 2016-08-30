@@ -2,7 +2,7 @@
 
 #include <QMouseEvent>
 
-ClickLabel::ClickLabel(QWidget* parent) : QLabel(parent) {}
+ClickLabel::ClickLabel(QWidget* parent) : QLabel{parent} {}
 ClickLabel::~ClickLabel() {}
 
 void ClickLabel::mouseReleaseEvent(QMouseEvent*) {

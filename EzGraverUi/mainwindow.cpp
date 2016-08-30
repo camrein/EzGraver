@@ -13,14 +13,15 @@
 
 MainWindow::MainWindow(QWidget* parent)
         :  QMainWindow{parent}, _ui{new Ui::MainWindow},
-          _portTimer{}, _ezGraver{}, _connected{false}, _imageLoaded{false} {
+          _portTimer{}, _image{}, _ezGraver{}, _connected{false} {
     _ui->setupUi(this);
     setAcceptDrops(true);
 
     connect(&_portTimer, &QTimer::timeout, this, &MainWindow::updatePorts);
     _portTimer.start(1000);
 
-    setupBindings();
+    initBindings();
+    initConversionFlags();
     setConnected(false);
 }
 
@@ -28,7 +29,7 @@ MainWindow::~MainWindow() {
     delete _ui;
 }
 
-void MainWindow::setupBindings() {
+void MainWindow::initBindings() {
     connect(_ui->burnTime, &QSlider::valueChanged, [this](int const& v) { _ui->burnTimeLabel->setText(QString::number(v)); });
 
     connect(this, &MainWindow::connectedChanged, _ui->ports, &QComboBox::setDisabled);
@@ -45,10 +46,20 @@ void MainWindow::setupBindings() {
     connect(this, &MainWindow::connectedChanged, _ui->start, &QPushButton::setEnabled);
     connect(this, &MainWindow::connectedChanged, _ui->pause, &QPushButton::setEnabled);
     connect(this, &MainWindow::connectedChanged, _ui->reset, &QPushButton::setEnabled);
+    connect(_ui->conversionFlags, static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged), [this](int index) {
+        _ui->image->setConversionFlags(static_cast<Qt::ImageConversionFlags>(_ui->conversionFlags->itemData(index).toInt()));
+    });
 
-    auto uploadEnabled = [this]() { _ui->upload->setEnabled(_imageLoaded && _connected); };
+    auto uploadEnabled = [this]() { _ui->upload->setEnabled(_ui->image->imageLoaded() && _connected); };
     connect(this, &MainWindow::connectedChanged, uploadEnabled);
-    connect(this, &MainWindow::imageLoadedChanged, uploadEnabled);
+    connect(_ui->image, &ImageLabel::imageLoadedChanged, uploadEnabled);
+}
+
+void MainWindow::initConversionFlags() {
+    _ui->conversionFlags->addItem("DiffuseDither", Qt::DiffuseDither);
+    _ui->conversionFlags->addItem("OrderedDither", Qt::OrderedDither);
+    _ui->conversionFlags->addItem("ThresholdDither", Qt::ThresholdDither);
+    _ui->conversionFlags->setCurrentIndex(0);
 }
 
 void MainWindow::printVerbose(QString const& verbose) {
@@ -76,10 +87,8 @@ void MainWindow::loadImage(QString const& fileName) {
         printVerbose("failed to load image");
         return;
     }
-    image = image.scaled(512, 512).convertToFormat(QImage::Format_Mono);
 
-    _ui->image->setPixmap(QPixmap::fromImage(image));
-    setImageLoaded(true);
+    _ui->image->setImage(image);
 }
 
 bool MainWindow::connected() const {
@@ -89,15 +98,6 @@ bool MainWindow::connected() const {
 void MainWindow::setConnected(bool connected) {
     _connected = connected;
     emit connectedChanged(connected);
-}
-
-bool MainWindow::imageLoaded() const {
-    return _imageLoaded;
-}
-
-void MainWindow::setImageLoaded(bool imageLoaded) {
-    _imageLoaded = imageLoaded;
-    emit imageLoadedChanged(imageLoaded);
 }
 
 void MainWindow::on_connect_clicked() {
@@ -178,8 +178,10 @@ void MainWindow::on_disconnect_clicked() {
 }
 
 void MainWindow::on_image_clicked() {
-    auto fileName = QFileDialog::getOpenFileName(this, "Open Image", "", "Image Files (*.png *.jpeg *.jpg *.bmp)");
-    loadImage(fileName);
+    auto fileName = QFileDialog::getOpenFileName(this, "Open Image", "", "Images (*.png *.jpeg *.jpg *.bmp)");
+    if(!fileName.isNull()) {
+        loadImage(fileName);
+    }
 }
 
 void MainWindow::dragEnterEvent(QDragEnterEvent* event) {

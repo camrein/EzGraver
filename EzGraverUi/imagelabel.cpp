@@ -1,6 +1,6 @@
 #include "imagelabel.h"
 
-ImageLabel::ImageLabel(QWidget* parent) : ClickLabel{parent}, _image{}, _flags{Qt::AutoColor} {}
+ImageLabel::ImageLabel(QWidget* parent) : ClickLabel{parent}, _image{}, _flags{Qt::DiffuseDither} {}
 ImageLabel::~ImageLabel() {}
 
 QImage ImageLabel::image() const {

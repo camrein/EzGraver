@@ -54,7 +54,9 @@ private:
     std::shared_ptr<EzGraver> _ezGraver;
     bool _connected;
 
-    void setupBindings();
+    void initBindings();
+    void initConversionFlags();
+
     void setConnected(bool connected);
     void printVerbose(QString const& verbose);
     void loadImage(QString const& fileName);

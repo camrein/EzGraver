@@ -20,7 +20,8 @@ MainWindow::MainWindow(QWidget* parent)
     connect(&_portTimer, &QTimer::timeout, this, &MainWindow::updatePorts);
     _portTimer.start(1000);
 
-    setupBindings();
+    initBindings();
+    initConversionFlags();
     setConnected(false);
 }
 
@@ -28,7 +29,7 @@ MainWindow::~MainWindow() {
     delete _ui;
 }
 
-void MainWindow::setupBindings() {
+void MainWindow::initBindings() {
     connect(_ui->burnTime, &QSlider::valueChanged, [this](int const& v) { _ui->burnTimeLabel->setText(QString::number(v)); });
 
     connect(this, &MainWindow::connectedChanged, _ui->ports, &QComboBox::setDisabled);
@@ -45,10 +46,20 @@ void MainWindow::setupBindings() {
     connect(this, &MainWindow::connectedChanged, _ui->start, &QPushButton::setEnabled);
     connect(this, &MainWindow::connectedChanged, _ui->pause, &QPushButton::setEnabled);
     connect(this, &MainWindow::connectedChanged, _ui->reset, &QPushButton::setEnabled);
+    connect(_ui->conversionFlags, static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged), [this](int index) {
+        _ui->image->setConversionFlags(static_cast<Qt::ImageConversionFlags>(_ui->conversionFlags->itemData(index).toInt()));
+    });
 
     auto uploadEnabled = [this]() { _ui->upload->setEnabled(_ui->image->imageLoaded() && _connected); };
     connect(this, &MainWindow::connectedChanged, uploadEnabled);
     connect(_ui->image, &ImageLabel::imageLoadedChanged, uploadEnabled);
+}
+
+void MainWindow::initConversionFlags() {
+    _ui->conversionFlags->addItem("DiffuseDither", Qt::DiffuseDither);
+    _ui->conversionFlags->addItem("OrderedDither", Qt::OrderedDither);
+    _ui->conversionFlags->addItem("ThresholdDither", Qt::ThresholdDither);
+    _ui->conversionFlags->setCurrentIndex(0);
 }
 
 void MainWindow::printVerbose(QString const& verbose) {

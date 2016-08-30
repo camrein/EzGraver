@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1078</width>
-    <height>627</height>
+    <width>1086</width>
+    <height>654</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -41,6 +41,9 @@
          <set>Qt::AlignCenter</set>
         </property>
        </widget>
+      </item>
+      <item>
+       <widget class="QComboBox" name="conversionFlags"/>
       </item>
       <item>
        <layout class="QHBoxLayout" name="horizontalLayout">
@@ -386,7 +389,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1078</width>
+     <width>1086</width>
      <height>21</height>
     </rect>
    </property>

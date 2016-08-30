@@ -25,6 +25,10 @@ void ImageLabel::setConversionFlags(Qt::ImageConversionFlags const& flags) {
 }
 
 void ImageLabel::updateDisplayedImage() {
+    if(!imageLoaded()) {
+        return;
+    }
+
     QImage image = _image.scaled(512, 512).convertToFormat(QImage::Format_Mono, _flags);
     setPixmap(QPixmap::fromImage(image));
 }

@@ -13,7 +13,7 @@
 
 MainWindow::MainWindow(QWidget* parent)
         :  QMainWindow{parent}, _ui{new Ui::MainWindow},
-          _portTimer{}, _ezGraver{}, _connected{false}, _imageLoaded{false} {
+          _portTimer{}, _image{}, _ezGraver{}, _connected{false} {
     _ui->setupUi(this);
     setAcceptDrops(true);
 
@@ -46,9 +46,9 @@ void MainWindow::setupBindings() {
     connect(this, &MainWindow::connectedChanged, _ui->pause, &QPushButton::setEnabled);
     connect(this, &MainWindow::connectedChanged, _ui->reset, &QPushButton::setEnabled);
 
-    auto uploadEnabled = [this]() { _ui->upload->setEnabled(_imageLoaded && _connected); };
+    auto uploadEnabled = [this]() { _ui->upload->setEnabled(_ui->image->imageLoaded() && _connected); };
     connect(this, &MainWindow::connectedChanged, uploadEnabled);
-    connect(this, &MainWindow::imageLoadedChanged, uploadEnabled);
+    connect(_ui->image, &ImageLabel::imageLoadedChanged, uploadEnabled);
 }
 
 void MainWindow::printVerbose(QString const& verbose) {
@@ -76,10 +76,8 @@ void MainWindow::loadImage(QString const& fileName) {
         printVerbose("failed to load image");
         return;
     }
-    image = image.scaled(512, 512).convertToFormat(QImage::Format_Mono);
 
-    _ui->image->setPixmap(QPixmap::fromImage(image));
-    setImageLoaded(true);
+    _ui->image->setImage(image);
 }
 
 bool MainWindow::connected() const {
@@ -89,15 +87,6 @@ bool MainWindow::connected() const {
 void MainWindow::setConnected(bool connected) {
     _connected = connected;
     emit connectedChanged(connected);
-}
-
-bool MainWindow::imageLoaded() const {
-    return _imageLoaded;
-}
-
-void MainWindow::setImageLoaded(bool imageLoaded) {
-    _imageLoaded = imageLoaded;
-    emit imageLoadedChanged(imageLoaded);
 }
 
 void MainWindow::on_connect_clicked() {

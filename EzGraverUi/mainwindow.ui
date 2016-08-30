@@ -18,7 +18,7 @@
     <item>
      <layout class="QVBoxLayout" name="verticalLayout_3">
       <item>
-       <widget class="ClickLabel" name="image">
+       <widget class="ImageLabel" name="image">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
           <horstretch>0</horstretch>
@@ -404,12 +404,9 @@
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>
   <customwidget>
-   <class>ClickLabel</class>
+   <class>ImageLabel</class>
    <extends>QLabel</extends>
-   <header>clicklabel.h</header>
-   <slots>
-    <signal>clicked()</signal>
-   </slots>
+   <header>imagelabel.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

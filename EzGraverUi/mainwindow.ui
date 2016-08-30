@@ -27,8 +27,8 @@
         </property>
         <property name="minimumSize">
          <size>
-          <width>512</width>
-          <height>512</height>
+          <width>514</width>
+          <height>514</height>
          </size>
         </property>
         <property name="frameShape">

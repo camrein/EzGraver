@@ -1,5 +1,7 @@
 #include "imagelabel.h"
 
+#include <QPainter>
+
 ImageLabel::ImageLabel(QWidget* parent) : ClickLabel{parent}, _image{}, _flags{Qt::DiffuseDither} {}
 ImageLabel::~ImageLabel() {}
 
@@ -29,8 +31,13 @@ void ImageLabel::updateDisplayedImage() {
         return;
     }
 
-    QImage image = _image.scaled(512, 512).convertToFormat(QImage::Format_Mono, _flags);
-    setPixmap(QPixmap::fromImage(image));
+    // Draw white background, otherwise transparency is converted to black.
+    QImage image{QSize{512, 512}, QImage::Format_ARGB32};
+    image.fill(QColor{Qt::white});
+    QPainter painter{&image};
+    painter.drawImage(0, 0, _image.scaled(image.size()));
+
+    setPixmap(QPixmap::fromImage(image.convertToFormat(QImage::Format_Mono, _flags)));
 }
 
 bool ImageLabel::imageLoaded() const {

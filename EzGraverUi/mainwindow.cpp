@@ -178,8 +178,10 @@ void MainWindow::on_disconnect_clicked() {
 }
 
 void MainWindow::on_image_clicked() {
-    auto fileName = QFileDialog::getOpenFileName(this, "Open Image", "", "Image Files (*.png *.jpeg *.jpg *.bmp)");
-    loadImage(fileName);
+    auto fileName = QFileDialog::getOpenFileName(this, "Open Image", "", "Images (*.png *.jpeg *.jpg *.bmp)");
+    if(!fileName.isNull()) {
+        loadImage(fileName);
+    }
 }
 
 void MainWindow::dragEnterEvent(QDragEnterEvent* event) {

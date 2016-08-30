@@ -1,3 +1,8 @@
+
+| Linux / OSX | Windows | Latest |
+|-------------|---------|---------|
+|[![Travis Build Status](https://travis-ci.org/camrein/EzGraver.svg?branch=master)](https://travis-ci.org/camrein/EzGraver)|[![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/g98wrysmliq4t8d9/branch/master?svg=true)](https://ci.appveyor.com/project/camrein/ezgraver)|[![Latest GitHub Release](https://img.shields.io/github/release/camrein/EzGraver.svg?maxAge=3600)](https://github.com/camrein/EzGraver/releases/latest)|
+
 # About
 EzGraver is an open source software allowing users to use with laser engravers by NEJE. It supports Linux, OSX and Windows. It provides both a command line interface and a graphical user interface. The latest release is available on the [releases page](https://github.com/camrein/EzGraver/releases/latest).
 
@@ -18,19 +23,13 @@ Available options:
   u <port> <image> - Uploads the given image to the engraver
 ```
 
-# Build Status
-| Linux / OSX | Windows |
-|-------------|---------|
-|[![Build Status](https://travis-ci.org/camrein/EzGraver.svg?branch=master)](https://travis-ci.org/camrein/EzGraver)|[![Build Status](https://ci.appveyor.com/api/projects/status/g98wrysmliq4t8d9/branch/master?svg=true)](https://ci.appveyor.com/project/camrein/ezgraver/branch/master)|
-
-
 # Building
-EzGraver was developed with QT 5.7. The lowest known API-Requirement is [QT 5.4](http://doc.qt.io/qt-5.7/qtimer.html#singleShot-4). Continuous integration on Travis-CI and Tea-CI is done with at least QT 5.5.
+EzGraver was developed with QT 5.7. The lowest known API-Requirement is [QT 5.4](http://doc.qt.io/qt-5.7/qtimer.html#singleShot-4). Continuous integration on Travis-CI, Tea-CI and AppVeyor is done with at least QT 5.5.
 
 ## Windows
 Download the latest QT release and build it using QT Creator. Builds have been tested on the following kits:
 - Desktop QT 5.7.0 MinGW 32bit
-- Desktop QT 5.7.0 MSVC2015_64bit
+- Desktop QT 5.7.0 MSVC2015 64bit
 
 ## OS X
 First install at a sufficient QT version. In this example, QT 5.5 is being installed.

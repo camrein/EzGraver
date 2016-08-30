@@ -1,6 +1,6 @@
 #include "imagelabel.h"
 
-ImageLabel::ImageLabel(QWidget* parent) : ClickLabel{parent}, _image{}, _flags{Qt::AutoColor}, _imageLoaded{false} {}
+ImageLabel::ImageLabel(QWidget* parent) : ClickLabel{parent}, _image{}, _flags{Qt::AutoColor} {}
 ImageLabel::~ImageLabel() {}
 
 QImage ImageLabel::image() const {
@@ -9,9 +9,8 @@ QImage ImageLabel::image() const {
 
 void ImageLabel::setImage(QImage const& image) {
     _image = image;
-    _imageLoaded = true;
     updateDisplayedImage();
-    emit imageLoadedChanged(_imageLoaded);
+    emit imageLoadedChanged(true);
     emit imageChanged(image);
 }
 
@@ -31,5 +30,5 @@ void ImageLabel::updateDisplayedImage() {
 }
 
 bool ImageLabel::imageLoaded() const {
-    return _imageLoaded;
+    return !_image.isNull();
 }

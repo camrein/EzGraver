@@ -83,7 +83,6 @@ signals:
 private:
     QImage _image;
     Qt::ImageConversionFlags _flags;
-    bool _imageLoaded;
 
     void updateDisplayedImage();
 };

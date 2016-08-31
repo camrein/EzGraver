@@ -74,8 +74,7 @@ void EzGraver::right() {
 
 void EzGraver::erase() {
     qDebug() << "erasing EEPROM";
-    unsigned char erase[] = {0xFE, 0xFE, 0xFE, 0xFE, 0xFE, 0xFE, 0xFE, 0xFE};
-    QByteArray bytes{reinterpret_cast<char*>(erase), sizeof(erase)};
+    QByteArray bytes{8, static_cast<char>(0xFE)};
     _transmit(bytes);
 }
 
@@ -104,9 +103,7 @@ void EzGraver::awaitTransmission(int msecs) {
 }
 
 void EzGraver::_transmit(unsigned char const& data) {
-    QByteArray container{};
-    container.append(data);
-    _transmit(container);
+    _transmit(QByteArray{1, static_cast<char>(data)});
 }
 
 void EzGraver::_transmit(QByteArray const& data) {

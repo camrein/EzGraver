@@ -50,7 +50,7 @@ void MainWindow::initBindings() {
         _ui->image->setConversionFlags(static_cast<Qt::ImageConversionFlags>(_ui->conversionFlags->itemData(index).toInt()));
     });
 
-    auto uploadEnabled = [this]() { _ui->upload->setEnabled(_ui->image->imageLoaded() && _connected); };
+    auto uploadEnabled = [this] { _ui->upload->setEnabled(_ui->image->imageLoaded() && _connected); };
     connect(this, &MainWindow::connectedChanged, uploadEnabled);
     connect(_ui->image, &ImageLabel::imageLoadedChanged, uploadEnabled);
 }

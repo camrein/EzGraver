@@ -9,8 +9,8 @@
 
 #include "ezgraver.h"
 
-std::ostream& operator<<(std::ostream& rhv, QString const& lhv) {
-    return rhv << lhv.toStdString();
+std::ostream& operator<<(std::ostream& lhv, QString const& rhv) {
+    return lhv << rhv.toStdString();
 }
 
 void showHelp() {

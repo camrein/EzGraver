@@ -10,8 +10,7 @@
 #include <functional>
 
 
-EzGraver::EzGraver(std::shared_ptr<QSerialPort> serial) : _serial{serial} {
-}
+EzGraver::EzGraver(std::shared_ptr<QSerialPort> serial) : _serial{serial} {}
 
 void EzGraver::start(unsigned char const& burnTime) {
     _setBurnTime(burnTime);
@@ -138,7 +137,7 @@ std::shared_ptr<EzGraver> EzGraver::create(QString const& portName) {
     if(!serial->open(QIODevice::ReadWrite)) {
         qDebug() << "failed to establish a connection on port" << portName;
         qDebug() << serial->errorString();
-        throw std::runtime_error{QString("failed to connect to port %1 (%2)").arg(portName, serial->errorString()).toStdString()};
+        throw std::runtime_error{QString{"failed to connect to port %1 (%2)"}.arg(portName, serial->errorString()).toStdString()};
     }
 
     return std::shared_ptr<EzGraver>{new EzGraver(serial)};

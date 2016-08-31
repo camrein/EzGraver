@@ -106,7 +106,6 @@ struct EZGRAVERLIBSHARED_EXPORT EzGraver {
     virtual ~EzGraver();
 
 private:
-
     std::shared_ptr<QSerialPort> _serial;
     explicit EzGraver(std::shared_ptr<QSerialPort> serial);
 

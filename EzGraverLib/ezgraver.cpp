@@ -6,6 +6,7 @@
 #include <QBitmap>
 #include <QBuffer>
 
+#include <iterator>
 #include <algorithm>
 #include <functional>
 

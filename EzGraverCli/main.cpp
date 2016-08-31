@@ -1,6 +1,7 @@
 #include <QCoreApplication>
 #include <QThread>
 
+#include <iterator>
 #include <algorithm>
 #include <iostream>
 #include <memory>

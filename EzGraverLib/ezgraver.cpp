@@ -6,12 +6,12 @@
 #include <QBitmap>
 #include <QBuffer>
 
+#include <iterator>
 #include <algorithm>
 #include <functional>
 
 
-EzGraver::EzGraver(std::shared_ptr<QSerialPort> serial) : _serial{serial} {
-}
+EzGraver::EzGraver(std::shared_ptr<QSerialPort> serial) : _serial{serial} {}
 
 void EzGraver::start(unsigned char const& burnTime) {
     _setBurnTime(burnTime);
@@ -74,8 +74,7 @@ void EzGraver::right() {
 
 void EzGraver::erase() {
     qDebug() << "erasing EEPROM";
-    unsigned char erase[] = {0xFE, 0xFE, 0xFE, 0xFE, 0xFE, 0xFE, 0xFE, 0xFE};
-    QByteArray bytes{reinterpret_cast<char*>(erase), sizeof(erase)};
+    QByteArray bytes{8, static_cast<char>(0xFE)};
     _transmit(bytes);
 }
 
@@ -104,9 +103,7 @@ void EzGraver::awaitTransmission(int msecs) {
 }
 
 void EzGraver::_transmit(unsigned char const& data) {
-    QByteArray container{};
-    container.append(data);
-    _transmit(container);
+    _transmit(QByteArray{1, static_cast<char>(data)});
 }
 
 void EzGraver::_transmit(QByteArray const& data) {
@@ -141,7 +138,7 @@ std::shared_ptr<EzGraver> EzGraver::create(QString const& portName) {
     if(!serial->open(QIODevice::ReadWrite)) {
         qDebug() << "failed to establish a connection on port" << portName;
         qDebug() << serial->errorString();
-        throw std::runtime_error{QString("failed to connect to port %1 (%2)").arg(portName, serial->errorString()).toStdString()};
+        throw std::runtime_error{QString{"failed to connect to port %1 (%2)"}.arg(portName, serial->errorString()).toStdString()};
     }
 
     return std::shared_ptr<EzGraver>{new EzGraver(serial)};

@@ -17,7 +17,8 @@ before_install:
     - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then source /opt/qt55/bin/qt55-env.sh ; fi
 
 script:
-    - EZ_VERSION=$TRAVIS_TAG
+    - export EZ_VERSION=$TRAVIS_TAG
+    - echo "Building $EZ_VERSION"
     - qmake -v
     - qmake -config release EzGraver.pro
     - make

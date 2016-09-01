@@ -50,7 +50,7 @@ void MainWindow::initBindings() {
         _ui->image->setConversionFlags(static_cast<Qt::ImageConversionFlags>(_ui->conversionFlags->itemData(index).toInt()));
     });
 
-    auto uploadEnabled = [this]() { _ui->upload->setEnabled(_ui->image->imageLoaded() && _connected); };
+    auto uploadEnabled = [this] { _ui->upload->setEnabled(_ui->image->imageLoaded() && _connected); };
     connect(this, &MainWindow::connectedChanged, uploadEnabled);
     connect(_ui->image, &ImageLabel::imageLoadedChanged, uploadEnabled);
 }
@@ -80,7 +80,7 @@ void MainWindow::updatePorts() {
 }
 
 void MainWindow::loadImage(QString const& fileName) {
-    printVerbose(QString("loading image: %1").arg(fileName));
+    printVerbose(QString{"loading image: %1"}.arg(fileName));
 
     QImage image{};
     if(!image.load(fileName)) {
@@ -102,12 +102,12 @@ void MainWindow::setConnected(bool connected) {
 
 void MainWindow::on_connect_clicked() {
     try {
-        printVerbose(QString("connecting to port %1").arg(_ui->ports->currentText()));
+        printVerbose(QString{"connecting to port %1"}.arg(_ui->ports->currentText()));
         _ezGraver = EzGraver::create(_ui->ports->currentText());
         printVerbose("connection established successfully");
         setConnected(true);
     } catch(std::runtime_error const& e) {
-        printVerbose(QString("Error: %1").arg(e.what()));
+        printVerbose(QString{"Error: %1"}.arg(e.what()));
     }
 }
 
@@ -156,7 +156,7 @@ void MainWindow::on_preview_clicked() {
 }
 
 void MainWindow::on_start_clicked() {
-    printVerbose(QString("starting engrave process with burn time %1").arg(_ui->burnTime->value()));
+    printVerbose(QString{"starting engrave process with burn time %1"}.arg(_ui->burnTime->value()));
     _ezGraver->start(_ui->burnTime->value());
 }
 

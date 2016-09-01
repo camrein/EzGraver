@@ -1,12 +1,15 @@
 
 | Linux / OSX | Windows | Latest |
 |-------------|---------|---------|
-|[![Travis Build Status](https://travis-ci.org/camrein/EzGraver.svg?branch=master)](https://travis-ci.org/camrein/EzGraver)|[![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/g98wrysmliq4t8d9/branch/master?svg=true)](https://ci.appveyor.com/project/camrein/ezgraver)|[![Latest GitHub Release](https://img.shields.io/github/release/camrein/EzGraver.svg?maxAge=3600)](https://github.com/camrein/EzGraver/releases/latest)|
+|[![Travis Build Status](https://travis-ci.org/camrein/EzGraver.svg?branch=master)](https://travis-ci.org/camrein/EzGraver)|[![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/g98wrysmliq4t8d9/branch/master?svg=true)](https://ci.appveyor.com/project/camrein/ezgraver)|[![Latest GitHub Release](https://img.shields.io/github/release/camrein/EzGraver.svg)](https://github.com/camrein/EzGraver/releases/latest)|
 
 # About
 EzGraver is an open source software allowing users to use with laser engravers by NEJE. It supports Linux, OSX and Windows. It provides both a command line interface and a graphical user interface. The latest release is available on the [releases page](https://github.com/camrein/EzGraver/releases/latest).
 
 ![](screenshot.png)
+
+# Before Running
+On all platforms (Linux, OSX and Windows), it is required that the proper drivers are installed. If that's not the case, the engraver will not be detected and not listed in the dropdown. Additionally, windows requires the installation of [Visual C++ Redistributable for Visual Studio 2015](https://www.microsoft.com/en-us/download/details.aspx?id=48145) too. Otherwise, errors like *VCRUNTIME140.dll* or *MSVCP140.dll* could not be found will be shown.
 
 # Command Line Interface
 Beside the graphical user interface, EzGraver provides a pure command line interface too.

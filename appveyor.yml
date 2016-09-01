@@ -7,6 +7,8 @@ environment:
 
 install:
   - set PATH=%PATH%;%QT_DIR%\bin
+# TODO descide Decide whether vcredist_$(arch).exe should be packaged with the application or published separately. 
+#  - set VCINSTALLDIR=C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC
 
 before_build:
   - set EZ_VERSION=%APPVEYOR_REPO_TAG_NAME%

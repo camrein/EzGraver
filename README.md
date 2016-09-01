@@ -8,6 +8,9 @@ EzGraver is an open source software allowing users to use with laser engravers b
 
 ![](screenshot.png)
 
+# Before Running
+On all platforms (Linux, OSX and Windows), it is required that the proper drivers are installed. If that's not the case, the engraver will not be detected and not listed in the dropdown. Additionally, windows requires the installation of [Visual C++ Redistributable for Visual Studio 2015](https://www.microsoft.com/en-us/download/details.aspx?id=48145) too. Otherwise, errors like *VCRUNTIME140.dll* or *MSVCP140.dll* could not be found will be shown.
+
 # Command Line Interface
 Beside the graphical user interface, EzGraver provides a pure command line interface too.
 ```bash

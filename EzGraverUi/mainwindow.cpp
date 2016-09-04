@@ -143,7 +143,7 @@ void MainWindow::on_upload_clicked() {
     printVerbose("erasing EEPROM");
     _ezGraver->erase();
 
-    QTimer::singleShot(6000, [this, image]() {
+    QTimer::singleShot(6000, [this, image] {
         printVerbose("uploading image to EEPROM");
         _ezGraver->uploadImage(image);
         printVerbose("upload completed");

@@ -31,5 +31,3 @@ else:unix: LIBS += -L$$OUT_PWD/../EzGraverLib/ -lEzGraverLib
 
 INCLUDEPATH += $$PWD/../EzGraverLib
 DEPENDPATH += $$PWD/../EzGraverLib
-
-DISTFILES +=

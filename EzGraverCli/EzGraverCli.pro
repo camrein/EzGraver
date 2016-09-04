@@ -3,8 +3,6 @@ include(../common.pri)
 QT += core
 QT += gui
 
-CONFIG += c++11
-
 TARGET = EzGraverCli
 CONFIG += console
 CONFIG -= app_bundle

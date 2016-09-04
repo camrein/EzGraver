@@ -74,8 +74,7 @@ void EzGraver::right() {
 
 void EzGraver::erase() {
     qDebug() << "erasing EEPROM";
-    QByteArray bytes{8, static_cast<char>(0xFE)};
-    _transmit(bytes);
+    _transmit(QByteArray{8, '\xFE'});
 }
 
 #include <QFile>

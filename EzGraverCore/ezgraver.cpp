@@ -94,12 +94,10 @@ int EzGraver::uploadImage(QImage const& originalImage) {
 
 int EzGraver::uploadImage(QByteArray const& image) {
     qDebug() << "uploading image";
-    for(int i{0}; i < image.size(); i += 32) {
-        int length{32};
-        if(i+length > image.size()) {
-            length = image.size()-i;
-        }
-        _transmit(QByteArray{image.constData()+i, length});
+    // Data is chunked in order to get at least some progress updates
+    int chunkSize{32};
+    for(int i{0}; i < image.size(); i += chunkSize) {
+        _transmit(image.mid(i, chunkSize));
     }
     return image.size();
 }

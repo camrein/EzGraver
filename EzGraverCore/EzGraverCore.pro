@@ -1,6 +1,5 @@
 include(../common.pri)
 
-QT += gui
 QT += serialport
 
 TARGET = EzGraverCore

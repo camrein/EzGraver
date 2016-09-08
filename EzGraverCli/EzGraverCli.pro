@@ -1,7 +1,6 @@
 include(../common.pri)
 
 QT += core
-QT += gui
 
 TARGET = EzGraverCli
 CONFIG += console

@@ -159,6 +159,13 @@
        </layout>
       </item>
       <item>
+       <widget class="QProgressBar" name="progress">
+        <property name="value">
+         <number>0</number>
+        </property>
+       </widget>
+      </item>
+      <item>
        <layout class="QGridLayout" name="gridLayout_3">
         <item row="1" column="0">
          <widget class="QPushButton" name="left">

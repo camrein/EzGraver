@@ -1,5 +1,6 @@
 include(../common.pri)
 
+QT += core
 QT += serialport
 
 TARGET = EzGraverCore

@@ -7,13 +7,14 @@
 #include <QBitmap>
 #include <QIcon>
 #include <QThreadPool>
+#include <QDebug>
 
 #include <stdexcept>
 #include <functional>
 
 MainWindow::MainWindow(QWidget* parent)
         :  QMainWindow{parent}, _ui{new Ui::MainWindow},
-          _portTimer{}, _image{}, _ezGraver{}, _connected{false} {
+          _portTimer{}, _statusTimer{}, _image{}, _ezGraver{}, _connected{false} {
     _ui->setupUi(this);
     setAcceptDrops(true);
 
@@ -100,12 +101,21 @@ void MainWindow::setConnected(bool connected) {
     emit connectedChanged(connected);
 }
 
+void MainWindow::updateProgress(qint64 bytes) {
+    if(_ezGraver) {
+        qDebug() << "Bytes written:" << bytes;
+        _ui->progress->setValue(_ui->progress->value() + bytes);
+    }
+}
+
 void MainWindow::on_connect_clicked() {
     try {
         printVerbose(QString{"connecting to port %1"}.arg(_ui->ports->currentText()));
         _ezGraver = EzGraver::create(_ui->ports->currentText());
         printVerbose("connection established successfully");
         setConnected(true);
+
+        connect(_ezGraver->serialPort().get(), &QSerialPort::bytesWritten, this, &MainWindow::updateProgress);
     } catch(std::runtime_error const& e) {
         printVerbose(QString{"Error: %1"}.arg(e.what()));
     }
@@ -145,7 +155,9 @@ void MainWindow::on_upload_clicked() {
 
     QTimer::singleShot(6000, [this, image] {
         printVerbose("uploading image to EEPROM");
-        _ezGraver->uploadImage(image);
+        _ui->progress->setValue(0);
+        auto bytes = _ezGraver->uploadImage(image);
+        _ui->progress->setMaximum(bytes);
         printVerbose("upload completed");
     });
 }

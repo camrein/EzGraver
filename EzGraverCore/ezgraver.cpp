@@ -78,7 +78,7 @@ void EzGraver::erase() {
 }
 
 #include <QFile>
-void EzGraver::uploadImage(QImage const& originalImage) {
+int EzGraver::uploadImage(QImage const& originalImage) {
     qDebug() << "converting image to bitmap";
     QImage image{originalImage
             .scaled(512, 512)
@@ -89,16 +89,27 @@ void EzGraver::uploadImage(QImage const& originalImage) {
     QByteArray bytes{};
     QBuffer buffer{&bytes};
     image.save(&buffer, "BMP");
-    uploadImage(bytes);
+    return uploadImage(bytes);
 }
 
-void EzGraver::uploadImage(QByteArray const& image) {
+int EzGraver::uploadImage(QByteArray const& image) {
     qDebug() << "uploading image";
-    _transmit(image);
+    for(int i{0}; i < image.size(); i += 32) {
+        int length{32};
+        if(i+length > image.size()) {
+            length = image.size()-i;
+        }
+        _transmit(QByteArray{image.constData()+i, length});
+    }
+    return image.size();
 }
 
 void EzGraver::awaitTransmission(int msecs) {
     _serial->waitForBytesWritten(msecs);
+}
+
+std::shared_ptr<QSerialPort> EzGraver::serialPort() {
+    return _serial;
 }
 
 void EzGraver::_transmit(unsigned char const& data) {
@@ -109,6 +120,7 @@ void EzGraver::_transmit(QByteArray const& data) {
     QString hex{data.count() < 10 ? data.toHex() : ""};
     qDebug() << "transmitting" << data.length() << "bytes:" << hex;
     _serial->write(data);
+    _serial->flush();
 }
 
 EzGraver::~EzGraver() {

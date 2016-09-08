@@ -41,6 +41,7 @@ private slots:
     void on_image_clicked();
 
     void updatePorts();
+    void updateProgress(qint64 bytes);
 
 protected:
     void dragEnterEvent(QDragEnterEvent* event);
@@ -49,6 +50,7 @@ protected:
 private:
     Ui::MainWindow* _ui;
     QTimer _portTimer;
+    QTimer _statusTimer;
     QImage _image;
 
     std::shared_ptr<EzGraver> _ezGraver;

@@ -3,8 +3,6 @@ include(../common.pri)
 QT += core
 QT += gui
 
-CONFIG += c++11
-
 TARGET = EzGraverCli
 CONFIG += console
 CONFIG -= app_bundle
@@ -13,9 +11,9 @@ TEMPLATE = app
 
 SOURCES += main.cpp
 
-win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../EzGraverLib/release/ -lEzGraverLib
-else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../EzGraverLib/debug/ -lEzGraverLib
-else:unix: LIBS += -L$$OUT_PWD/../EzGraverLib/ -lEzGraverLib
+win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../EzGraverCore/release/ -lEzGraverCore
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../EzGraverCore/debug/ -lEzGraverCore
+else:unix: LIBS += -L$$OUT_PWD/../EzGraverCore/ -lEzGraverCore
 
-INCLUDEPATH += $$PWD/../EzGraverLib
-DEPENDPATH += $$PWD/../EzGraverLib
+INCLUDEPATH += $$PWD/../EzGraverCore
+DEPENDPATH += $$PWD/../EzGraverCore

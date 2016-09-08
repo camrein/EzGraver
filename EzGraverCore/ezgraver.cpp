@@ -95,10 +95,7 @@ int EzGraver::uploadImage(QImage const& originalImage) {
 int EzGraver::uploadImage(QByteArray const& image) {
     qDebug() << "uploading image";
     // Data is chunked in order to get at least some progress updates
-    int chunkSize{32};
-    for(int i{0}; i < image.size(); i += chunkSize) {
-        _transmit(image.mid(i, chunkSize));
-    }
+    _transmit(image, 8192);
     return image.size();
 }
 
@@ -115,10 +112,17 @@ void EzGraver::_transmit(unsigned char const& data) {
 }
 
 void EzGraver::_transmit(QByteArray const& data) {
-    QString hex{data.count() < 10 ? data.toHex() : ""};
-    qDebug() << "transmitting" << data.length() << "bytes:" << hex;
+    qDebug() << "transmitting" << data.size() << "bytes:" << data.toHex();
     _serial->write(data);
     _serial->flush();
+}
+
+void EzGraver::_transmit(QByteArray const& data, int chunkSize) {
+    qDebug() << "transmitting" << data.size() << "bytes in chunks of size" << chunkSize;
+    for(int i{0}; i < data.size(); i += chunkSize) {
+        _serial->write(data.mid(i, chunkSize));
+        _serial->flush();
+    }
 }
 
 EzGraver::~EzGraver() {

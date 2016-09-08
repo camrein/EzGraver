@@ -117,6 +117,7 @@ private:
 
     void _transmit(unsigned char const& data);
     void _transmit(QByteArray const& data);
+    void _transmit(QByteArray const& data, int chunkSize);
 
     void _setBurnTime(unsigned char const& burnTime);
 };

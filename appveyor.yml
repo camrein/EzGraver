@@ -13,7 +13,7 @@ install:
 before_build:
   - set EZ_VERSION=%APPVEYOR_REPO_TAG_NAME%
   - cd EzGraverCli & qmake -config release -tp vc -spec win32-msvc2015 EzGraverCli.pro & cd ..
-  - cd EzGraverLib & qmake -config release -tp vc -spec win32-msvc2015 EzGraverLib.pro & cd ..
+  - cd EzGraverCore & qmake -config release -tp vc -spec win32-msvc2015 EzGraverCore.pro & cd ..
   - cd EzGraverUi & qmake -config release -tp vc -spec win32-msvc2015 EzGraverUi.pro & cd ..
   - qmake -config release -tp vc -spec win32-msvc2015 EzGraver.pro
 
@@ -23,10 +23,10 @@ configuration:
 after_build:
   - mkdir deploy
   - copy EzGraverCli\release\EzGraverCli.exe deploy\EzGraverCli.exe
-  - copy EzGraverLib\release\EzGraverLib.dll deploy\EzGraverLib.dll
+  - copy EzGraverCore\release\EzGraverCore.dll deploy\EzGraverCore.dll
   - copy EzGraverUi\release\EzGraverUi.exe deploy\EzGraverUi.exe
   - windeployqt --release --no-translations --no-angle --no-opengl-sw deploy/EzGraverCli.exe
-  - windeployqt --release --no-translations --no-angle --no-opengl-sw deploy/EzGraverLib.dll
+  - windeployqt --release --no-translations --no-angle --no-opengl-sw deploy/EzGraverCore.dll
   - windeployqt --release --no-translations --no-angle --no-opengl-sw deploy/EzGraverUi.exe
   - 7z a EzGraver_win_%arch%.zip .\deploy\*
 

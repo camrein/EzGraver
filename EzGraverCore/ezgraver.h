@@ -1,7 +1,7 @@
-#ifndef EZGRAVERLIB_H
-#define EZGRAVERLIB_H
+#ifndef EZGRAVER_H
+#define EZGRAVER_H
 
-#include "ezgraverlib_global.h"
+#include "ezgravercore_global.h"
 
 #include <QStringList>
 #include <QImage>
@@ -16,7 +16,7 @@ QT_END_NAMESPACE
  * Allows accessing a NEJE engraver using the serial port it was instantiated with.
  * The connection is closed as soon as the object is destroyed.
  */
-struct EZGRAVERLIBSHARED_EXPORT EzGraver {
+struct EZGRAVERCORESHARED_EXPORT EzGraver {
     /*!
      * Creates an instance and connects to the given \a portName.
      *
@@ -115,4 +115,4 @@ private:
     void _setBurnTime(unsigned char const& burnTime);
 };
 
-#endif // EZGRAVERLIB_H
+#endif // EZGRAVER_H

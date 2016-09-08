@@ -22,10 +22,10 @@ build:
     # Deployment
     - mkdir deploy
     - cp EzGraverCli/release/EzGraverCli.exe deploy/
-    - cp EzGraverLib/release/EzGraverLib.dll deploy/
+    - cp EzGraverCore/release/EzGraverCore.dll deploy/
     - cp EzGraverUi/release/EzGraverUi.exe deploy/
     - windeployqt --release --no-translations --no-angle --no-opengl-sw deploy/EzGraverCli.exe
-    - windeployqt --release --no-translations --no-angle --no-opengl-sw deploy/EzGraverLib.dll
+    - windeployqt --release --no-translations --no-angle --no-opengl-sw deploy/EzGraverCore.dll
     - windeployqt --release --no-translations --no-angle --no-opengl-sw deploy/EzGraverUi.exe
     # Add missing libraries. MSYS libs have to be added as well.
     # Generate final zip

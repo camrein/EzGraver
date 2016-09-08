@@ -3,15 +3,15 @@ include(../common.pri)
 QT += gui
 QT += serialport
 
-TARGET = EzGraverLib
+TARGET = EzGraverCore
 TEMPLATE = lib
 
-DEFINES += EZGRAVERLIB_LIBRARY
+DEFINES += EZGRAVERCORE_LIBRARY
 
 SOURCES += ezgraver.cpp
 
 HEADERS += ezgraver.h\
-        ezgraverlib_global.h
+        ezgravercore_global.h
 
 unix {
     target.path = /usr/lib

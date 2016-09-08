@@ -1,6 +1,6 @@
 TEMPLATE = subdirs
 
 SUBDIRS += \
-    EzGraverLib \
+    EzGraverCore \
     EzGraverCli \
     EzGraverUi

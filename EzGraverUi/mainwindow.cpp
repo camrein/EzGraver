@@ -10,11 +10,10 @@
 #include <QDebug>
 
 #include <stdexcept>
-#include <functional>
 
 MainWindow::MainWindow(QWidget* parent)
         :  QMainWindow{parent}, _ui{new Ui::MainWindow},
-          _portTimer{}, _statusTimer{}, _image{}, _ezGraver{}, _connected{false} {
+          _portTimer{}, _statusTimer{}, _image{}, _ezGraver{}, _bytesWrittenProcessor{[](qint64){}}, _connected{false} {
     _ui->setupUi(this);
     setAcceptDrops(true);
 
@@ -101,10 +100,19 @@ void MainWindow::setConnected(bool connected) {
     emit connectedChanged(connected);
 }
 
+void MainWindow::bytesWritten(qint64 bytes) {
+    _bytesWrittenProcessor(bytes);
+}
+
 void MainWindow::updateProgress(qint64 bytes) {
     if(_ezGraver) {
         qDebug() << "Bytes written:" << bytes;
-        _ui->progress->setValue(_ui->progress->value() + bytes);
+        auto progress = _ui->progress->value() + bytes;
+        _ui->progress->setValue(progress);
+        if(progress >= _ui->progress->maximum()) {
+            printVerbose("upload completed");
+            _bytesWrittenProcessor = [](qint64){};
+        }
     }
 }
 
@@ -115,7 +123,7 @@ void MainWindow::on_connect_clicked() {
         printVerbose("connection established successfully");
         setConnected(true);
 
-        connect(_ezGraver->serialPort().get(), &QSerialPort::bytesWritten, this, &MainWindow::updateProgress);
+        connect(_ezGraver->serialPort().get(), &QSerialPort::bytesWritten, this, &MainWindow::bytesWritten);
     } catch(std::runtime_error const& e) {
         printVerbose(QString{"Error: %1"}.arg(e.what()));
     }
@@ -148,17 +156,16 @@ void MainWindow::on_down_clicked() {
 }
 
 void MainWindow::on_upload_clicked() {
-    QImage image{_ui->image->pixmap()->toImage()};
-
     printVerbose("erasing EEPROM");
     _ezGraver->erase();
 
+    QImage image{_ui->image->pixmap()->toImage()};
     QTimer::singleShot(6000, [this, image] {
+        _bytesWrittenProcessor = std::bind(&MainWindow::updateProgress, this, std::placeholders::_1);
         printVerbose("uploading image to EEPROM");
-        _ui->progress->setValue(0);
         auto bytes = _ezGraver->uploadImage(image);
+        _ui->progress->setValue(0);
         _ui->progress->setMaximum(bytes);
-        printVerbose("upload completed");
     });
 }
 

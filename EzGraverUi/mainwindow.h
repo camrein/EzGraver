@@ -5,6 +5,7 @@
 #include <QTimer>
 
 #include <memory>
+#include <functional>
 
 #include "ezgraver.h"
 
@@ -41,6 +42,7 @@ private slots:
     void on_image_clicked();
 
     void updatePorts();
+    void bytesWritten(qint64 bytes);
     void updateProgress(qint64 bytes);
 
 protected:
@@ -54,6 +56,7 @@ private:
     QImage _image;
 
     std::shared_ptr<EzGraver> _ezGraver;
+    std::function<void(qint64)> _bytesWrittenProcessor;
     bool _connected;
 
     void initBindings();

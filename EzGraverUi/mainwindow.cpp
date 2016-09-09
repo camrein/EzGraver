@@ -160,13 +160,24 @@ void MainWindow::on_upload_clicked() {
     _ezGraver->erase();
 
     QImage image{_ui->image->pixmap()->toImage()};
-    QTimer::singleShot(6000, [this, image] {
+    QTimer* eraseProgressTimer = new QTimer{this};
+    _ui->progress->setValue(0);
+    _ui->progress->setMaximum(6000);
+    connect(eraseProgressTimer, &QTimer::timeout, [this, eraseProgressTimer, image] {
+        auto value = _ui->progress->value() + 200;
+        _ui->progress->setValue(value);
+        if(value < 6000) {
+            return;
+        }
+        eraseProgressTimer->stop();
+
         _bytesWrittenProcessor = std::bind(&MainWindow::updateProgress, this, std::placeholders::_1);
         printVerbose("uploading image to EEPROM");
         auto bytes = _ezGraver->uploadImage(image);
         _ui->progress->setValue(0);
         _ui->progress->setMaximum(bytes);
     });
+    eraseProgressTimer->start(200);
 }
 
 void MainWindow::on_preview_clicked() {

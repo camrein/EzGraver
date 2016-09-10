@@ -162,11 +162,11 @@ void MainWindow::on_upload_clicked() {
     QImage image{_ui->image->pixmap()->toImage()};
     QTimer* eraseProgressTimer = new QTimer{this};
     _ui->progress->setValue(0);
-    _ui->progress->setMaximum(6000);
+    _ui->progress->setMaximum(EzGraver::EraseTimeMs);
     connect(eraseProgressTimer, &QTimer::timeout, [this, eraseProgressTimer, image] {
         auto value = _ui->progress->value() + 200;
         _ui->progress->setValue(value);
-        if(value < 6000) {
+        if(value < EzGraver::EraseTimeMs) {
             return;
         }
         eraseProgressTimer->stop();

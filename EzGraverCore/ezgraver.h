@@ -14,6 +14,9 @@
  * The connection is closed as soon as the object is destroyed.
  */
 struct EZGRAVERCORESHARED_EXPORT EzGraver {
+    /*! The time required to erase the EEPROM in milliseconds. */
+    static int const EraseTimeMs = 6000;
+
     /*!
      * Creates an instance and connects to the given \a portName.
      *

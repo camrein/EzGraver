@@ -163,17 +163,22 @@ void MainWindow::on_upload_clicked() {
     QTimer* eraseProgressTimer {new QTimer{this}};
     _ui->progress->setValue(0);
     _ui->progress->setMaximum(EzGraver::EraseTimeMs);
-    connect(eraseProgressTimer, &QTimer::timeout, [this, eraseProgressTimer, image] {
-        auto value = _ui->progress->value() + EraseProgressDelay;
-        _ui->progress->setValue(value);
-        if(value < EzGraver::EraseTimeMs) {
-            return;
-        }
-        eraseProgressTimer->stop();
 
-        _uploadImage(image);
-    });
+    auto eraseProgress = std::bind(&MainWindow::_eraseProgressed, this, eraseProgressTimer, image);
+    connect(eraseProgressTimer, &QTimer::timeout, eraseProgress);
     eraseProgressTimer->start(EraseProgressDelay);
+}
+
+void MainWindow::_eraseProgressed(QTimer* eraseProgressTimer, QImage const& image) {
+    auto value = _ui->progress->value() + EraseProgressDelay;
+    _ui->progress->setValue(value);
+    if(value < EzGraver::EraseTimeMs) {
+        //QTimer::singleShot()
+        return;
+    }
+    eraseProgressTimer->stop();
+
+    _uploadImage(image);
 }
 
 void MainWindow::_uploadImage(QImage const& image) {

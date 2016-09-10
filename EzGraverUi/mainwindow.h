@@ -64,12 +64,13 @@ private:
     std::function<void(qint64)> _bytesWrittenProcessor;
     bool _connected;
 
-    void initBindings();
-    void initConversionFlags();
+    void _initBindings();
+    void _initConversionFlags();
 
-    void setConnected(bool connected);
-    void printVerbose(QString const& verbose);
-    void loadImage(QString const& fileName);
+    void _setConnected(bool connected);
+    void _printVerbose(QString const& verbose);
+    void _loadImage(QString const& fileName);
+    void _uploadImage(QImage const& image);
 };
 
 #endif // MAINWINDOW_H

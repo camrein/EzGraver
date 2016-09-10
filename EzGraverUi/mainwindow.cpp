@@ -107,14 +107,12 @@ void MainWindow::bytesWritten(qint64 bytes) {
 }
 
 void MainWindow::updateProgress(qint64 bytes) {
-    if(_ezGraver) {
-        qDebug() << "Bytes written:" << bytes;
-        auto progress = _ui->progress->value() + bytes;
-        _ui->progress->setValue(progress);
-        if(progress >= _ui->progress->maximum()) {
-            _printVerbose("upload completed");
-            _bytesWrittenProcessor = [](qint64){};
-        }
+    qDebug() << "Bytes written:" << bytes;
+    auto progress = _ui->progress->value() + bytes;
+    _ui->progress->setValue(progress);
+    if(progress >= _ui->progress->maximum()) {
+        _printVerbose("upload completed");
+        _bytesWrittenProcessor = [](qint64){};
     }
 }
 

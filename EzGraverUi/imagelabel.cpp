@@ -2,7 +2,7 @@
 
 #include <QPainter>
 
-#include "EZGraver.h"
+#include "ezgraver.h"
 
 ImageLabel::ImageLabel(QWidget* parent) : ClickLabel{parent}, _image{}, _flags{Qt::DiffuseDither} {}
 ImageLabel::~ImageLabel() {}
@@ -46,10 +46,8 @@ bool ImageLabel::imageLoaded() const {
     return !_image.isNull();
 }
 
-#include <QDebug>
 void ImageLabel::setImageDimensions(QSize const& dimensions) {
     auto span = this->lineWidth()*2;
-    qDebug() << "span:" << span;
     setMinimumWidth(dimensions.width() + span);
     setMinimumHeight(dimensions.height() + span);
 }

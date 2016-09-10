@@ -77,7 +77,6 @@ void EzGraver::erase() {
     _transmit(QByteArray{8, '\xFE'});
 }
 
-#include <QFile>
 int EzGraver::uploadImage(QImage const& originalImage) {
     qDebug() << "converting image to bitmap";
     QImage image{originalImage

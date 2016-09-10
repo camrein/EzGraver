@@ -58,7 +58,7 @@ macdeployqt EzGraverUi/EzGraverUi.app -dmg
 
 
 ## Ubuntu
-Before loading QT from the official ubuntntu repositories, it is recommended to ensure that they contain the required version.
+Before loading QT from the official ubuntu repositories, it is recommended to ensure that they contain the required version.
 ```bash
 apt-get install build-essential qt5-qmake qtbase5-dev libqt5serialport5-dev
 ```

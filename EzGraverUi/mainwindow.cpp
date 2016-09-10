@@ -7,29 +7,31 @@
 #include <QBitmap>
 #include <QIcon>
 #include <QThreadPool>
+#include <QDebug>
 
 #include <stdexcept>
-#include <functional>
 
 MainWindow::MainWindow(QWidget* parent)
         :  QMainWindow{parent}, _ui{new Ui::MainWindow},
-          _portTimer{}, _image{}, _ezGraver{}, _connected{false} {
+          _portTimer{}, _statusTimer{}, _image{}, _ezGraver{}, _bytesWrittenProcessor{[](qint64){}}, _connected{false} {
     _ui->setupUi(this);
     setAcceptDrops(true);
 
     connect(&_portTimer, &QTimer::timeout, this, &MainWindow::updatePorts);
-    _portTimer.start(1000);
+    _portTimer.start(PortUpdateDelay);
 
-    initBindings();
-    initConversionFlags();
-    setConnected(false);
+    _initBindings();
+    _initConversionFlags();
+    _setConnected(false);
+
+    _ui->image->setImageDimensions(QSize{EzGraver::ImageWidth, EzGraver::ImageHeight});
 }
 
 MainWindow::~MainWindow() {
     delete _ui;
 }
 
-void MainWindow::initBindings() {
+void MainWindow::_initBindings() {
     connect(_ui->burnTime, &QSlider::valueChanged, [this](int const& v) { _ui->burnTimeLabel->setText(QString::number(v)); });
 
     connect(this, &MainWindow::connectedChanged, _ui->ports, &QComboBox::setDisabled);
@@ -55,14 +57,14 @@ void MainWindow::initBindings() {
     connect(_ui->image, &ImageLabel::imageLoadedChanged, uploadEnabled);
 }
 
-void MainWindow::initConversionFlags() {
+void MainWindow::_initConversionFlags() {
     _ui->conversionFlags->addItem("DiffuseDither", Qt::DiffuseDither);
     _ui->conversionFlags->addItem("OrderedDither", Qt::OrderedDither);
     _ui->conversionFlags->addItem("ThresholdDither", Qt::ThresholdDither);
     _ui->conversionFlags->setCurrentIndex(0);
 }
 
-void MainWindow::printVerbose(QString const& verbose) {
+void MainWindow::_printVerbose(QString const& verbose) {
     _ui->verbose->appendPlainText(verbose);
 }
 
@@ -79,12 +81,12 @@ void MainWindow::updatePorts() {
     }
 }
 
-void MainWindow::loadImage(QString const& fileName) {
-    printVerbose(QString{"loading image: %1"}.arg(fileName));
+void MainWindow::_loadImage(QString const& fileName) {
+    _printVerbose(QString{"loading image: %1"}.arg(fileName));
 
     QImage image{};
     if(!image.load(fileName)) {
-        printVerbose("failed to load image");
+        _printVerbose("failed to load image");
         return;
     }
 
@@ -95,24 +97,40 @@ bool MainWindow::connected() const {
     return _connected;
 }
 
-void MainWindow::setConnected(bool connected) {
+void MainWindow::_setConnected(bool connected) {
     _connected = connected;
     emit connectedChanged(connected);
 }
 
+void MainWindow::bytesWritten(qint64 bytes) {
+    _bytesWrittenProcessor(bytes);
+}
+
+void MainWindow::updateProgress(qint64 bytes) {
+    qDebug() << "Bytes written:" << bytes;
+    auto progress = _ui->progress->value() + bytes;
+    _ui->progress->setValue(progress);
+    if(progress >= _ui->progress->maximum()) {
+        _printVerbose("upload completed");
+        _bytesWrittenProcessor = [](qint64){};
+    }
+}
+
 void MainWindow::on_connect_clicked() {
     try {
-        printVerbose(QString{"connecting to port %1"}.arg(_ui->ports->currentText()));
+        _printVerbose(QString{"connecting to port %1"}.arg(_ui->ports->currentText()));
         _ezGraver = EzGraver::create(_ui->ports->currentText());
-        printVerbose("connection established successfully");
-        setConnected(true);
+        _printVerbose("connection established successfully");
+        _setConnected(true);
+
+        connect(_ezGraver->serialPort().get(), &QSerialPort::bytesWritten, this, &MainWindow::bytesWritten);
     } catch(std::runtime_error const& e) {
-        printVerbose(QString{"Error: %1"}.arg(e.what()));
+        _printVerbose(QString{"Error: %1"}.arg(e.what()));
     }
 }
 
 void MainWindow::on_home_clicked() {
-    printVerbose("moving to home");
+    _printVerbose("moving to home");
     _ezGraver->home();
 }
 
@@ -125,7 +143,7 @@ void MainWindow::on_left_clicked() {
 }
 
 void MainWindow::on_center_clicked() {
-    printVerbose("moving to center");
+    _printVerbose("moving to center");
     _ezGraver->center();
 }
 
@@ -138,49 +156,69 @@ void MainWindow::on_down_clicked() {
 }
 
 void MainWindow::on_upload_clicked() {
-    QImage image{_ui->image->pixmap()->toImage()};
-
-    printVerbose("erasing EEPROM");
+    _printVerbose("erasing EEPROM");
     _ezGraver->erase();
 
-    QTimer::singleShot(6000, [this, image] {
-        printVerbose("uploading image to EEPROM");
-        _ezGraver->uploadImage(image);
-        printVerbose("upload completed");
-    });
+    QImage image{_ui->image->pixmap()->toImage()};
+    QTimer* eraseProgressTimer{new QTimer{this}};
+    _ui->progress->setValue(0);
+    _ui->progress->setMaximum(EzGraver::EraseTimeMs);
+
+    auto eraseProgress = std::bind(&MainWindow::_eraseProgressed, this, eraseProgressTimer, image);
+    connect(eraseProgressTimer, &QTimer::timeout, eraseProgress);
+    eraseProgressTimer->start(EraseProgressDelay);
+}
+
+void MainWindow::_eraseProgressed(QTimer* eraseProgressTimer, QImage const& image) {
+    auto value = _ui->progress->value() + EraseProgressDelay;
+    _ui->progress->setValue(value);
+    if(value < EzGraver::EraseTimeMs) {
+        return;
+    }
+    eraseProgressTimer->stop();
+
+    _uploadImage(image);
+}
+
+void MainWindow::_uploadImage(QImage const& image) {
+    _bytesWrittenProcessor = std::bind(&MainWindow::updateProgress, this, std::placeholders::_1);
+    _printVerbose("uploading image to EEPROM");
+    auto bytes = _ezGraver->uploadImage(image);
+    _ui->progress->setValue(0);
+    _ui->progress->setMaximum(bytes);
 }
 
 void MainWindow::on_preview_clicked() {
-    printVerbose("drawing preview");
+    _printVerbose("drawing preview");
     _ezGraver->preview();
 }
 
 void MainWindow::on_start_clicked() {
-    printVerbose(QString{"starting engrave process with burn time %1"}.arg(_ui->burnTime->value()));
+    _printVerbose(QString{"starting engrave process with burn time %1"}.arg(_ui->burnTime->value()));
     _ezGraver->start(_ui->burnTime->value());
 }
 
 void MainWindow::on_pause_clicked() {
-    printVerbose("pausing engrave process");
+    _printVerbose("pausing engrave process");
     _ezGraver->pause();
 }
 
 void MainWindow::on_reset_clicked() {
-    printVerbose("resetting engraver");
+    _printVerbose("resetting engraver");
     _ezGraver->reset();
 }
 
 void MainWindow::on_disconnect_clicked() {
-    printVerbose("disconnecting");
-    setConnected(false);
+    _printVerbose("disconnecting");
+    _setConnected(false);
     _ezGraver.reset();
-    printVerbose("disconnected");
+    _printVerbose("disconnected");
 }
 
 void MainWindow::on_image_clicked() {
     auto fileName = QFileDialog::getOpenFileName(this, "Open Image", "", "Images (*.png *.jpeg *.jpg *.bmp)");
     if(!fileName.isNull()) {
-        loadImage(fileName);
+        _loadImage(fileName);
     }
 }
 
@@ -192,6 +230,6 @@ void MainWindow::dragEnterEvent(QDragEnterEvent* event) {
 
 void MainWindow::dropEvent(QDropEvent* event) {
     QString fileName{event->mimeData()->urls()[0].toLocalFile()};
-    loadImage(fileName);
+    _loadImage(fileName);
 }
 

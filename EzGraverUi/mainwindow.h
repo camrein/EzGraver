@@ -5,6 +5,7 @@
 #include <QTimer>
 
 #include <memory>
+#include <functional>
 
 #include "ezgraver.h"
 
@@ -41,25 +42,36 @@ private slots:
     void on_image_clicked();
 
     void updatePorts();
+    void bytesWritten(qint64 bytes);
+    void updateProgress(qint64 bytes);
 
 protected:
     void dragEnterEvent(QDragEnterEvent* event);
     void dropEvent(QDropEvent* event);
 
 private:
+    /*! The delay between each port list update. */
+    static int const PortUpdateDelay{1000};
+    /*! The delay between each progress update while erasing the EEPROM. */
+    static int const EraseProgressDelay{500};
+
     Ui::MainWindow* _ui;
     QTimer _portTimer;
+    QTimer _statusTimer;
     QImage _image;
 
     std::shared_ptr<EzGraver> _ezGraver;
+    std::function<void(qint64)> _bytesWrittenProcessor;
     bool _connected;
 
-    void initBindings();
-    void initConversionFlags();
+    void _initBindings();
+    void _initConversionFlags();
 
-    void setConnected(bool connected);
-    void printVerbose(QString const& verbose);
-    void loadImage(QString const& fileName);
+    void _setConnected(bool connected);
+    void _printVerbose(QString const& verbose);
+    void _loadImage(QString const& fileName);
+    void _eraseProgressed(QTimer* eraseProgressTimer, QImage const& image);
+    void _uploadImage(QImage const& image);
 };
 
 #endif // MAINWINDOW_H

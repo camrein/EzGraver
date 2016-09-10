@@ -5,18 +5,25 @@
 
 #include <QStringList>
 #include <QImage>
+#include <QSerialPort>
+#include <QSize>
 
 #include <memory>
-
-QT_BEGIN_NAMESPACE
-class QSerialPort;
-QT_END_NAMESPACE
 
 /*!
  * Allows accessing a NEJE engraver using the serial port it was instantiated with.
  * The connection is closed as soon as the object is destroyed.
  */
 struct EZGRAVERCORESHARED_EXPORT EzGraver {
+    /*! The time required to erase the EEPROM in milliseconds. */
+    static int const EraseTimeMs{6000};
+
+    /*! The image width */
+    static int const ImageWidth{512};
+
+    /*! The image height */
+    static int const ImageHeight{512};
+
     /*!
      * Creates an instance and connects to the given \a portName.
      *
@@ -84,16 +91,18 @@ struct EZGRAVERCORESHARED_EXPORT EzGraver {
      * mirrored and converted to a monochrome bitmap.
      *
      * \param image The image to upload to the EEPROM for engraving.
+     * \return The number of bytes being sent to the device.
      */
-    void uploadImage(QImage const& image);
+    int uploadImage(QImage const& image);
 
     /*!
      * Uploads any given \a image byte array to the EEPROM. It has to be a monochrome
      * bitmap of the dimensions 512x512. Every white pixel is being engraved.
      *
      * \param image The image byte array to upload to the EEPROM.
+     * \return The number of bytes being sent to the device.
      */
-    void uploadImage(QByteArray const& image);
+    int uploadImage(QByteArray const& image);
 
     /*!
      * Waits until the current serial port buffer is fully written to the device.
@@ -101,6 +110,13 @@ struct EZGRAVERCORESHARED_EXPORT EzGraver {
      * \param msecs The time in milliseconds to await the transmission to complete.
      */
     void awaitTransmission(int msecs=-1);
+
+    /*!
+     * Gets the serialport used by the EzGraver instance.
+     *
+     * \return The serial port used.
+     */
+    std::shared_ptr<QSerialPort> serialPort();
 
     EzGraver() = delete;
     virtual ~EzGraver();
@@ -111,6 +127,7 @@ private:
 
     void _transmit(unsigned char const& data);
     void _transmit(QByteArray const& data);
+    void _transmit(QByteArray const& data, int chunkSize);
 
     void _setBurnTime(unsigned char const& burnTime);
 };

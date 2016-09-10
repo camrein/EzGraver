@@ -18,11 +18,13 @@ MainWindow::MainWindow(QWidget* parent)
     setAcceptDrops(true);
 
     connect(&_portTimer, &QTimer::timeout, this, &MainWindow::updatePorts);
-    _portTimer.start(1000);
+    _portTimer.start(PortUpdateDelay);
 
     initBindings();
     initConversionFlags();
     setConnected(false);
+
+    _ui->image->setImageDimensions(QSize{EzGraver::ImageWidth, EzGraver::ImageHeight});
 }
 
 MainWindow::~MainWindow() {
@@ -164,7 +166,7 @@ void MainWindow::on_upload_clicked() {
     _ui->progress->setValue(0);
     _ui->progress->setMaximum(EzGraver::EraseTimeMs);
     connect(eraseProgressTimer, &QTimer::timeout, [this, eraseProgressTimer, image] {
-        auto value = _ui->progress->value() + 200;
+        auto value = _ui->progress->value() + EraseProgressDelay;
         _ui->progress->setValue(value);
         if(value < EzGraver::EraseTimeMs) {
             return;
@@ -177,7 +179,7 @@ void MainWindow::on_upload_clicked() {
         _ui->progress->setValue(0);
         _ui->progress->setMaximum(bytes);
     });
-    eraseProgressTimer->start(200);
+    eraseProgressTimer->start(EraseProgressDelay);
 }
 
 void MainWindow::on_preview_clicked() {

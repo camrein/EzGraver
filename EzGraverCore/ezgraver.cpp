@@ -81,7 +81,7 @@ void EzGraver::erase() {
 int EzGraver::uploadImage(QImage const& originalImage) {
     qDebug() << "converting image to bitmap";
     QImage image{originalImage
-            .scaled(512, 512)
+            .scaled(ImageWidth, ImageHeight)
             .mirrored()
             .convertToFormat(QImage::Format_Mono)};
     image.invertPixels();

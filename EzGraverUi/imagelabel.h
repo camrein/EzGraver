@@ -59,6 +59,14 @@ public:
      * \return Returns \c true if an image is loaded.
      */
     bool imageLoaded() const;
+
+    /*!
+     * Sets the image dimensions. This enforces minimum dimensions of the
+     * component with respect to the border width.
+     *
+     * \param dimensions The image dimensions.
+     */
+    void setImageDimensions(QSize const& dimensions);
 signals:
     /*!
      * Fired as soon as the image has been changed.

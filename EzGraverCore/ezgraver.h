@@ -6,6 +6,7 @@
 #include <QStringList>
 #include <QImage>
 #include <QSerialPort>
+#include <QSize>
 
 #include <memory>
 
@@ -15,7 +16,13 @@
  */
 struct EZGRAVERCORESHARED_EXPORT EzGraver {
     /*! The time required to erase the EEPROM in milliseconds. */
-    static int const EraseTimeMs = 6000;
+    static int const EraseTimeMs{6000};
+
+    /*! The image width */
+    static int const ImageWidth{512};
+
+    /*! The image height */
+    static int const ImageHeight{512};
 
     /*!
      * Creates an instance and connects to the given \a portName.

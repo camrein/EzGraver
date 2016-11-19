@@ -50,7 +50,7 @@ qmake -config release EzGraver.pro
 make
 ```
 
-Generate a *.dmg file for deployment. The install step is used to ensure that the dependencies (namely EzGraverCore) is found.
+Generate a *.dmg file for deployment. The install step is used to ensure that the dependencies (namely EzGraverCore) are found.
 ```bash
 make install
 macdeployqt EzGraverUi/EzGraverUi.app -dmg

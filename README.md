@@ -13,6 +13,8 @@ On all platforms (Linux, OSX and Windows), it is required that the proper driver
 
 Additionally, Windows requires the installation of [Visual C++ Redistributable for Visual Studio 2015](https://www.microsoft.com/en-us/download/details.aspx?id=48145) too. Otherwise, errors like *VCRUNTIME140.dll* or *MSVCP140.dll* could not be found will be shown.
 
+Linux may require to run EzGraver with extended privileges. This possibly identifies itself with a *permission denied* error. To gain access to the serial device, add the user to the group of allowed serialport users (*dialout* for Ubuntu).
+
 # Command Line Interface
 Beside the graphical user interface, EzGraver provides a pure command line interface too.
 ```bash

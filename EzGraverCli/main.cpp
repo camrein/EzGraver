@@ -33,13 +33,13 @@ void showAvailablePorts() {
     std::cout << '\n';
 }
 
-void uploadImage(std::shared_ptr<EzGraver>& engraver, QStringList const& arguments) {
-    if(arguments.size() < 4) {
+void uploadImage(std::shared_ptr<EzGraver>& engraver, QList<QString> const& arguments) {
+    if(arguments.size() < 2) {
         std::cout << "No image provided\n";
         return;
     }
 
-    auto fileName = arguments[3];
+    auto fileName = arguments[1];
     QImage image{};
     if(!image.load(fileName)) {
         std::cout << "Error while loading image '" << fileName << "'\n";
@@ -55,31 +55,11 @@ void uploadImage(std::shared_ptr<EzGraver>& engraver, QStringList const& argumen
     engraver->uploadImage(image);
 }
 
-void handleArguments(QStringList const& arguments) {
-    if(arguments.size() < 2) {
-        showHelp();
-        return;
-    }
-
-    auto argument = arguments[1][0].toLatin1();
-    switch(argument) {
-    case 'a':
-        showAvailablePorts();
-        return;
-    case 'v':
-        std::cout << "EzGraver " << EZ_VERSION << '\n';
-        return;
-    }
-
-    if(arguments.size() < 3) {
-        showHelp();
-        return;
-    }
-
+void processCommand(char const& command, QList<QString> const& arguments) {
     try {
-        std::shared_ptr<EzGraver> engraver{EzGraver::create(arguments[2])};
+        std::shared_ptr<EzGraver> engraver{EzGraver::create(arguments[0])};
 
-        switch(argument) {
+        switch(command) {
         case 'h':
             engraver->home();
             break;
@@ -99,7 +79,7 @@ void handleArguments(QStringList const& arguments) {
             uploadImage(engraver, arguments);
             break;
         default:
-            std::cout << "Unknown argument: '" << argument << "'\n";
+            std::cout << "Unknown command: '" << command << "'\n";
             showHelp();
         }
 
@@ -107,6 +87,30 @@ void handleArguments(QStringList const& arguments) {
     } catch(std::exception const& e) {
         std::cout << "Error: " << e.what() << '\n';
     }
+}
+
+void handleArguments(QStringList const& arguments) {
+    if(arguments.size() < 2) {
+        showHelp();
+        return;
+    }
+
+    auto command = arguments[1][0].toLatin1();
+    switch(command) {
+    case 'a':
+        showAvailablePorts();
+        return;
+    case 'v':
+        std::cout << "EzGraver " << EZ_VERSION << '\n';
+        return;
+    }
+
+    if(arguments.size() < 3) {
+        showHelp();
+        return;
+    }
+
+    processCommand(command, arguments.mid(2));
 }
 
 int main(int argc, char* argv[]) {

@@ -52,7 +52,6 @@ void ImageLabel::setLayer(int const& layer) {
     emit layerChanged(layer);
 }
 
-#include <QDebug>
 void ImageLabel::updateDisplayedImage() {
     if(!imageLoaded()) {
         return;
@@ -75,8 +74,8 @@ QVector<QRgb> ImageLabel::_colorTable() {
 
     int i{0};
     std::generate(colorTable.begin(), colorTable.end(), [&i] {
-      int gray = (256 / MaxGrayscaleLayers) * (i++);
-      return qRgb(gray, gray, gray);;
+      int gray = (256 / (MaxGrayscaleLayers-1)) * (i++);
+      return qRgb(gray, gray, gray);
     });
     colorTable.push_back(qRgb(255, 255, 255));
 

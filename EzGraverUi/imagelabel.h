@@ -7,6 +7,7 @@ class ImageLabel : public ClickLabel {
     Q_OBJECT
     Q_PROPERTY(QImage image READ image WRITE setImage NOTIFY imageChanged)
     Q_PROPERTY(Qt::ImageConversionFlags conversionFlags READ conversionFlags WRITE setConversionFlags NOTIFY conversionFlagsChanged)
+    Q_PROPERTY(bool grayscale READ grayscale WRITE setGrayscale NOTIFY grayscaleChanged)
     Q_PROPERTY(bool imageLoaded READ imageLoaded NOTIFY imageLoadedChanged)
 
 public:
@@ -54,6 +55,34 @@ public:
     void setConversionFlags(Qt::ImageConversionFlags const& flags);
 
     /*!
+     * Gets if grayscale is enabled.
+     *
+     * \return \c true if grayscale is enabled.
+     */
+    bool grayscale() const;
+
+    /*!
+     * Enables/disables the grayscale setting of the image.
+     *
+     * \param enabled \c true if the image should be handled as grayscale.
+     */
+    void setGrayscale(bool const& enabled);
+
+    /*!
+     * Gets the currently selected grayscale layer.
+     *
+     * \return The currently selected grayscale layer.
+     */
+    int layer() const;
+
+    /*!
+     * Changes the displayed grayscale layer to the provided one.
+     *
+     * \param layer The layer to display.
+     */
+    void setLayer(int const& layer);
+
+    /*!
      * Gets if an image has been loaded.
      *
      * \return Returns \c true if an image is loaded.
@@ -83,6 +112,20 @@ signals:
     void conversionFlagsChanged(Qt::ImageConversionFlags const& flags);
 
     /*!
+     * Fired as soon as grayscale has been enabled or disabled.
+     *
+     * \param enabled \c true if grayscale has been enabled.
+     */
+    void grayscaleChanged(bool const& enabled);
+
+    /*!
+     * Fired as soon as the layer of the grayscale image was changed.
+     *
+     * \param layer The currently selected layer.
+     */
+    void layerChanged(int const& layer);
+
+    /*!
      * Fired as soon as an image has been loaded.
      *
      * \param imageLoaded \c true if an image is loaded.
@@ -91,6 +134,8 @@ signals:
 private:
     QImage _image;
     Qt::ImageConversionFlags _flags;
+    bool _grayscale;
+    int _layer;
 
     void updateDisplayedImage();
 };

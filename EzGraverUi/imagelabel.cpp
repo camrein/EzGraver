@@ -2,6 +2,8 @@
 
 #include <QPainter>
 
+#include <algorithm>
+
 #include "ezgraver.h"
 
 ImageLabel::ImageLabel(QWidget* parent) : ClickLabel{parent}, _image{}, _flags{Qt::DiffuseDither},
@@ -50,6 +52,7 @@ void ImageLabel::setLayer(int const& layer) {
     emit layerChanged(layer);
 }
 
+#include <QDebug>
 void ImageLabel::updateDisplayedImage() {
     if(!imageLoaded()) {
         return;
@@ -61,13 +64,23 @@ void ImageLabel::updateDisplayedImage() {
     QPainter painter{&image};
     painter.drawImage(0, 0, _image.scaled(image.size()));
 
-    if(_grayscale) {
-        // TODO limit the number of levels to 8.
-        // TODO split into unique layers and allow displaying them separately.
-        setPixmap(QPixmap::fromImage(image.convertToFormat(QImage::Format_Grayscale8, _flags)));
-    } else {
-        setPixmap(QPixmap::fromImage(image.convertToFormat(QImage::Format_Mono, _flags)));
-    }
+    auto rendered = _grayscale
+            ? QPixmap::fromImage(image.convertToFormat(QImage::Format_Indexed8, _colorTable(), _flags))
+            : QPixmap::fromImage(image.convertToFormat(QImage::Format_Mono, _flags));
+    setPixmap(rendered);
+}
+
+QVector<QRgb> ImageLabel::_colorTable() {
+    QVector<QRgb> colorTable(MaxGrayscaleLayers - 1);
+
+    int i{0};
+    std::generate(colorTable.begin(), colorTable.end(), [&i] {
+      int gray = (256 / MaxGrayscaleLayers) * (i++);
+      return qRgb(gray, gray, gray);;
+    });
+    colorTable.push_back(qRgb(255, 255, 255));
+
+    return colorTable;
 }
 
 bool ImageLabel::imageLoaded() const {

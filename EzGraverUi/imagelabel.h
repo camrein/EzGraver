@@ -11,6 +11,9 @@ class ImageLabel : public ClickLabel {
     Q_PROPERTY(bool imageLoaded READ imageLoaded NOTIFY imageLoadedChanged)
 
 public:
+    /*! The maximum number of grayscale layers. */
+    static int const MaxGrayscaleLayers{8};
+
     /*!
      * Creates a new instance with the given \a parent.
      *
@@ -138,6 +141,7 @@ private:
     int _layer;
 
     void updateDisplayedImage();
+    QVector<QRgb> _colorTable();
 };
 
 #endif // IMAGELABEL_H

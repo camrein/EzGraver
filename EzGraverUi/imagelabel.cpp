@@ -64,12 +64,29 @@ void ImageLabel::updateDisplayedImage() {
     painter.drawImage(0, 0, _image.scaled(image.size()));
 
     auto rendered = _grayscale
-            ? QPixmap::fromImage(image.convertToFormat(QImage::Format_Indexed8, _colorTable(), _flags))
+            ? QPixmap::fromImage(_createGrayscaleImage(image))
             : QPixmap::fromImage(image.convertToFormat(QImage::Format_Mono, _flags));
     setPixmap(rendered);
 }
 
-QVector<QRgb> ImageLabel::_colorTable() {
+QImage ImageLabel::_createGrayscaleImage(QImage const& original) const {
+    auto colorTable = _createColorTable();
+    QImage grayed = original.convertToFormat(QImage::Format_Indexed8, colorTable, _flags);
+    if(_layer == 0) {
+        return grayed;
+    }
+
+    auto visibleLayer = _layer-1;
+    int i{0};
+    std::transform(colorTable.begin(), colorTable.end(), colorTable.begin(), [&i,visibleLayer](QRgb) {
+        return i++ == visibleLayer ? qRgb(0, 0, 0) : qRgb(255, 255, 255);
+    });
+    grayed.setColorTable(colorTable);
+
+    return grayed.convertToFormat(QImage::Format_Mono, _flags);
+}
+
+QVector<QRgb> ImageLabel::_createColorTable() const {
     QVector<QRgb> colorTable(MaxGrayscaleLayers - 1);
 
     int i{0};

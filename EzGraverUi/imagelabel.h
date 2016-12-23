@@ -141,7 +141,8 @@ private:
     int _layer;
 
     void updateDisplayedImage();
-    QVector<QRgb> _colorTable();
+    QImage _createGrayscaleImage(QImage const& original) const;
+    QVector<QRgb> _createColorTable() const;
 };
 
 #endif // IMAGELABEL_H

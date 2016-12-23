@@ -53,7 +53,7 @@ void MainWindow::_initBindings() {
     });
     connect(_ui->grayscale, &QCheckBox::toggled, _ui->selectedLayer, &QSpinBox::setEnabled);
     connect(_ui->grayscale, &QCheckBox::toggled, _ui->image, &ImageLabel::setGrayscale);
-    connect(_ui->selectedLayer, static_cast<void (QSpinBox::*)(int)>(QSpinBox::valueChanged), _ui->image, &ImageLabel::setLayer);
+    connect(_ui->selectedLayer, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), _ui->image, &ImageLabel::setLayer);
 
     auto uploadEnabled = [this] { _ui->upload->setEnabled(_ui->image->imageLoaded() && _connected); };
     connect(this, &MainWindow::connectedChanged, uploadEnabled);

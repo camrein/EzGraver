@@ -59,9 +59,13 @@ void MainWindow::_initBindings() {
     connect(_ui->layerCount, static_cast<void(QSpinBox::*)(int)>(&QSpinBox::valueChanged), _ui->selectedLayer, &QSpinBox::setMaximum);
     connect(_ui->selectedLayer, static_cast<void(QSpinBox::*)(int)>(&QSpinBox::valueChanged), _ui->image, &ImageLabel::setLayer);
 
-    auto uploadEnabled = [this] { _ui->upload->setEnabled(_ui->image->imageLoaded() && _connected); };
+    auto uploadEnabled = [this] {
+        _ui->upload->setEnabled(_ui->image->imageLoaded() && _connected && (!_ui->layered->isChecked() || _ui->selectedLayer->value() > 0));
+    };
     connect(this, &MainWindow::connectedChanged, uploadEnabled);
     connect(_ui->image, &ImageLabel::imageLoadedChanged, uploadEnabled);
+    connect(_ui->selectedLayer, static_cast<void(QSpinBox::*)(int)>(&QSpinBox::valueChanged), uploadEnabled);
+    connect(_ui->layered, &QCheckBox::toggled, uploadEnabled);
 }
 
 void MainWindow::_initConversionFlags() {

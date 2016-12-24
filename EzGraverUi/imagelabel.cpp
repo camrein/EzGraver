@@ -7,7 +7,7 @@
 #include "ezgraver.h"
 
 ImageLabel::ImageLabel(QWidget* parent) : ClickLabel{parent}, _image{}, _flags{Qt::DiffuseDither},
-    _grayscale{false}, _layer{0} {}
+    _grayscale{false}, _layer{0}, _layerCount{3} {}
 
 ImageLabel::~ImageLabel() {}
 
@@ -52,6 +52,16 @@ void ImageLabel::setLayer(int const& layer) {
     emit layerChanged(layer);
 }
 
+int ImageLabel::layerCount() const {
+    return _layerCount;
+}
+
+void ImageLabel::setLayerCount(int const& layerCount) {
+    _layerCount = layerCount;
+    updateDisplayedImage();
+    emit layerCountChanged(layerCount);
+}
+
 void ImageLabel::updateDisplayedImage() {
     if(!imageLoaded()) {
         return;
@@ -87,11 +97,11 @@ QImage ImageLabel::_createGrayscaleImage(QImage const& original) const {
 }
 
 QVector<QRgb> ImageLabel::_createColorTable() const {
-    QVector<QRgb> colorTable(MaxGrayscaleLayers - 1);
+    QVector<QRgb> colorTable(_layerCount - 1);
 
     int i{0};
-    std::generate(colorTable.begin(), colorTable.end(), [&i] {
-      int gray = (256 / (MaxGrayscaleLayers-1)) * (i++);
+    std::generate(colorTable.begin(), colorTable.end(), [this, &i] {
+      int gray = (256 / (_layerCount-1)) * (i++);
       return qRgb(gray, gray, gray);
     });
     colorTable.push_back(qRgb(255, 255, 255));

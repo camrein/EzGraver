@@ -48,12 +48,16 @@ void MainWindow::_initBindings() {
     connect(this, &MainWindow::connectedChanged, _ui->start, &QPushButton::setEnabled);
     connect(this, &MainWindow::connectedChanged, _ui->pause, &QPushButton::setEnabled);
     connect(this, &MainWindow::connectedChanged, _ui->reset, &QPushButton::setEnabled);
-    connect(_ui->conversionFlags, static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged), [this](int index) {
+    connect(_ui->conversionFlags, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), [this](int index) {
         _ui->image->setConversionFlags(static_cast<Qt::ImageConversionFlags>(_ui->conversionFlags->itemData(index).toInt()));
     });
-    connect(_ui->grayscale, &QCheckBox::toggled, _ui->selectedLayer, &QSpinBox::setEnabled);
-    connect(_ui->grayscale, &QCheckBox::toggled, _ui->image, &ImageLabel::setGrayscale);
-    connect(_ui->selectedLayer, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), _ui->image, &ImageLabel::setLayer);
+
+    connect(_ui->layered, &QCheckBox::toggled, _ui->selectedLayer, &QSpinBox::setEnabled);
+    connect(_ui->layered, &QCheckBox::toggled, _ui->layerCount, &QSpinBox::setEnabled);
+    connect(_ui->layered, &QCheckBox::toggled, _ui->image, &ImageLabel::setGrayscale);
+    connect(_ui->layerCount, static_cast<void(QSpinBox::*)(int)>(&QSpinBox::valueChanged), _ui->image, &ImageLabel::setLayerCount);
+    connect(_ui->layerCount, static_cast<void(QSpinBox::*)(int)>(&QSpinBox::valueChanged), _ui->selectedLayer, &QSpinBox::setMaximum);
+    connect(_ui->selectedLayer, static_cast<void(QSpinBox::*)(int)>(&QSpinBox::valueChanged), _ui->image, &ImageLabel::setLayer);
 
     auto uploadEnabled = [this] { _ui->upload->setEnabled(_ui->image->imageLoaded() && _connected); };
     connect(this, &MainWindow::connectedChanged, uploadEnabled);

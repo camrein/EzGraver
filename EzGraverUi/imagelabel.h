@@ -8,12 +8,11 @@ class ImageLabel : public ClickLabel {
     Q_PROPERTY(QImage image READ image WRITE setImage NOTIFY imageChanged)
     Q_PROPERTY(Qt::ImageConversionFlags conversionFlags READ conversionFlags WRITE setConversionFlags NOTIFY conversionFlagsChanged)
     Q_PROPERTY(bool grayscale READ grayscale WRITE setGrayscale NOTIFY grayscaleChanged)
+    Q_PROPERTY(int layer READ layer WRITE setLayer NOTIFY layerChanged)
+    Q_PROPERTY(int layerCount READ layerCount WRITE setLayerCount NOTIFY layerCountChanged)
     Q_PROPERTY(bool imageLoaded READ imageLoaded NOTIFY imageLoadedChanged)
 
 public:
-    /*! The maximum number of grayscale layers. */
-    static int const MaxGrayscaleLayers{8};
-
     /*!
      * Creates a new instance with the given \a parent.
      *
@@ -86,6 +85,20 @@ public:
     void setLayer(int const& layer);
 
     /*!
+     * Gets the currently used number of layers.
+     *
+     * \return The currently user number of layers.
+     */
+    int layerCount() const;
+
+    /*!
+     * Changes the used number of layers.
+     *
+     * \param layer The number of layers.
+     */
+    void setLayerCount(int const& layerCount);
+
+    /*!
      * Gets if an image has been loaded.
      *
      * \return Returns \c true if an image is loaded.
@@ -129,6 +142,13 @@ signals:
     void layerChanged(int const& layer);
 
     /*!
+     * Fired as soon as the layer the number of layers changed.
+     *
+     * \param layerCount The currently active number of layers.
+     */
+    void layerCountChanged(int const& layerCount);
+
+    /*!
      * Fired as soon as an image has been loaded.
      *
      * \param imageLoaded \c true if an image is loaded.
@@ -139,6 +159,7 @@ private:
     Qt::ImageConversionFlags _flags;
     bool _grayscale;
     int _layer;
+    int _layerCount;
 
     void updateDisplayedImage();
     QImage _createGrayscaleImage(QImage const& original) const;

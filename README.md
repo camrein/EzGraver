@@ -15,8 +15,8 @@ Additionally, Windows requires the installation of [Visual C++ Redistributable f
 
 Linux may require running EzGraver with extended privileges. This possibly identifies itself with a *permission denied* error. To gain access to the serial device, add the user to the group of allowed serial port users (*dialout* for Ubuntu).
 
-# Command Line Interface
-Besides the graphical user interface, EzGraver provides a pure command line interface too.
+# Command-Line Interface
+Besides the graphical user interface, EzGraver provides a pure command-line interface too.
 ```bash
 Usage: EzGraverCli <option> [arguments...]
 

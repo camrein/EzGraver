@@ -66,6 +66,7 @@ void MainWindow::_initBindings() {
     connect(_ui->image, &ImageLabel::imageLoadedChanged, uploadEnabled);
     connect(_ui->selectedLayer, static_cast<void(QSpinBox::*)(int)>(&QSpinBox::valueChanged), uploadEnabled);
     connect(_ui->layered, &QCheckBox::toggled, uploadEnabled);
+    connect(_ui->keepAspectRatio, &QCheckBox::toggled, _ui->image, &ImageLabel::setKeepAspectRatio);
 }
 
 void MainWindow::_initConversionFlags() {

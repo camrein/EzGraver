@@ -7,7 +7,7 @@
 #include "ezgraver.h"
 
 ImageLabel::ImageLabel(QWidget* parent) : ClickLabel{parent}, _image{}, _flags{Qt::DiffuseDither},
-    _grayscale{false}, _layer{0}, _layerCount{3} {}
+    _grayscale{false}, _layer{0}, _layerCount{3}, _keepAspectRatio{false} {}
 
 ImageLabel::~ImageLabel() {}
 
@@ -62,6 +62,16 @@ void ImageLabel::setLayerCount(int const& layerCount) {
     emit layerCountChanged(layerCount);
 }
 
+bool ImageLabel::keepAspectRatio() const {
+    return _keepAspectRatio;
+}
+
+void ImageLabel::setKeepAspectRatio(bool const& keepAspectRatio) {
+    _keepAspectRatio = keepAspectRatio;
+    updateDisplayedImage();
+    emit keepAspectRatioChanged(keepAspectRatio);
+}
+
 void ImageLabel::updateDisplayedImage() {
     if(!imageLoaded()) {
         return;
@@ -71,7 +81,15 @@ void ImageLabel::updateDisplayedImage() {
     QImage image{QSize{EzGraver::ImageWidth, EzGraver::ImageHeight}, QImage::Format_ARGB32};
     image.fill(QColor{Qt::white});
     QPainter painter{&image};
-    painter.drawImage(0, 0, _image.scaled(image.size()));
+
+    // As at this time, the target image is quadratic, scaling according the larger dimension is sufficient.
+    auto scaled = _keepAspectRatio
+              ? (_image.width() > _image.height() ? _image.scaledToWidth(image.width()) : _image.scaledToHeight(image.height()))
+              : _image.scaled(image.size());
+    auto position = _keepAspectRatio
+            ? (_image.width() > _image.height() ? QPoint(0, (image.height() - scaled.height()) / 2) : QPoint((image.width() - scaled.width()) / 2, 0))
+            : QPoint(0, 0);
+    painter.drawImage(position, scaled);
 
     auto rendered = _grayscale
             ? QPixmap::fromImage(_createGrayscaleImage(image))

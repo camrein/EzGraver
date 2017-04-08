@@ -81,7 +81,12 @@ void ImageLabel::updateDisplayedImage() {
     QImage image{QSize{EzGraver::ImageWidth, EzGraver::ImageHeight}, QImage::Format_ARGB32};
     image.fill(QColor{Qt::white});
     QPainter painter{&image};
-    painter.drawImage(0, 0, _image.scaled(image.size()));
+
+    // As at this time, the target image is quadratic, scaling according the larger dimension is sufficient.
+    auto scaled = _keepAspectRatio
+              ? (_image.width() > _image.height() ? _image.scaledToWidth(image.width()) : _image.scaledToHeight(image.height()))
+              : _image.scaled(image.size());
+    painter.drawImage(0, 0, scaled);
 
     auto rendered = _grayscale
             ? QPixmap::fromImage(_createGrayscaleImage(image))

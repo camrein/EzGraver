@@ -86,7 +86,10 @@ void ImageLabel::updateDisplayedImage() {
     auto scaled = _keepAspectRatio
               ? (_image.width() > _image.height() ? _image.scaledToWidth(image.width()) : _image.scaledToHeight(image.height()))
               : _image.scaled(image.size());
-    painter.drawImage(0, 0, scaled);
+    auto position = _keepAspectRatio
+            ? (_image.width() > _image.height() ? QPoint(0, (image.height() - scaled.height()) / 2) : QPoint((image.width() - scaled.width()) / 2, 0))
+            : QPoint(0, 0);
+    painter.drawImage(position, scaled);
 
     auto rendered = _grayscale
             ? QPixmap::fromImage(_createGrayscaleImage(image))

@@ -66,7 +66,10 @@ void MainWindow::_initBindings() {
     connect(_ui->image, &ImageLabel::imageLoadedChanged, uploadEnabled);
     connect(_ui->selectedLayer, static_cast<void(QSpinBox::*)(int)>(&QSpinBox::valueChanged), uploadEnabled);
     connect(_ui->layered, &QCheckBox::toggled, uploadEnabled);
+
     connect(_ui->keepAspectRatio, &QCheckBox::toggled, _ui->image, &ImageLabel::setKeepAspectRatio);
+    connect(_ui->imageScale, &QSlider::valueChanged, [this](int const& v) { _ui->imageScaleLabel->setText(QString::number(v)); });
+    connect(_ui->resetImageScale, &QPushButton::clicked, [this] { _ui->imageScale->setValue(100); });
 }
 
 void MainWindow::_initConversionFlags() {

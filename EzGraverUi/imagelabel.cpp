@@ -106,14 +106,12 @@ void ImageLabel::updateDisplayedImage() {
     if(_scaled) {
         auto scaled = _image.scaled(_image.width() * _imageScale, _image.height() * _imageScale);
         painter.drawImage(QPoint{0, 0}, scaled);
-    } else {
-        auto scaled = _keepAspectRatio
-                  ? (_image.width() > _image.height() ? _image.scaledToWidth(image.width()) : _image.scaledToHeight(image.height()))
-                  : _image.scaled(image.size());
-        auto position = _keepAspectRatio
-                ? (_image.width() > _image.height() ? QPoint{0, (image.height() - scaled.height()) / 2} : QPoint{(image.width() - scaled.width()) / 2, 0})
-                : QPoint{0, 0};
+    } else if(_keepAspectRatio) {
+        auto scaled = (_image.width() > _image.height() ? _image.scaledToWidth(image.width()) : _image.scaledToHeight(image.height()));
+        auto position = (_image.width() > _image.height() ? QPoint{0, (image.height() - scaled.height()) / 2} : QPoint{(image.width() - scaled.width()) / 2, 0});
         painter.drawImage(position, scaled);
+    } else {
+        painter.drawImage(QPoint{0, 0}, _image.scaled(image.size()));
     }
 
     auto rendered = _grayscale

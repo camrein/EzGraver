@@ -7,7 +7,7 @@
 #include "ezgraver.h"
 
 ImageLabel::ImageLabel(QWidget* parent) : ClickLabel{parent}, _image{}, _flags{Qt::DiffuseDither},
-    _grayscale{false}, _layer{0}, _layerCount{3}, _keepAspectRatio{false} {}
+    _grayscale{false}, _layer{0}, _layerCount{3}, _keepAspectRatio{false}, _imageScale{1.0} {}
 
 ImageLabel::~ImageLabel() {}
 
@@ -70,6 +70,16 @@ void ImageLabel::setKeepAspectRatio(bool const& keepAspectRatio) {
     _keepAspectRatio = keepAspectRatio;
     updateDisplayedImage();
     emit keepAspectRatioChanged(keepAspectRatio);
+}
+
+float ImageLabel::imageScale() const {
+    return _imageScale;
+}
+
+void ImageLabel::setImageScale(float const& imageScale) {
+    _imageScale = imageScale;
+    updateDisplayedImage();
+    emit imageScaleChanged(imageScale);
 }
 
 void ImageLabel::updateDisplayedImage() {

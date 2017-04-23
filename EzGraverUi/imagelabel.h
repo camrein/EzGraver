@@ -11,6 +11,7 @@ class ImageLabel : public ClickLabel {
     Q_PROPERTY(int layer READ layer WRITE setLayer NOTIFY layerChanged)
     Q_PROPERTY(int layerCount READ layerCount WRITE setLayerCount NOTIFY layerCountChanged)
     Q_PROPERTY(bool keepAspectRatio READ keepAspectRatio WRITE setKeepAspectRatio NOTIFY keepAspectRatioChanged)
+    Q_PROPERTY(float imageScale READ imageScale WRITE setImageScale NOTIFY imageScaleChanged)
     Q_PROPERTY(bool imageLoaded READ imageLoaded NOTIFY imageLoadedChanged)
 
 public:
@@ -107,11 +108,25 @@ public:
     bool keepAspectRatio() const;
 
     /*!
-     * Sets the if the aspect ratio of the image should be kept.
+     * Sets the the aspect ratio of the image should be kept.
      *
      * \param keepAspectRatio \c true if the aspect ratio should be kept.
      */
     void setKeepAspectRatio(bool const& keepAspectRatio);
+
+    /*!
+     * Gets the current image scale.
+     *
+     * \return The image scale. 1.0 equals to 100% (original size).
+     */
+    float imageScale() const;
+
+    /*!
+     * Sets the image scale of the image.
+     *
+     * \param imageScale The image sacle. 1.0 equals to 100% (origina size).
+     */
+    void setImageScale(float const& imageScale);
 
     /*!
      * Gets if an image has been loaded.
@@ -171,6 +186,13 @@ signals:
     void keepAspectRatioChanged(bool const& keepAspectRatio);
 
     /*!
+     * Fired as soon as the image scale changed.
+     *
+     * \param imageScale The current image scale. 1.0 equals to 100%.
+     */
+    void imageScaleChanged(float const& imageScale);
+
+    /*!
      * Fired as soon as an image has been loaded.
      *
      * \param imageLoaded \c true if an image is loaded.
@@ -183,6 +205,7 @@ private:
     int _layer;
     int _layerCount;
     bool _keepAspectRatio;
+    float _imageScale;
 
     void updateDisplayedImage();
     QImage _createGrayscaleImage(QImage const& original) const;

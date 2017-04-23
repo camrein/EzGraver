@@ -71,6 +71,7 @@ void MainWindow::_initBindings() {
 
     connect(_ui->scaled, &QCheckBox::toggled, _ui->imageScale, &QSlider::setEnabled);
     connect(_ui->scaled, &QCheckBox::toggled, _ui->resetImageScale, &QSlider::setEnabled);
+    connect(_ui->scaled, &QCheckBox::toggled, _ui->image, &ImageLabel::setScaled);
     connect(_ui->imageScale, &QSlider::valueChanged, [this](int const& v) { _ui->imageScaleLabel->setText(QString::number(v)); });
     connect(_ui->imageScale, &QSlider::valueChanged, [this](int const& v) { _ui->image->setImageScale(v / 100.0); });
     connect(_ui->resetImageScale, &QPushButton::clicked, [this] { _ui->imageScale->setValue(100); });

@@ -105,7 +105,8 @@ void ImageLabel::updateDisplayedImage() {
     // As at this time, the target image is quadratic, scaling according the larger dimension is sufficient.
     if(_scaled) {
         auto scaled = _image.scaled(_image.width() * _imageScale, _image.height() * _imageScale);
-        painter.drawImage(QPoint{0, 0}, scaled);
+        QPoint position{(image.width() - scaled.width()) / 2, (image.height() - scaled.height()) / 2};
+        painter.drawImage(position, scaled);
     } else if(_keepAspectRatio) {
         auto scaled = (_image.width() > _image.height() ? _image.scaledToWidth(image.width()) : _image.scaledToHeight(image.height()));
         auto position = (_image.width() > _image.height() ? QPoint{0, (image.height() - scaled.height()) / 2} : QPoint{(image.width() - scaled.width()) / 2, 0});

@@ -11,6 +11,7 @@ class ImageLabel : public ClickLabel {
     Q_PROPERTY(int layer READ layer WRITE setLayer NOTIFY layerChanged)
     Q_PROPERTY(int layerCount READ layerCount WRITE setLayerCount NOTIFY layerCountChanged)
     Q_PROPERTY(bool keepAspectRatio READ keepAspectRatio WRITE setKeepAspectRatio NOTIFY keepAspectRatioChanged)
+    Q_PROPERTY(bool scaled READ scaled WRITE setScaled NOTIFY scaledChanged)
     Q_PROPERTY(float imageScale READ imageScale WRITE setImageScale NOTIFY imageScaleChanged)
     Q_PROPERTY(bool imageLoaded READ imageLoaded NOTIFY imageLoadedChanged)
 
@@ -115,6 +116,20 @@ public:
     void setKeepAspectRatio(bool const& keepAspectRatio);
 
     /*!
+     * Gets if the image is being scaled.
+     *
+     * \return Returns \c true if the image is being scaled.
+     */
+    bool scaled() const;
+
+    /*!
+     * Sets if the image is being scaled.
+     *
+     * \param scaled \c true if the iamge is being scaled.
+     */
+    void setScaled(bool const& scaled);
+
+    /*!
      * Gets the current image scale.
      *
      * \return The image scale. 1.0 equals to 100% (original size).
@@ -186,6 +201,13 @@ signals:
     void keepAspectRatioChanged(bool const& keepAspectRatio);
 
     /*!
+     * Fired as soon as the image is being scaled.
+     *
+     * \param scaled \c true if the image is being scaled.
+     */
+    void scaledChanged(float const& imageScale);
+
+    /*!
      * Fired as soon as the image scale changed.
      *
      * \param imageScale The current image scale. 1.0 equals to 100%.
@@ -205,6 +227,7 @@ private:
     int _layer;
     int _layerCount;
     bool _keepAspectRatio;
+    float _scaled;
     float _imageScale;
 
     void updateDisplayedImage();

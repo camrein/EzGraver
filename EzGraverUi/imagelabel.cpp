@@ -7,7 +7,7 @@
 #include "ezgraver.h"
 
 ImageLabel::ImageLabel(QWidget* parent) : ClickLabel{parent}, _image{}, _flags{Qt::DiffuseDither},
-    _grayscale{false}, _layer{0}, _layerCount{3}, _keepAspectRatio{false} {}
+    _grayscale{false}, _layer{0}, _layerCount{3}, _keepAspectRatio{false}, _scaled{false}, _imageScale{1.0} {}
 
 ImageLabel::~ImageLabel() {}
 
@@ -72,6 +72,26 @@ void ImageLabel::setKeepAspectRatio(bool const& keepAspectRatio) {
     emit keepAspectRatioChanged(keepAspectRatio);
 }
 
+bool ImageLabel::scaled() const {
+    return _imageScale;
+}
+
+void ImageLabel::setScaled(bool const& scaled) {
+    _scaled = scaled;
+    updateDisplayedImage();
+    emit scaledChanged(scaled);
+}
+
+float ImageLabel::imageScale() const {
+    return _imageScale;
+}
+
+void ImageLabel::setImageScale(float const& imageScale) {
+    _imageScale = imageScale;
+    updateDisplayedImage();
+    emit imageScaleChanged(imageScale);
+}
+
 void ImageLabel::updateDisplayedImage() {
     if(!imageLoaded()) {
         return;
@@ -83,13 +103,17 @@ void ImageLabel::updateDisplayedImage() {
     QPainter painter{&image};
 
     // As at this time, the target image is quadratic, scaling according the larger dimension is sufficient.
-    auto scaled = _keepAspectRatio
-              ? (_image.width() > _image.height() ? _image.scaledToWidth(image.width()) : _image.scaledToHeight(image.height()))
-              : _image.scaled(image.size());
-    auto position = _keepAspectRatio
-            ? (_image.width() > _image.height() ? QPoint(0, (image.height() - scaled.height()) / 2) : QPoint((image.width() - scaled.width()) / 2, 0))
-            : QPoint(0, 0);
-    painter.drawImage(position, scaled);
+    if(_scaled) {
+        auto scaled = _image.scaled(_image.width() * _imageScale, _image.height() * _imageScale);
+        QPoint position{(image.width() - scaled.width()) / 2, (image.height() - scaled.height()) / 2};
+        painter.drawImage(position, scaled);
+    } else if(_keepAspectRatio) {
+        auto scaled = (_image.width() > _image.height() ? _image.scaledToWidth(image.width()) : _image.scaledToHeight(image.height()));
+        auto position = (_image.width() > _image.height() ? QPoint{0, (image.height() - scaled.height()) / 2} : QPoint{(image.width() - scaled.width()) / 2, 0});
+        painter.drawImage(position, scaled);
+    } else {
+        painter.drawImage(QPoint{0, 0}, _image.scaled(image.size()));
+    }
 
     auto rendered = _grayscale
             ? QPixmap::fromImage(_createGrayscaleImage(image))

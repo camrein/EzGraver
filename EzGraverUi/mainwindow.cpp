@@ -78,7 +78,9 @@ void MainWindow::_initBindings() {
     connect(_ui->imageScale, &QSlider::valueChanged, [this](int const& v) { _ui->image->setImageScale(v / 100.0); });
     connect(_ui->resetImageScale, &QPushButton::clicked, [this] { _ui->imageScale->setValue(100); });
 
-    _ui->protocolVersion->addItems(QStringList{"v1", "v2"});
+    _ui->protocolVersion->addItem("v1", Ez::Protocol::v1);
+    _ui->protocolVersion->addItem("v2", Ez::Protocol::v2);
+    connect(this, &MainWindow::connectedChanged, _ui->protocolVersion, &QComboBox::setDisabled);
 }
 
 void MainWindow::_initConversionFlags() {
@@ -143,7 +145,7 @@ void MainWindow::updateProgress(qint64 bytes) {
 void MainWindow::on_connect_clicked() {
     try {
         _printVerbose(QString{"connecting to port %1"}.arg(_ui->ports->currentText()));
-        _ezGraver = EzGraver::create(_ui->ports->currentText());
+        _ezGraver = EzGraver::create(_ui->ports->currentText(), static_cast<Ez::Protocol>(_ui->protocolVersion->currentData().toInt()));
         _printVerbose("connection established successfully");
         _setConnected(true);
 

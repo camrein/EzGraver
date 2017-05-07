@@ -15,6 +15,10 @@
  * The connection is closed as soon as the object is destroyed.
  */
 struct EZGRAVERCORESHARED_EXPORT EzGraver {
+    enum Protocol {
+        v1, v2
+    };
+
     /*! The time required to erase the EEPROM in milliseconds. */
     static int const EraseTimeMs{6000};
 
@@ -30,7 +34,7 @@ struct EZGRAVERCORESHARED_EXPORT EzGraver {
      * \param portName The port the connection should be established to.
      * \return An instance of the EzGraver as a shared pointer.
      */
-    static std::shared_ptr<EzGraver> create(QString const& portName);
+    static std::shared_ptr<EzGraver> create(QString const& portName, Protocol protocol = Protocol::v1);
 
     /*!
      * Gets a list of all available ports.
@@ -122,8 +126,9 @@ struct EZGRAVERCORESHARED_EXPORT EzGraver {
     virtual ~EzGraver();
 
 private:
+    Protocol _protocol;
     std::shared_ptr<QSerialPort> _serial;
-    explicit EzGraver(std::shared_ptr<QSerialPort> serial);
+    explicit EzGraver(std::shared_ptr<QSerialPort> serial, Protocol protocol);
 
     void _transmit(unsigned char const& data);
     void _transmit(QByteArray const& data);

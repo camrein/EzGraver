@@ -10,16 +10,14 @@
 
 #include <memory>
 
+#include "protocol.h"
+
 namespace Ez {
 /*!
  * Allows accessing a NEJE engraver using the serial port it was instantiated with.
  * The connection is closed as soon as the object is destroyed.
  */
 struct EZGRAVERCORESHARED_EXPORT EzGraver {
-    enum Protocol {
-        v1, v2
-    };
-
     /*! The time required to erase the EEPROM in milliseconds. */
     static int const EraseTimeMs{6000};
 

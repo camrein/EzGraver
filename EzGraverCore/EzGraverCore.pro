@@ -11,7 +11,8 @@ DEFINES += EZGRAVERCORE_LIBRARY
 SOURCES += ezgraver.cpp
 
 HEADERS += ezgraver.h\
-        ezgravercore_global.h
+        ezgravercore_global.h \
+    protocol.h
 
 unix {
     target.path = /usr/lib

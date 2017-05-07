@@ -77,6 +77,8 @@ void MainWindow::_initBindings() {
     connect(_ui->imageScale, &QSlider::valueChanged, [this](int const& v) { _ui->imageScaleLabel->setText(QString::number(v)); });
     connect(_ui->imageScale, &QSlider::valueChanged, [this](int const& v) { _ui->image->setImageScale(v / 100.0); });
     connect(_ui->resetImageScale, &QPushButton::clicked, [this] { _ui->imageScale->setValue(100); });
+
+    _ui->protocolVersion->addItems(QStringList{"v1", "v2"});
 }
 
 void MainWindow::_initConversionFlags() {

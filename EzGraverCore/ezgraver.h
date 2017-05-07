@@ -10,6 +10,7 @@
 
 #include <memory>
 
+namespace Ez {
 /*!
  * Allows accessing a NEJE engraver using the serial port it was instantiated with.
  * The connection is closed as soon as the object is destroyed.
@@ -136,5 +137,7 @@ private:
 
     void _setBurnTime(unsigned char const& burnTime);
 };
+
+}
 
 #endif // EZGRAVER_H

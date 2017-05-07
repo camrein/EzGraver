@@ -6,6 +6,8 @@
 
 #include "ezgraver.h"
 
+using namespace Ez;
+
 ImageLabel::ImageLabel(QWidget* parent) : ClickLabel{parent}, _image{}, _flags{Qt::DiffuseDither},
     _grayscale{false}, _layer{0}, _layerCount{3}, _keepAspectRatio{false}, _scaled{false}, _imageScale{1.0} {}
 

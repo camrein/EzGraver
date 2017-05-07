@@ -9,6 +9,8 @@
 
 #include "ezgraver.h"
 
+using namespace Ez;
+
 std::ostream& operator<<(std::ostream& lhv, QString const& rhv) {
     return lhv << rhv.toStdString();
 }

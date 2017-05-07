@@ -10,6 +10,7 @@
 #include <algorithm>
 #include <functional>
 
+namespace Ez {
 
 EzGraver::EzGraver(std::shared_ptr<QSerialPort> serial, Protocol protocol) : _serial{serial}, _protocol{protocol} {}
 
@@ -154,4 +155,6 @@ std::shared_ptr<EzGraver> EzGraver::create(QString const& portName, Protocol pro
     }
 
     return std::shared_ptr<EzGraver>{new EzGraver(serial, protocol)};
+}
+
 }

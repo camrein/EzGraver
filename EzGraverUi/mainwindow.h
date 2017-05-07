@@ -59,7 +59,7 @@ private:
     QTimer _portTimer;
     QImage _image;
 
-    std::shared_ptr<EzGraver> _ezGraver;
+    std::shared_ptr<Ez::EzGraver> _ezGraver;
     std::function<void(qint64)> _bytesWrittenProcessor;
     bool _connected;
 

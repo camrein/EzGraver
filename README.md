@@ -39,11 +39,11 @@ Download the latest QT release and build it using QT Creator. Builds have been t
 - Desktop QT 5.7.0 MSVC2015 64bit
 
 ## OS X
-First, install a sufficient QT version. In this example, QT 5.5 is being installed.
+First, install a sufficient QT version. In this example, QT 5.7 is being installed.
 ```bash
 brew update
-brew install qt55
-brew link --force qt55
+brew install qt@5.7
+brew link --force qt@5.7
 ```
 
 Now build EzGraver.
@@ -52,10 +52,9 @@ qmake -config release EzGraver.pro
 make
 ```
 
-Generate a *.dmg file for deployment. The install step is used to ensure that the dependencies (namely EzGraverCore) are found.
+Generate a \*.dmg file for deployment. The libpath argument denotes the location of EzGraverCore's \*.dylib files.
 ```bash
-make install
-macdeployqt EzGraverUi/EzGraverUi.app -dmg
+macdeployqt EzGraverUi/EzGraverUi.app -dmg -libpath="$(pwd)/EzGraverCore"
 ```
 
 

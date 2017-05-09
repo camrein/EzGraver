@@ -23,6 +23,7 @@ script:
     - qmake -config release EzGraver.pro
     - make
     - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then macdeployqt EzGraverUi/EzGraverUi.app -dmg -libpath="$(pwd)/EzGraverCore" ; fi
+    - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then otool -L EzGraverUi/EzGraverUi.app/Contents/MacOS/EzGraverUi ; fi
     - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then mv EzGraverUi/EzGraverUi.dmg EzGraverUi/EzGraver_osx.dmg; fi
 
 deploy:

@@ -56,7 +56,7 @@ Copy EzGraverCore into the frameworks directory and then generate the \*.dmg fil
 ```bash
 mkdir EzGraverUi/EzGraverUi.app/Contents/Frameworks/
 cp EzGraverCore/libEzGraverCore.1.dylib EzGraverUi/EzGraverUi.app/Contents/Frameworks/libEzGraverCore.1.dylib
-macdeployqt EzGraverUi/EzGraverUi.app -dmg -libpath="$(pwd)/EzGraverCore"
+macdeployqt EzGraverUi/EzGraverUi.app -dmg
 ```
 
 

@@ -22,6 +22,7 @@ script:
     - qmake -v
     - qmake -config release EzGraver.pro
     - make
+    - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then mkdir EzGraverUi/EzGraverUi.app/Contents/Frameworks/ ; fi
     - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then cp EzGraverCore/libEzGraverCore.1.dylib EzGraverUi/EzGraverUi.app/Contents/Frameworks/libEzGraverCore.1.dylib ; fi
     - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then ls -al EzGraverUi/EzGraverUi.app/Contents/Frameworks/ ; fi
     - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then macdeployqt EzGraverUi/EzGraverUi.app -dmg ; fi

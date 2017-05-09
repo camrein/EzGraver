@@ -42,8 +42,8 @@ Download the latest QT release and build it using QT Creator. Builds have been t
 First, install a sufficient QT version. In this example, QT 5.7 is being installed.
 ```bash
 brew update
-brew install qt@5.7
-brew link --force qt@5.7
+brew install qt55
+brew link --force qt55
 ```
 
 Now build EzGraver.

@@ -24,12 +24,8 @@ script:
     - make
     - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then mkdir EzGraverUi/EzGraverUi.app/Contents/Frameworks/ ; fi
     - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then cp EzGraverCore/libEzGraverCore.1.dylib EzGraverUi/EzGraverUi.app/Contents/Frameworks/libEzGraverCore.1.dylib ; fi
-    - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then ls -al EzGraverUi/EzGraverUi.app/Contents/Frameworks/ ; fi
     - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then macdeployqt EzGraverUi/EzGraverUi.app -dmg ; fi
-    - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then ls -al EzGraverUi/EzGraverUi.app/Contents/Frameworks/ ; fi
     - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then otool -L EzGraverUi/EzGraverUi.app/Contents/MacOS/EzGraverUi ; fi
-    - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then otool -TV EzGraverUi/EzGraverUi.app/Contents/Frameworks/libEzGraverCore.1.dylib ; fi
-    - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then otool -TV EzGraverUi/EzGraverUi.app/Contents/Frameworks/QtGui.framework/QtGui ; fi
     - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then mv EzGraverUi/EzGraverUi.dmg EzGraverUi/EzGraver_osx.dmg; fi
 
 deploy:

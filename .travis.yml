@@ -8,8 +8,8 @@ os:
 
 before_install:
     - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update ; fi
-    - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install qt@5.7 ; fi
-    - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew link --force qt@5.7 ; fi
+    - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install qt55 ; fi
+    - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew link --force qt55 ; fi
     - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo add-apt-repository --yes ppa:beineri/opt-qt551-trusty ; fi
     - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get update -qq ; fi
     - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get install -qq qt55base qt55serialport ; fi
@@ -22,8 +22,13 @@ script:
     - qmake -v
     - qmake -config release EzGraver.pro
     - make
-    - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then macdeployqt EzGraverUi/EzGraverUi.app -dmg -libpath="$(pwd)/EzGraverCore" ; fi
+    - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then cp EzGraverCore/libEzGraverCore.1.dylib EzGraverUi/EzGraverUi.app/Contents/Frameworks/libEzGraverCore.1.dylib ; fi
+    - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then ls -al EzGraverUi/EzGraverUi.app/Contents/Frameworks/ ; fi
+    - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then macdeployqt EzGraverUi/EzGraverUi.app -dmg ; fi
+    - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then ls -al EzGraverUi/EzGraverUi.app/Contents/Frameworks/ ; fi
     - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then otool -L EzGraverUi/EzGraverUi.app/Contents/MacOS/EzGraverUi ; fi
+    - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then otool -TV EzGraverUi/EzGraverUi.app/Contents/Frameworks/libEzGraverCore.1.dylib ; fi
+    - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then otool -TV EzGraverUi/EzGraverUi.app/Contents/Frameworks/QtGui.framework/QtGui ; fi
     - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then mv EzGraverUi/EzGraverUi.dmg EzGraverUi/EzGraver_osx.dmg; fi
 
 deploy:

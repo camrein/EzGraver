@@ -39,7 +39,7 @@ Download the latest QT release and build it using QT Creator. Builds have been t
 - Desktop QT 5.7.0 MSVC2015 64bit
 
 ## OS X
-First, install a sufficient QT version. In this example, QT 5.7 is being installed.
+First, install a sufficient QT version. In this example, QT 5.5 is being installed.
 ```bash
 brew update
 brew install qt55

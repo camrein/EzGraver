@@ -1,5 +1,5 @@
-#ifndef EZGRAVERV1_H
-#define EZGRAVERV1_H
+#ifndef EZGRAVERV2_H
+#define EZGRAVERV2_H
 
 #include <QSerialPort>
 
@@ -10,13 +10,13 @@
 
 namespace Ez {
 
-struct EzGraverV1 : EzGraver {
+struct EzGraverV2 : EzGraver {
     /*!
-     * Creates an instance of the EzGraver with protocol version 1.
+     * Creates an instance of the EzGraver with protocol version 2.
      *
      * \param serial The serial port to use.
      */
-    explicit EzGraverV1(std::shared_ptr<QSerialPort> serial);
+    explicit EzGraverV2(std::shared_ptr<QSerialPort> serial);
 
     /*! Moves the engraver up. */
     void up();
@@ -33,4 +33,4 @@ struct EzGraverV1 : EzGraver {
 
 }
 
-#endif // EZGRAVERV1_H
+#endif // EZGRAVERV2_H

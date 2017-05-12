@@ -159,7 +159,7 @@ void MainWindow::on_connect_clicked() {
         _setConnected(true);
 
         connect(_ezGraver->serialPort().get(), &QSerialPort::bytesWritten, this, &MainWindow::bytesWritten);
-    } catch(std::runtime_error const& e) {
+    } catch(std::exception const& e) {
         _printVerbose(QString{"Error: %1"}.arg(e.what()));
     }
 }

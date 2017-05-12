@@ -10,11 +10,13 @@
 
 #include <memory>
 
+namespace Ez {
 /*!
  * Allows accessing a NEJE engraver using the serial port it was instantiated with.
  * The connection is closed as soon as the object is destroyed.
  */
 struct EZGRAVERCORESHARED_EXPORT EzGraver {
+
     /*! The time required to erase the EEPROM in milliseconds. */
     static int const EraseTimeMs{6000};
 
@@ -23,14 +25,6 @@ struct EZGRAVERCORESHARED_EXPORT EzGraver {
 
     /*! The image height */
     static int const ImageHeight{512};
-
-    /*!
-     * Creates an instance and connects to the given \a portName.
-     *
-     * \param portName The port the connection should be established to.
-     * \return An instance of the EzGraver as a shared pointer.
-     */
-    static std::shared_ptr<EzGraver> create(QString const& portName);
 
     /*!
      * Gets a list of all available ports.
@@ -65,16 +59,16 @@ struct EZGRAVERCORESHARED_EXPORT EzGraver {
     void preview();
 
     /*! Moves the engraver up. */
-    void up();
+    virtual void up() = 0;
 
     /*! Moves the engraver down. */
-    void down();
+    virtual void down() = 0;
 
     /*! Moves the engraver left. */
-    void left();
+    virtual void left() = 0;
 
     /*! Moves the engraver right. */
-    void right();
+    virtual void right() = 0;
 
     /*!
      * Erases the EEPROM of the engraver. This is necessary before uploading
@@ -121,15 +115,19 @@ struct EZGRAVERCORESHARED_EXPORT EzGraver {
     EzGraver() = delete;
     virtual ~EzGraver();
 
-private:
-    std::shared_ptr<QSerialPort> _serial;
+protected:
     explicit EzGraver(std::shared_ptr<QSerialPort> serial);
 
     void _transmit(unsigned char const& data);
     void _transmit(QByteArray const& data);
     void _transmit(QByteArray const& data, int chunkSize);
 
+private:
+    std::shared_ptr<QSerialPort> _serial;
+
     void _setBurnTime(unsigned char const& burnTime);
 };
+
+}
 
 #endif // EZGRAVER_H

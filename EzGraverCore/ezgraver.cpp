@@ -10,6 +10,7 @@
 #include <algorithm>
 #include <functional>
 
+namespace Ez {
 
 EzGraver::EzGraver(std::shared_ptr<QSerialPort> serial) : _serial{serial} {}
 
@@ -50,26 +51,6 @@ void EzGraver::center() {
 void EzGraver::preview() {
     qDebug() << "drawing image preview";
     _transmit(0xF4);
-}
-
-void EzGraver::up() {
-    qDebug() << "moving up";
-    _transmit(0xF5);
-}
-
-void EzGraver::down() {
-    qDebug() << "moving down";
-    _transmit(0xF6);
-}
-
-void EzGraver::left() {
-    qDebug() << "moving left";
-    _transmit(0xF7);
-}
-
-void EzGraver::right() {
-    qDebug() << "moving right";
-    _transmit(0xF8);
 }
 
 void EzGraver::erase() {
@@ -138,20 +119,5 @@ QStringList EzGraver::availablePorts() {
     return result;
 }
 
-std::shared_ptr<EzGraver> EzGraver::create(QString const& portName) {
-    qDebug() << "instantiating EzGraver on port" << portName;
-
-    std::shared_ptr<QSerialPort> serial{new QSerialPort(portName)};
-    serial->setBaudRate(QSerialPort::Baud57600, QSerialPort::AllDirections);
-    serial->setParity(QSerialPort::Parity::NoParity);
-    serial->setDataBits(QSerialPort::DataBits::Data8);
-    serial->setStopBits(QSerialPort::StopBits::OneStop);
-
-    if(!serial->open(QIODevice::ReadWrite)) {
-        qDebug() << "failed to establish a connection on port" << portName;
-        qDebug() << serial->errorString();
-        throw std::runtime_error{QString{"failed to connect to port %1 (%2)"}.arg(portName, serial->errorString()).toStdString()};
-    }
-
-    return std::shared_ptr<EzGraver>{new EzGraver(serial)};
 }
+

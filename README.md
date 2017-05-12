@@ -83,5 +83,9 @@ make install
 ```
 
 # Acknowledgment
-Many thanks to [Frederik Andersson](https://github.com/Na1w) for reverse engineering the low-level protocol.
+Many thanks to:
+
+* [Frederik Andersson](https://github.com/Na1w) for reverse engineering the low-level protocol.
+* [AlexNk](https://github.com/AlexNk) for provididing updated control codes.
+
 

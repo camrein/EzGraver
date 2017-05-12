@@ -10,10 +10,15 @@
 #include <QDebug>
 
 #include <stdexcept>
+#include <algorithm>
+
+#include "ezgraver_factory.h"
+
+using namespace Ez;
 
 MainWindow::MainWindow(QWidget* parent)
         :  QMainWindow{parent}, _ui{new Ui::MainWindow},
-          _portTimer{}, _image{}, _ezGraver{}, _bytesWrittenProcessor{[](qint64){}}, _connected{false} {
+          _portTimer{}, _image{}, _settings{"EzGraver", "EzGraver"}, _ezGraver{}, _bytesWrittenProcessor{[](qint64){}}, _connected{false} {
     _ui->setupUi(this);
     setAcceptDrops(true);
 
@@ -22,6 +27,7 @@ MainWindow::MainWindow(QWidget* parent)
 
     _initBindings();
     _initConversionFlags();
+    _initProtocols();
     _setConnected(false);
 
     _ui->image->setImageDimensions(QSize{EzGraver::ImageWidth, EzGraver::ImageHeight});
@@ -75,6 +81,8 @@ void MainWindow::_initBindings() {
     connect(_ui->imageScale, &QSlider::valueChanged, [this](int const& v) { _ui->imageScaleLabel->setText(QString::number(v)); });
     connect(_ui->imageScale, &QSlider::valueChanged, [this](int const& v) { _ui->image->setImageScale(v / 100.0); });
     connect(_ui->resetImageScale, &QPushButton::clicked, [this] { _ui->imageScale->setValue(100); });
+
+    connect(this, &MainWindow::connectedChanged, _ui->protocolVersion, &QComboBox::setDisabled);
 }
 
 void MainWindow::_initConversionFlags() {
@@ -82,6 +90,18 @@ void MainWindow::_initConversionFlags() {
     _ui->conversionFlags->addItem("OrderedDither", Qt::OrderedDither);
     _ui->conversionFlags->addItem("ThresholdDither", Qt::ThresholdDither);
     _ui->conversionFlags->setCurrentIndex(0);
+}
+
+void MainWindow::_initProtocols() {
+    auto protocols = Ez::protocols();
+    for(auto protocol : protocols) {
+        _ui->protocolVersion->addItem(QString{"v%1"}.arg(protocol), protocol);
+    }
+
+    auto selectedProtocol = _settings.value("protocol", 1).toInt();
+    if(std::find(protocols.cbegin(), protocols.cend(), selectedProtocol) != protocols.cend()) {
+        _ui->protocolVersion->setCurrentText(QString{"v%1"}.arg(selectedProtocol));
+    }
 }
 
 void MainWindow::_printVerbose(QString const& verbose) {
@@ -138,13 +158,16 @@ void MainWindow::updateProgress(qint64 bytes) {
 
 void MainWindow::on_connect_clicked() {
     try {
-        _printVerbose(QString{"connecting to port %1"}.arg(_ui->ports->currentText()));
-        _ezGraver = EzGraver::create(_ui->ports->currentText());
+        auto protocol = _ui->protocolVersion->currentData().toInt();
+        _printVerbose(QString{"connecting to port %1 with protocol version %2"}.arg(_ui->ports->currentText()).arg(protocol));
+        _ezGraver = Ez::create(_ui->ports->currentText(), protocol);
         _printVerbose("connection established successfully");
         _setConnected(true);
 
+        _settings.setValue("protocol", protocol);
+
         connect(_ezGraver->serialPort().get(), &QSerialPort::bytesWritten, this, &MainWindow::bytesWritten);
-    } catch(std::runtime_error const& e) {
+    } catch(std::exception const& e) {
         _printVerbose(QString{"Error: %1"}.arg(e.what()));
     }
 }

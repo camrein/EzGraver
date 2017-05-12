@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QTimer>
+#include <QSettings>
 
 #include <memory>
 #include <functional>
@@ -58,13 +59,15 @@ private:
     Ui::MainWindow* _ui;
     QTimer _portTimer;
     QImage _image;
+    QSettings _settings;
 
-    std::shared_ptr<EzGraver> _ezGraver;
+    std::shared_ptr<Ez::EzGraver> _ezGraver;
     std::function<void(qint64)> _bytesWrittenProcessor;
     bool _connected;
 
     void _initBindings();
     void _initConversionFlags();
+    void _initProtocols();
 
     void _setConnected(bool connected);
     void _printVerbose(QString const& verbose);

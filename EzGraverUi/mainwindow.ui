@@ -267,7 +267,14 @@
          <widget class="QComboBox" name="ports"/>
         </item>
         <item>
-         <widget class="QComboBox" name="protocolVersion"/>
+         <widget class="QComboBox" name="protocolVersion">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+         </widget>
         </item>
         <item>
          <widget class="QPushButton" name="connect">

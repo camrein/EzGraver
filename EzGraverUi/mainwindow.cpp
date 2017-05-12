@@ -152,8 +152,9 @@ void MainWindow::updateProgress(qint64 bytes) {
 
 void MainWindow::on_connect_clicked() {
     try {
-        _printVerbose(QString{"connecting to port %1"}.arg(_ui->ports->currentText()));
-        _ezGraver = Ez::create(_ui->ports->currentText(), _ui->protocolVersion->currentData().toInt());
+        auto protocol = _ui->protocolVersion->currentData().toInt();
+        _printVerbose(QString{"connecting to port %1 with protocol version %2"}.arg(_ui->ports->currentText()).arg(protocol));
+        _ezGraver = Ez::create(_ui->ports->currentText(), protocol);
         _printVerbose("connection established successfully");
         _setConnected(true);
 

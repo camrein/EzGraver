@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QTimer>
+#include <QSettings>
 
 #include <memory>
 #include <functional>
@@ -58,6 +59,7 @@ private:
     Ui::MainWindow* _ui;
     QTimer _portTimer;
     QImage _image;
+    QSettings _settings;
 
     std::shared_ptr<Ez::EzGraver> _ezGraver;
     std::function<void(qint64)> _bytesWrittenProcessor;

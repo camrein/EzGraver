@@ -18,7 +18,7 @@ using namespace Ez;
 
 MainWindow::MainWindow(QWidget* parent)
         :  QMainWindow{parent}, _ui{new Ui::MainWindow},
-          _portTimer{}, _image{}, _ezGraver{}, _bytesWrittenProcessor{[](qint64){}}, _connected{false} {
+          _portTimer{}, _image{}, _ezGraver{}, _bytesWrittenProcessor{[](qint64){}}, _connected{false}, _settings{"EzGraver", "EzGraver"} {
     _ui->setupUi(this);
     setAcceptDrops(true);
 
@@ -93,8 +93,14 @@ void MainWindow::_initConversionFlags() {
 }
 
 void MainWindow::_initProtocols() {
-    for(auto protocol : Ez::protocols()) {
+    auto protocols = Ez::protocols();
+    for(auto protocol : protocols) {
         _ui->protocolVersion->addItem(QString{"v%1"}.arg(protocol), protocol);
+    }
+
+    auto selectedProtocol = _settings.value("protocol", 1).toInt();
+    if(std::find(protocols.cbegin(), protocols.cend(), selectedProtocol) != protocols.cend()) {
+        _ui->protocolVersion->setCurrentText(QString{"v%1"}.arg(selectedProtocol));
     }
 }
 
@@ -157,6 +163,8 @@ void MainWindow::on_connect_clicked() {
         _ezGraver = Ez::create(_ui->ports->currentText(), protocol);
         _printVerbose("connection established successfully");
         _setConnected(true);
+
+        _settings.setValue("protocol", protocol);
 
         connect(_ezGraver->serialPort().get(), &QSerialPort::bytesWritten, this, &MainWindow::bytesWritten);
     } catch(std::exception const& e) {

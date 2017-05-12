@@ -65,6 +65,7 @@ private:
 
     void _initBindings();
     void _initConversionFlags();
+    void _initProtocols();
 
     void _setConnected(bool connected);
     void _printVerbose(QString const& verbose);

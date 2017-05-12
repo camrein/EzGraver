@@ -10,8 +10,8 @@
 #include <QDebug>
 
 #include <stdexcept>
+#include <algorithm>
 
-#include "protocol.h"
 #include "ezgraver_factory.h"
 
 using namespace Ez;
@@ -27,6 +27,7 @@ MainWindow::MainWindow(QWidget* parent)
 
     _initBindings();
     _initConversionFlags();
+    _initProtocols();
     _setConnected(false);
 
     _ui->image->setImageDimensions(QSize{EzGraver::ImageWidth, EzGraver::ImageHeight});
@@ -81,8 +82,6 @@ void MainWindow::_initBindings() {
     connect(_ui->imageScale, &QSlider::valueChanged, [this](int const& v) { _ui->image->setImageScale(v / 100.0); });
     connect(_ui->resetImageScale, &QPushButton::clicked, [this] { _ui->imageScale->setValue(100); });
 
-    _ui->protocolVersion->addItem("v1", Ez::Protocol::v1);
-    _ui->protocolVersion->addItem("v2", Ez::Protocol::v2);
     connect(this, &MainWindow::connectedChanged, _ui->protocolVersion, &QComboBox::setDisabled);
 }
 
@@ -91,6 +90,12 @@ void MainWindow::_initConversionFlags() {
     _ui->conversionFlags->addItem("OrderedDither", Qt::OrderedDither);
     _ui->conversionFlags->addItem("ThresholdDither", Qt::ThresholdDither);
     _ui->conversionFlags->setCurrentIndex(0);
+}
+
+void MainWindow::_initProtocols() {
+    for(auto protocol : Ez::protocols()) {
+        _ui->protocolVersion->addItem(QString{"v%1"}.arg(protocol), protocol);
+    }
 }
 
 void MainWindow::_printVerbose(QString const& verbose) {
@@ -148,7 +153,7 @@ void MainWindow::updateProgress(qint64 bytes) {
 void MainWindow::on_connect_clicked() {
     try {
         _printVerbose(QString{"connecting to port %1"}.arg(_ui->ports->currentText()));
-        _ezGraver = Ez::create(_ui->ports->currentText(), static_cast<Ez::Protocol>(_ui->protocolVersion->currentData().toInt()));
+        _ezGraver = Ez::create(_ui->ports->currentText(), _ui->protocolVersion->currentData().toInt());
         _printVerbose("connection established successfully");
         _setConnected(true);
 

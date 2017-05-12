@@ -1,15 +1,18 @@
 #include "ezgraver_factory.h"
 
-#include <stdexcept>
 #include <QString>
 #include <QSerialPort>
 #include <QDebug>
 
+#include <stdexcept>
+
+#include "ezgraver.h"
 #include "ezgraver_v1.h"
+#include "ezgraver_v2.h"
 
 namespace Ez {
 
-std::shared_ptr<EzGraver> create(QString const& portName, Protocol protocol) {
+std::shared_ptr<EzGraver> create(QString const& portName, int protocol) {
     qDebug() << "instantiating EzGraver on port" << portName;
 
     std::shared_ptr<QSerialPort> serial{new QSerialPort(portName)};
@@ -25,12 +28,17 @@ std::shared_ptr<EzGraver> create(QString const& portName, Protocol protocol) {
     }
 
     switch(protocol) {
-    case Protocol::v1:
+    case 1:
         return std::shared_ptr<EzGraver>{new EzGraverV1(serial)};
+    case 2:
+        return std::shared_ptr<EzGraver>{new EzGraverV2(serial)};
     default:
-        throw std::invalid_argument{"unsupported protocol selected"};
+        throw std::invalid_argument{QString{"unsupported protocol '%1' selected"}.arg(protocol).toStdString()};
     }
+}
 
+std::vector<int> protocols() {
+    return std::vector<int>{1, 2};
 }
 
 }

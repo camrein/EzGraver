@@ -15,7 +15,6 @@ SOURCES += ezgraver.cpp \
 
 HEADERS += ezgraver.h\
         ezgravercore_global.h \
-    protocol.h \
     ezgraver_v1.h \
     ezgraver_factory.h \
     ezgraver_v2.h

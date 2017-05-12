@@ -5,7 +5,6 @@
 
 #include <memory>
 
-#include "protocol.h"
 #include "ezgraver.h"
 
 namespace Ez {

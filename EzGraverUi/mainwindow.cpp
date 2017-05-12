@@ -11,6 +11,9 @@
 
 #include <stdexcept>
 
+#include "protocol.h"
+#include "ezgraver_factory.h"
+
 using namespace Ez;
 
 MainWindow::MainWindow(QWidget* parent)
@@ -145,7 +148,7 @@ void MainWindow::updateProgress(qint64 bytes) {
 void MainWindow::on_connect_clicked() {
     try {
         _printVerbose(QString{"connecting to port %1"}.arg(_ui->ports->currentText()));
-        _ezGraver = EzGraver::create(_ui->ports->currentText(), static_cast<Ez::Protocol>(_ui->protocolVersion->currentData().toInt()));
+        _ezGraver = Ez::create(_ui->ports->currentText(), static_cast<Ez::Protocol>(_ui->protocolVersion->currentData().toInt()));
         _printVerbose("connection established successfully");
         _setConnected(true);
 

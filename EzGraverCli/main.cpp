@@ -8,6 +8,7 @@
 #include <exception>
 
 #include "ezgraver.h"
+#include "ezgraver_factory.h"
 
 using namespace Ez;
 
@@ -59,7 +60,7 @@ void uploadImage(std::shared_ptr<EzGraver>& engraver, QList<QString> const& argu
 
 void processCommand(char const& command, QList<QString> const& arguments) {
     try {
-        std::shared_ptr<EzGraver> engraver{EzGraver::create(arguments[0])};
+        std::shared_ptr<EzGraver> engraver{Ez::create(arguments[0])};
 
         switch(command) {
         case 'h':

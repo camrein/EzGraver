@@ -13,7 +13,7 @@
 namespace Ez {
 
 std::shared_ptr<EzGraver> create(QString const& portName, int protocol) {
-    qDebug() << "instantiating EzGraver on port" << portName;
+    qDebug() << "instantiating EzGraver on port" << portName << "with protocol version" << protocol;
 
     std::shared_ptr<QSerialPort> serial{new QSerialPort(portName)};
     serial->setBaudRate(QSerialPort::Baud57600, QSerialPort::AllDirections);

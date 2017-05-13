@@ -18,7 +18,7 @@ HEADERS += ezgraver.h\
     ezgraver_v1.h \
     ezgraver_v2.h \
     specifications.h \
-    ezgraver_factory.h
+    factory.h
 
 unix {
     target.path = /usr/lib

@@ -8,7 +8,7 @@
 #include <exception>
 
 #include "ezgraver.h"
-#include "ezgraver_factory.h"
+#include "factory.h"
 #include "specifications.h"
 
 std::ostream& operator<<(std::ostream& lhv, QString const& rhv) {

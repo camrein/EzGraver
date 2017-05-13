@@ -12,7 +12,7 @@
 #include <stdexcept>
 #include <algorithm>
 
-#include "ezgraver_factory.h"
+#include "factory.h"
 #include "specifications.h"
 
 MainWindow::MainWindow(QWidget* parent)

@@ -1,4 +1,4 @@
-#include "ezgraver_factory.h"
+#include "factory.h"
 
 #include <QString>
 #include <QSerialPort>

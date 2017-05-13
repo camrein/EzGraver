@@ -1,6 +1,8 @@
 #ifndef EZGRAVER_FACTORY_H
 #define EZGRAVER_FACTORY_H
 
+#include "ezgravercore_global.h"
+
 #include <QString>
 #include <QList>
 #include <QStringList>

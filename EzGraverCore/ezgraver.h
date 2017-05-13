@@ -15,16 +15,6 @@ namespace Ez {
  * The connection is closed as soon as the object is destroyed.
  */
 struct EZGRAVERCORESHARED_EXPORT EzGraver {
-
-    /*! The time required to erase the EEPROM in milliseconds. */
-    static int const EraseTimeMs{6000};
-
-    /*! The image width */
-    static int const ImageWidth{512};
-
-    /*! The image height */
-    static int const ImageHeight{512};
-
     /*!
      * Creates an instance of the EzGraver.
      *

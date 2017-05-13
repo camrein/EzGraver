@@ -9,6 +9,7 @@
 
 #include "ezgraver.h"
 #include "ezgraver_factory.h"
+#include "specifications.h"
 
 std::ostream& operator<<(std::ostream& lhv, QString const& rhv) {
     return lhv << rhv.toStdString();
@@ -50,7 +51,7 @@ void uploadImage(std::shared_ptr<Ez::EzGraver>& engraver, QList<QString> const& 
     std::cout << "erasing EEPROM\n";
     engraver->erase();
     engraver->awaitTransmission();
-    QThread::msleep(Ez::EzGraver::EraseTimeMs);
+    QThread::msleep(Ez::Specifications::EraseTimeMs);
 
     std::cout << "uploading image to EEPROM\n";
     engraver->uploadImage(image);

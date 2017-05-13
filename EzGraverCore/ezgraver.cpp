@@ -10,6 +10,8 @@
 #include <algorithm>
 #include <functional>
 
+#include "specifications.h"
+
 namespace Ez {
 
 EzGraver::EzGraver(std::shared_ptr<QSerialPort> serial) : _serial{serial} {}
@@ -61,7 +63,7 @@ void EzGraver::erase() {
 int EzGraver::uploadImage(QImage const& originalImage) {
     qDebug() << "converting image to bitmap";
     QImage image{originalImage
-            .scaled(ImageWidth, ImageHeight)
+            .scaled(Ez::Specifications::ImageWidth, Ez::Specifications::ImageHeight)
             .mirrored()
             .convertToFormat(QImage::Format_Mono)};
     image.invertPixels();

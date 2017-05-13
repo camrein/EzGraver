@@ -1,8 +1,6 @@
 #ifndef SETTINGS_H
 #define SETTINGS_H
 
-#include "ezgravercore_global.h"
-
 namespace Ez {
 namespace Specifications {
 

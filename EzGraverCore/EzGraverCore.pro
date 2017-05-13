@@ -16,9 +16,9 @@ SOURCES += ezgraver.cpp \
 HEADERS += ezgraver.h\
         ezgravercore_global.h \
     ezgraver_v1.h \
-    ezgraver_factory.h \
     ezgraver_v2.h \
-    specifications.h
+    specifications.h \
+    ezgraver_factory.h
 
 unix {
     target.path = /usr/lib

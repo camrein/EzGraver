@@ -2,10 +2,10 @@
 #define EZGRAVER_FACTORY_H
 
 #include <QString>
+#include <QList>
 #include <QStringList>
 
 #include <memory>
-#include <vector>
 
 #include "ezgraver.h"
 
@@ -25,7 +25,7 @@ EZGRAVERCORESHARED_EXPORT std::shared_ptr<EzGraver> create(QString const& portNa
  *
  * \return The available protocols.
  */
-EZGRAVERCORESHARED_EXPORT std::vector<int> protocols();
+EZGRAVERCORESHARED_EXPORT QList<int> protocols();
 
 /*!
  * Gets a list of all available ports.

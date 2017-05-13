@@ -38,8 +38,8 @@ std::shared_ptr<EzGraver> create(QString const& portName, int protocol) {
     }
 }
 
-std::vector<int> protocols() {
-    return std::vector<int>{1, 2};
+QList<int> protocols() {
+    return QList<int>{1, 2};
 }
 
 QStringList availablePorts() {

@@ -97,7 +97,7 @@ void MainWindow::_initProtocols() {
     }
 
     auto selectedProtocol = _settings.value("protocol", 1).toInt();
-    if(std::find(protocols.cbegin(), protocols.cend(), selectedProtocol) != protocols.cend()) {
+    if(protocols.contains(selectedProtocol)) {
         _ui->protocolVersion->setCurrentText(QString{"v%1"}.arg(selectedProtocol));
     }
 }

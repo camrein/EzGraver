@@ -6,8 +6,6 @@
 
 #include "ezgraver.h"
 
-using namespace Ez;
-
 ImageLabel::ImageLabel(QWidget* parent) : ClickLabel{parent}, _image{}, _flags{Qt::DiffuseDither},
     _grayscale{false}, _layer{0}, _layerCount{3}, _keepAspectRatio{false}, _scaled{false}, _imageScale{1.0} {}
 
@@ -100,7 +98,7 @@ void ImageLabel::updateDisplayedImage() {
     }
 
     // Draw white background, otherwise transparency is converted to black.
-    QImage image{QSize{EzGraver::ImageWidth, EzGraver::ImageHeight}, QImage::Format_ARGB32};
+    QImage image{QSize{Ez::EzGraver::ImageWidth, Ez::EzGraver::ImageHeight}, QImage::Format_ARGB32};
     image.fill(QColor{Qt::white});
     QPainter painter{&image};
 

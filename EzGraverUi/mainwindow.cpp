@@ -14,8 +14,6 @@
 
 #include "ezgraver_factory.h"
 
-using namespace Ez;
-
 MainWindow::MainWindow(QWidget* parent)
         :  QMainWindow{parent}, _ui{new Ui::MainWindow},
           _portTimer{}, _image{}, _settings{"EzGraver", "EzGraver"}, _ezGraver{}, _bytesWrittenProcessor{[](qint64){}}, _connected{false} {
@@ -30,7 +28,7 @@ MainWindow::MainWindow(QWidget* parent)
     _initProtocols();
     _setConnected(false);
 
-    _ui->image->setImageDimensions(QSize{EzGraver::ImageWidth, EzGraver::ImageHeight});
+    _ui->image->setImageDimensions(QSize{Ez::EzGraver::ImageWidth, Ez::EzGraver::ImageHeight});
 }
 
 MainWindow::~MainWindow() {
@@ -109,7 +107,7 @@ void MainWindow::_printVerbose(QString const& verbose) {
 }
 
 void MainWindow::updatePorts() {
-    QStringList ports{EzGraver::availablePorts()};
+    QStringList ports{Ez::EzGraver::availablePorts()};
     ports.insert(0, "");
 
     QString original{_ui->ports->currentText()};
@@ -205,7 +203,7 @@ void MainWindow::on_upload_clicked() {
     QImage image{_ui->image->pixmap()->toImage()};
     QTimer* eraseProgressTimer{new QTimer{this}};
     _ui->progress->setValue(0);
-    _ui->progress->setMaximum(EzGraver::EraseTimeMs);
+    _ui->progress->setMaximum(Ez::EzGraver::EraseTimeMs);
 
     auto eraseProgress = std::bind(&MainWindow::_eraseProgressed, this, eraseProgressTimer, image);
     connect(eraseProgressTimer, &QTimer::timeout, eraseProgress);
@@ -215,7 +213,7 @@ void MainWindow::on_upload_clicked() {
 void MainWindow::_eraseProgressed(QTimer* eraseProgressTimer, QImage const& image) {
     auto value = _ui->progress->value() + EraseProgressDelay;
     _ui->progress->setValue(value);
-    if(value < EzGraver::EraseTimeMs) {
+    if(value < Ez::EzGraver::EraseTimeMs) {
         return;
     }
     eraseProgressTimer->stop();

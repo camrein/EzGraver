@@ -3,7 +3,6 @@
 
 #include "ezgravercore_global.h"
 
-#include <QStringList>
 #include <QImage>
 #include <QSerialPort>
 #include <QSize>
@@ -25,13 +24,6 @@ struct EZGRAVERCORESHARED_EXPORT EzGraver {
 
     /*! The image height */
     static int const ImageHeight{512};
-
-    /*!
-     * Gets a list of all available ports.
-     *
-     * \return A list with all ports.
-     */
-    static QStringList availablePorts();
 
     /*!
      * Creates an instance of the EzGraver.

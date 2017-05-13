@@ -107,7 +107,7 @@ void MainWindow::_printVerbose(QString const& verbose) {
 }
 
 void MainWindow::updatePorts() {
-    QStringList ports{Ez::EzGraver::availablePorts()};
+    QStringList ports{Ez::availablePorts()};
     ports.insert(0, "");
 
     QString original{_ui->ports->currentText()};

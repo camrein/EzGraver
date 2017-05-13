@@ -27,7 +27,7 @@ void showHelp() {
 }
 
 void showAvailablePorts() {
-    auto ports = Ez::EzGraver::availablePorts();
+    auto ports = Ez::availablePorts();
     std::cout << "Available Ports: ";
     std::ostream_iterator<QString> out{std::cout, " "};
     std::copy(ports.cbegin(), ports.cend(), out);

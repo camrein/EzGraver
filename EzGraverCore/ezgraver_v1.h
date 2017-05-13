@@ -10,12 +10,7 @@
 namespace Ez {
 
 struct EzGraverV1 : EzGraver {
-    /*!
-     * Creates an instance of the EzGraver with protocol version 1.
-     *
-     * \param serial The serial port to use.
-     */
-    explicit EzGraverV1(std::shared_ptr<QSerialPort> serial);
+    using EzGraver::EzGraver;
 
     /*! Moves the engraver up. */
     void up();

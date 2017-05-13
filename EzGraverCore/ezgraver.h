@@ -34,6 +34,13 @@ struct EZGRAVERCORESHARED_EXPORT EzGraver {
     static QStringList availablePorts();
 
     /*!
+     * Creates an instance of the EzGraver.
+     *
+     * \param serial The serial port to use.
+     */
+    explicit EzGraver(std::shared_ptr<QSerialPort> serial);
+
+    /*!
      * Starts the engraving process with the given \a burnTime.
      *
      * \param burnTime The burn time to use in milliseconds.
@@ -116,8 +123,6 @@ struct EZGRAVERCORESHARED_EXPORT EzGraver {
     virtual ~EzGraver();
 
 protected:
-    explicit EzGraver(std::shared_ptr<QSerialPort> serial);
-
     void _transmit(unsigned char const& data);
     void _transmit(QByteArray const& data);
     void _transmit(QByteArray const& data, int chunkSize);

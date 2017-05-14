@@ -9,6 +9,7 @@
 #include <QThreadPool>
 #include <QDebug>
 #include <QImageReader>
+#include <QFileInfo>
 
 #include <stdexcept>
 #include <algorithm>
@@ -16,6 +17,9 @@
 
 #include "factory.h"
 #include "specifications.h"
+
+static QString const ProtocolSetting{"protocol"};
+static QString const DirectorySetting{"directory"};
 
 MainWindow::MainWindow(QWidget* parent)
         :  QMainWindow{parent}, _ui{new Ui::MainWindow},
@@ -99,7 +103,7 @@ void MainWindow::_initProtocols() {
         _ui->protocolVersion->addItem(QString{"v%1"}.arg(protocol), protocol);
     }
 
-    auto selectedProtocol = _settings.value("protocol", 1).toInt();
+    auto selectedProtocol = _settings.value(ProtocolSetting, 1).toInt();
     if(protocols.contains(selectedProtocol)) {
         _ui->protocolVersion->setCurrentText(QString{"v%1"}.arg(selectedProtocol));
     }
@@ -165,7 +169,7 @@ void MainWindow::on_connect_clicked() {
         _printVerbose("connection established successfully");
         _setConnected(true);
 
-        _settings.setValue("protocol", protocol);
+        _settings.setValue(ProtocolSetting, protocol);
 
         connect(_ezGraver->serialPort().get(), &QSerialPort::bytesWritten, this, &MainWindow::bytesWritten);
     } catch(std::exception const& e) {
@@ -266,10 +270,14 @@ void MainWindow::on_image_clicked() {
         return "*." + format;
     });
 
-    qDebug() << "supported file extensions:" << fileExtensions;
+    auto directory = _settings.value(DirectorySetting, "").toString();
+    if(!QFileInfo{directory}.isDir()) {
+        directory = "";
+    }
 
-    auto fileName = QFileDialog::getOpenFileName(this, "Open Image", "", QString{"Images (%1)"}.arg(fileExtensions.join(" ")));
+    auto fileName = QFileDialog::getOpenFileName(this, "Open Image", directory, QString{"Images (%1)"}.arg(fileExtensions.join(" ")));
     if(!fileName.isNull()) {
+        _settings.setValue(DirectorySetting, QFileInfo{fileName}.absoluteDir().absolutePath());
         _loadImage(fileName);
     }
 }

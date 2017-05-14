@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <QTimer>
 #include <QSettings>
+#include <QString>
 
 #include <memory>
 #include <functional>

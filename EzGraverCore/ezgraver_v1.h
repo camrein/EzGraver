@@ -13,16 +13,16 @@ struct EzGraverV1 : EzGraver {
     using EzGraver::EzGraver;
 
     /*! Moves the engraver up. */
-    void up();
+    void up() override;
 
     /*! Moves the engraver down. */
-    void down();
+    void down() override;
 
     /*! Moves the engraver left. */
-    void left();
+    void left() override;
 
     /*! Moves the engraver right. */
-    void right();
+    void right() override;
 };
 
 }

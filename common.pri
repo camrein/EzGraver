@@ -1,3 +1,3 @@
 DEFINES += EZ_VERSION=\\\"$$(EZ_VERSION)\\\"
 
-CONFIG += c++14
+CONFIG += c++11

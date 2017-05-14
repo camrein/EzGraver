@@ -8,9 +8,11 @@
 #include <QIcon>
 #include <QThreadPool>
 #include <QDebug>
+#include <QImageReader>
 
 #include <stdexcept>
 #include <algorithm>
+#include <iterator>
 
 #include "factory.h"
 #include "specifications.h"
@@ -258,7 +260,15 @@ void MainWindow::on_disconnect_clicked() {
 }
 
 void MainWindow::on_image_clicked() {
-    auto fileName = QFileDialog::getOpenFileName(this, "Open Image", "", "Images (*.png *.jpeg *.jpg *.bmp)");
+    auto supportedFormats = QImageReader::supportedImageFormats();
+    QStringList fileExtensions{};
+    std::transform(supportedFormats.cbegin(), supportedFormats.cend(), std::back_inserter(fileExtensions), [](auto format) {
+        return "*." + format;
+    });
+
+    qDebug() << "supported file extensions:" << fileExtensions;
+
+    auto fileName = QFileDialog::getOpenFileName(this, "Open Image", "", QString{"Images (%1)"}.arg(fileExtensions.join(" ")));
     if(!fileName.isNull()) {
         _loadImage(fileName);
     }

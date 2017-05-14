@@ -39,7 +39,7 @@ MainWindow::~MainWindow() {
 }
 
 void MainWindow::_initBindings() {
-    connect(_ui->burnTime, &QSlider::valueChanged, [this](int const& v) { _ui->burnTimeLabel->setText(QString::number(v)); });
+    connect(_ui->burnTime, &QSlider::valueChanged, [this](auto v) { _ui->burnTimeLabel->setText(QString::number(v)); });
 
     connect(this, &MainWindow::connectedChanged, _ui->ports, &QComboBox::setDisabled);
     connect(this, &MainWindow::connectedChanged, _ui->connect, &QPushButton::setDisabled);
@@ -55,7 +55,7 @@ void MainWindow::_initBindings() {
     connect(this, &MainWindow::connectedChanged, _ui->start, &QPushButton::setEnabled);
     connect(this, &MainWindow::connectedChanged, _ui->pause, &QPushButton::setEnabled);
     connect(this, &MainWindow::connectedChanged, _ui->reset, &QPushButton::setEnabled);
-    connect(_ui->conversionFlags, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), [this](int index) {
+    connect(_ui->conversionFlags, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), [this](auto index) {
         _ui->image->setConversionFlags(static_cast<Qt::ImageConversionFlags>(_ui->conversionFlags->itemData(index).toInt()));
     });
 
@@ -79,8 +79,8 @@ void MainWindow::_initBindings() {
     connect(_ui->scaled, &QCheckBox::toggled, _ui->imageScale, &QSlider::setEnabled);
     connect(_ui->scaled, &QCheckBox::toggled, _ui->resetImageScale, &QSlider::setEnabled);
     connect(_ui->scaled, &QCheckBox::toggled, _ui->image, &ImageLabel::setScaled);
-    connect(_ui->imageScale, &QSlider::valueChanged, [this](int const& v) { _ui->imageScaleLabel->setText(QString::number(v)); });
-    connect(_ui->imageScale, &QSlider::valueChanged, [this](int const& v) { _ui->image->setImageScale(v / 100.0); });
+    connect(_ui->imageScale, &QSlider::valueChanged, [this](auto v) { _ui->imageScaleLabel->setText(QString::number(v)); });
+    connect(_ui->imageScale, &QSlider::valueChanged, [this](auto v) { _ui->image->setImageScale(v / 100.0); });
     connect(_ui->resetImageScale, &QPushButton::clicked, [this] { _ui->imageScale->setValue(100); });
 
     connect(this, &MainWindow::connectedChanged, _ui->protocolVersion, &QComboBox::setDisabled);

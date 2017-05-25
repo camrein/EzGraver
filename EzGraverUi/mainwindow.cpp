@@ -21,9 +21,7 @@
 static QString const ProtocolSetting{"protocol"};
 static QString const DirectorySetting{"directory"};
 
-MainWindow::MainWindow(QWidget* parent)
-        :  QMainWindow{parent}, _ui{new Ui::MainWindow},
-          _portTimer{}, _image{}, _settings{"EzGraver", "EzGraver"}, _ezGraver{}, _bytesWrittenProcessor{[](qint64){}}, _connected{false} {
+MainWindow::MainWindow(QWidget* parent) : QMainWindow{parent}, _ui{new Ui::MainWindow} {
     _ui->setupUi(this);
     setAcceptDrops(true);
 

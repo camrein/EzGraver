@@ -8,9 +8,8 @@
 #include <exception>
 
 #include "ezgraver.h"
-#include "ezgraver_factory.h"
-
-using namespace Ez;
+#include "factory.h"
+#include "specifications.h"
 
 std::ostream& operator<<(std::ostream& lhv, QString const& rhv) {
     return lhv << rhv.toStdString();
@@ -29,14 +28,14 @@ void showHelp() {
 }
 
 void showAvailablePorts() {
-    auto ports = EzGraver::availablePorts();
+    auto ports = Ez::availablePorts();
     std::cout << "Available Ports: ";
     std::ostream_iterator<QString> out{std::cout, " "};
     std::copy(ports.cbegin(), ports.cend(), out);
     std::cout << '\n';
 }
 
-void uploadImage(std::shared_ptr<EzGraver>& engraver, QList<QString> const& arguments) {
+void uploadImage(std::shared_ptr<Ez::EzGraver>& engraver, QList<QString> const& arguments) {
     if(arguments.size() < 2) {
         std::cout << "No image provided\n";
         return;
@@ -52,7 +51,7 @@ void uploadImage(std::shared_ptr<EzGraver>& engraver, QList<QString> const& argu
     std::cout << "erasing EEPROM\n";
     engraver->erase();
     engraver->awaitTransmission();
-    QThread::msleep(EzGraver::EraseTimeMs);
+    QThread::msleep(Ez::Specifications::EraseTimeMs);
 
     std::cout << "uploading image to EEPROM\n";
     engraver->uploadImage(image);
@@ -60,7 +59,7 @@ void uploadImage(std::shared_ptr<EzGraver>& engraver, QList<QString> const& argu
 
 void processCommand(char const& command, QList<QString> const& arguments) {
     try {
-        std::shared_ptr<EzGraver> engraver{Ez::create(arguments[0])};
+        std::shared_ptr<Ez::EzGraver> engraver{Ez::create(arguments[0])};
 
         switch(command) {
         case 'h':

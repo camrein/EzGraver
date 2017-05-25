@@ -3,7 +3,6 @@
 
 #include "ezgravercore_global.h"
 
-#include <QStringList>
 #include <QImage>
 #include <QSerialPort>
 #include <QSize>
@@ -16,22 +15,12 @@ namespace Ez {
  * The connection is closed as soon as the object is destroyed.
  */
 struct EZGRAVERCORESHARED_EXPORT EzGraver {
-
-    /*! The time required to erase the EEPROM in milliseconds. */
-    static int const EraseTimeMs{6000};
-
-    /*! The image width */
-    static int const ImageWidth{512};
-
-    /*! The image height */
-    static int const ImageHeight{512};
-
     /*!
-     * Gets a list of all available ports.
+     * Creates an instance of the EzGraver.
      *
-     * \return A list with all ports.
+     * \param serial The serial port to use.
      */
-    static QStringList availablePorts();
+    explicit EzGraver(std::shared_ptr<QSerialPort> serial);
 
     /*!
      * Starts the engraving process with the given \a burnTime.
@@ -116,8 +105,6 @@ struct EZGRAVERCORESHARED_EXPORT EzGraver {
     virtual ~EzGraver();
 
 protected:
-    explicit EzGraver(std::shared_ptr<QSerialPort> serial);
-
     void _transmit(unsigned char const& data);
     void _transmit(QByteArray const& data);
     void _transmit(QByteArray const& data, int chunkSize);

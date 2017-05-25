@@ -221,14 +221,14 @@ signals:
      */
     void imageLoadedChanged(bool imageLoaded);
 private:
-    QImage _image;
-    Qt::ImageConversionFlags _flags;
-    bool _grayscale;
-    int _layer;
-    int _layerCount;
-    bool _keepAspectRatio;
-    float _scaled;
-    float _imageScale;
+    QImage _image{};
+    Qt::ImageConversionFlags _flags{Qt::DiffuseDither};
+    bool _grayscale{false};
+    int _layer{0};
+    int _layerCount{3};
+    bool _keepAspectRatio{false};
+    bool _scaled{false};
+    float _imageScale{1.0};
 
     void updateDisplayedImage();
     QImage _createGrayscaleImage(QImage const& original) const;

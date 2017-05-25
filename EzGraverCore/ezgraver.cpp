@@ -10,6 +10,8 @@
 #include <algorithm>
 #include <functional>
 
+#include "specifications.h"
+
 namespace Ez {
 
 EzGraver::EzGraver(std::shared_ptr<QSerialPort> serial) : _serial{serial} {}
@@ -61,7 +63,7 @@ void EzGraver::erase() {
 int EzGraver::uploadImage(QImage const& originalImage) {
     qDebug() << "converting image to bitmap";
     QImage image{originalImage
-            .scaled(ImageWidth, ImageHeight)
+            .scaled(Ez::Specifications::ImageWidth, Ez::Specifications::ImageHeight)
             .mirrored()
             .convertToFormat(QImage::Format_Mono)};
     image.invertPixels();
@@ -108,15 +110,6 @@ void EzGraver::_transmit(QByteArray const& data, int chunkSize) {
 EzGraver::~EzGraver() {
     qDebug() << "EzGraver is being destroyed, closing serial port";
     _serial->close();
-}
-
-QStringList EzGraver::availablePorts() {
-    auto toPortName = [](QSerialPortInfo const& port) { return port.portName(); };
-    auto ports = QSerialPortInfo::availablePorts();
-    QStringList result{};
-
-    std::transform(ports.cbegin(), ports.cend(), std::back_inserter<QStringList>(result), toPortName);
-    return result;
 }
 
 }

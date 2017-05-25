@@ -1,7 +1,8 @@
-#include "ezgraver_factory.h"
+#include "factory.h"
 
 #include <QString>
 #include <QSerialPort>
+#include <QSerialPortInfo>
 #include <QDebug>
 
 #include <stdexcept>
@@ -37,8 +38,17 @@ std::shared_ptr<EzGraver> create(QString const& portName, int protocol) {
     }
 }
 
-std::vector<int> protocols() {
-    return std::vector<int>{1, 2};
+QList<int> protocols() {
+    return QList<int>{1, 2};
+}
+
+QStringList availablePorts() {
+    auto toPortName = [](QSerialPortInfo const& port) { return port.portName(); };
+    auto ports = QSerialPortInfo::availablePorts();
+    QStringList result{};
+
+    std::transform(ports.cbegin(), ports.cend(), std::back_inserter<QStringList>(result), toPortName);
+    return result;
 }
 
 }

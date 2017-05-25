@@ -8,17 +8,20 @@
 #include <QIcon>
 #include <QThreadPool>
 #include <QDebug>
+#include <QImageReader>
+#include <QFileInfo>
 
 #include <stdexcept>
 #include <algorithm>
+#include <iterator>
 
-#include "ezgraver_factory.h"
+#include "factory.h"
+#include "specifications.h"
 
-using namespace Ez;
+static QString const ProtocolSetting{"protocol"};
+static QString const DirectorySetting{"directory"};
 
-MainWindow::MainWindow(QWidget* parent)
-        :  QMainWindow{parent}, _ui{new Ui::MainWindow},
-          _portTimer{}, _image{}, _settings{"EzGraver", "EzGraver"}, _ezGraver{}, _bytesWrittenProcessor{[](qint64){}}, _connected{false} {
+MainWindow::MainWindow(QWidget* parent) : QMainWindow{parent}, _ui{new Ui::MainWindow} {
     _ui->setupUi(this);
     setAcceptDrops(true);
 
@@ -30,7 +33,7 @@ MainWindow::MainWindow(QWidget* parent)
     _initProtocols();
     _setConnected(false);
 
-    _ui->image->setImageDimensions(QSize{EzGraver::ImageWidth, EzGraver::ImageHeight});
+    _ui->image->setImageDimensions(QSize{Ez::Specifications::ImageWidth, Ez::Specifications::ImageHeight});
 }
 
 MainWindow::~MainWindow() {
@@ -54,7 +57,7 @@ void MainWindow::_initBindings() {
     connect(this, &MainWindow::connectedChanged, _ui->start, &QPushButton::setEnabled);
     connect(this, &MainWindow::connectedChanged, _ui->pause, &QPushButton::setEnabled);
     connect(this, &MainWindow::connectedChanged, _ui->reset, &QPushButton::setEnabled);
-    connect(_ui->conversionFlags, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), [this](int index) {
+    connect(_ui->conversionFlags, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), [this](int const& index) {
         _ui->image->setConversionFlags(static_cast<Qt::ImageConversionFlags>(_ui->conversionFlags->itemData(index).toInt()));
     });
 
@@ -98,8 +101,8 @@ void MainWindow::_initProtocols() {
         _ui->protocolVersion->addItem(QString{"v%1"}.arg(protocol), protocol);
     }
 
-    auto selectedProtocol = _settings.value("protocol", 1).toInt();
-    if(std::find(protocols.cbegin(), protocols.cend(), selectedProtocol) != protocols.cend()) {
+    auto selectedProtocol = _settings.value(ProtocolSetting, 1).toInt();
+    if(protocols.contains(selectedProtocol)) {
         _ui->protocolVersion->setCurrentText(QString{"v%1"}.arg(selectedProtocol));
     }
 }
@@ -109,7 +112,7 @@ void MainWindow::_printVerbose(QString const& verbose) {
 }
 
 void MainWindow::updatePorts() {
-    QStringList ports{EzGraver::availablePorts()};
+    QStringList ports{Ez::availablePorts()};
     ports.insert(0, "");
 
     QString original{_ui->ports->currentText()};
@@ -164,7 +167,7 @@ void MainWindow::on_connect_clicked() {
         _printVerbose("connection established successfully");
         _setConnected(true);
 
-        _settings.setValue("protocol", protocol);
+        _settings.setValue(ProtocolSetting, protocol);
 
         connect(_ezGraver->serialPort().get(), &QSerialPort::bytesWritten, this, &MainWindow::bytesWritten);
     } catch(std::exception const& e) {
@@ -205,7 +208,7 @@ void MainWindow::on_upload_clicked() {
     QImage image{_ui->image->pixmap()->toImage()};
     QTimer* eraseProgressTimer{new QTimer{this}};
     _ui->progress->setValue(0);
-    _ui->progress->setMaximum(EzGraver::EraseTimeMs);
+    _ui->progress->setMaximum(Ez::Specifications::EraseTimeMs);
 
     auto eraseProgress = std::bind(&MainWindow::_eraseProgressed, this, eraseProgressTimer, image);
     connect(eraseProgressTimer, &QTimer::timeout, eraseProgress);
@@ -215,7 +218,7 @@ void MainWindow::on_upload_clicked() {
 void MainWindow::_eraseProgressed(QTimer* eraseProgressTimer, QImage const& image) {
     auto value = _ui->progress->value() + EraseProgressDelay;
     _ui->progress->setValue(value);
-    if(value < EzGraver::EraseTimeMs) {
+    if(value < Ez::Specifications::EraseTimeMs) {
         return;
     }
     eraseProgressTimer->stop();
@@ -259,8 +262,20 @@ void MainWindow::on_disconnect_clicked() {
 }
 
 void MainWindow::on_image_clicked() {
-    auto fileName = QFileDialog::getOpenFileName(this, "Open Image", "", "Images (*.png *.jpeg *.jpg *.bmp)");
+    auto supportedFormats = QImageReader::supportedImageFormats();
+    QStringList fileExtensions{};
+    std::transform(supportedFormats.cbegin(), supportedFormats.cend(), std::back_inserter(fileExtensions), [](QByteArray const& format) {
+        return "*." + format;
+    });
+
+    auto directory = _settings.value(DirectorySetting, "").toString();
+    if(!QFileInfo{directory}.isDir()) {
+        directory = "";
+    }
+
+    auto fileName = QFileDialog::getOpenFileName(this, "Open Image", directory, QString{"Images (%1)"}.arg(fileExtensions.join(" ")));
     if(!fileName.isNull()) {
+        _settings.setValue(DirectorySetting, QFileInfo{fileName}.absoluteDir().absolutePath());
         _loadImage(fileName);
     }
 }

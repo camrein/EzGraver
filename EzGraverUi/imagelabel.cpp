@@ -5,11 +5,9 @@
 #include <algorithm>
 
 #include "ezgraver.h"
+#include "specifications.h"
 
-using namespace Ez;
-
-ImageLabel::ImageLabel(QWidget* parent) : ClickLabel{parent}, _image{}, _flags{Qt::DiffuseDither},
-    _grayscale{false}, _layer{0}, _layerCount{3}, _keepAspectRatio{false}, _scaled{false}, _imageScale{1.0} {}
+ImageLabel::ImageLabel(QWidget* parent) : ClickLabel{parent} {}
 
 ImageLabel::~ImageLabel() {}
 
@@ -75,7 +73,7 @@ void ImageLabel::setKeepAspectRatio(bool const& keepAspectRatio) {
 }
 
 bool ImageLabel::scaled() const {
-    return _imageScale;
+    return _scaled;
 }
 
 void ImageLabel::setScaled(bool const& scaled) {
@@ -100,7 +98,7 @@ void ImageLabel::updateDisplayedImage() {
     }
 
     // Draw white background, otherwise transparency is converted to black.
-    QImage image{QSize{EzGraver::ImageWidth, EzGraver::ImageHeight}, QImage::Format_ARGB32};
+    QImage image{QSize{Ez::Specifications::ImageWidth, Ez::Specifications::ImageHeight}, QImage::Format_ARGB32};
     image.fill(QColor{Qt::white});
     QPainter painter{&image};
 

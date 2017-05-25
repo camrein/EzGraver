@@ -4,8 +4,6 @@
 
 namespace Ez {
 
-EzGraverV1::EzGraverV1(std::shared_ptr<QSerialPort> serial) : EzGraver{serial} { }
-
 void EzGraverV1::up() {
     qDebug() << "moving up";
     _transmit(0xF5);

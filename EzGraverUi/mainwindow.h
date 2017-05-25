@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <QTimer>
 #include <QSettings>
+#include <QString>
 
 #include <memory>
 #include <functional>
@@ -57,13 +58,13 @@ private:
     static int const EraseProgressDelay{500};
 
     Ui::MainWindow* _ui;
-    QTimer _portTimer;
-    QImage _image;
-    QSettings _settings;
+    QTimer _portTimer{};
+    QImage _image{};
+    QSettings _settings{"EzGraver", "EzGraver"};
 
-    std::shared_ptr<Ez::EzGraver> _ezGraver;
-    std::function<void(qint64)> _bytesWrittenProcessor;
-    bool _connected;
+    std::shared_ptr<Ez::EzGraver> _ezGraver{};
+    std::function<void(qint64)> _bytesWrittenProcessor{[](qint64){}};
+    bool _connected{false};
 
     void _initBindings();
     void _initConversionFlags();

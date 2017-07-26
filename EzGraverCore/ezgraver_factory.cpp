@@ -30,9 +30,9 @@ std::shared_ptr<EzGraver> create(QString const& portName, int protocol) {
 
     switch(protocol) {
     case 1:
-        return std::shared_ptr<EzGraver>{new EzGraverV1(serial)};
+        return std::make_shared<EzGraverV1>(serial);
     case 2:
-        return std::shared_ptr<EzGraver>{new EzGraverV2(serial)};
+        return std::make_shared<EzGraverV2>(serial);
     default:
         throw std::invalid_argument{QString{"unsupported protocol '%1' selected"}.arg(protocol).toStdString()};
     }

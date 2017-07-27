@@ -47,7 +47,7 @@ QStringList availablePorts() {
     auto ports = QSerialPortInfo::availablePorts();
     QStringList result{};
 
-    std::transform(ports.cbegin(), ports.cend(), std::back_inserter<QStringList>(result), toPortName);
+    std::transform(ports.cbegin(), ports.cend(), std::back_inserter(result), toPortName);
     return result;
 }
 

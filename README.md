@@ -82,6 +82,12 @@ Install the binaries.
 make install
 ```
 
+# Support EzGraver
+Knowing that people enjoy EzGraver is a great honor. If you like to support it, stars are appreciated and will help others getting aware of EzGraver.
+Feature requests, bug reports, general feedback, and code contributions are always welcome and will support further improvements of EzGraver.
+
+However, if you feel like showing your appreciation in a different way, [PayPal donations](https://www.paypal.me/camrein) are happily received as well.
+
 # Acknowledgment
 Many thanks to:
 

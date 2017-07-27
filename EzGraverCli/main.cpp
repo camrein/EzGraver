@@ -119,6 +119,6 @@ int main(int argc, char* argv[]) {
     QCoreApplication app{argc, argv};
 
     QStringList arguments{};
-    std::copy(argv, argv+argc, std::back_insert_iterator<QStringList>(arguments));
+    std::copy(argv, argv+argc, std::back_inserter<QStringList>(arguments));
     handleArguments(arguments);
 }

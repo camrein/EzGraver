@@ -59,7 +59,7 @@ void uploadImage(std::shared_ptr<Ez::EzGraver>& engraver, QList<QString> const& 
 
 void processCommand(char const& command, QList<QString> const& arguments) {
     try {
-        std::shared_ptr<Ez::EzGraver> engraver{Ez::create(arguments[0])};
+        auto engraver = Ez::create(arguments[0]);
 
         switch(command) {
         case 'h':

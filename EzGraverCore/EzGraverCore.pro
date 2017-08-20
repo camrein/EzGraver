@@ -10,8 +10,8 @@ DEFINES += EZGRAVERCORE_LIBRARY
 
 SOURCES += ezgraver.cpp \
     ezgraver_v1.cpp \
-    ezgraver_factory.cpp \
-    ezgraver_v2.cpp
+    ezgraver_v2.cpp \
+    factory.cpp
 
 HEADERS += ezgraver.h\
         ezgravercore_global.h \

@@ -72,14 +72,34 @@ void ImageLabel::setKeepAspectRatio(bool const& keepAspectRatio) {
     emit keepAspectRatioChanged(keepAspectRatio);
 }
 
-bool ImageLabel::scaled() const {
-    return _scaled;
+bool ImageLabel::flipHorizontally() const {
+    return _flipHorizontally;
 }
 
-void ImageLabel::setScaled(bool const& scaled) {
-    _scaled = scaled;
+void ImageLabel::setFlipHorizontally(bool const& flipHorizontally) {
+    _flipHorizontally = flipHorizontally;
     updateDisplayedImage();
-    emit scaledChanged(scaled);
+    emit flipHorizontallyChanged(flipHorizontally);
+}
+
+bool ImageLabel::flipVertically() const {
+    return _flipVertically;
+}
+
+void ImageLabel::setFlipVertically(bool const& flipVertically) {
+    _flipVertically = flipVertically;
+    updateDisplayedImage();
+    emit flipVerticallyChanged(flipVertically);
+}
+
+bool ImageLabel::transformed() const {
+    return _transformed;
+}
+
+void ImageLabel::setTransformed(bool const& transformed) {
+    _transformed = transformed;
+    updateDisplayedImage();
+    emit transformedChanged(transformed);
 }
 
 float ImageLabel::imageScale() const {
@@ -92,6 +112,16 @@ void ImageLabel::setImageScale(float const& imageScale) {
     emit imageScaleChanged(imageScale);
 }
 
+int ImageLabel::imageRotation() const {
+    return _imageRotation;
+}
+
+void ImageLabel::setImageRotation(int const& imageRotation) {
+    _imageRotation = imageRotation;
+    updateDisplayedImage();
+    emit imageRotationChanged(imageRotation);
+}
+
 void ImageLabel::updateDisplayedImage() {
     if(!imageLoaded()) {
         return;
@@ -102,17 +132,24 @@ void ImageLabel::updateDisplayedImage() {
     image.fill(QColor{Qt::white});
     QPainter painter{&image};
 
-    // As at this time, the target image is quadratic, scaling according the larger dimension is sufficient.
-    if(_scaled) {
-        auto scaled = _image.scaled(_image.width() * _imageScale, _image.height() * _imageScale);
+    QImage flipped{_image.mirrored(_flipHorizontally, _flipVertically)};
+
+    if(_transformed) {
+        QTransform rotation{};
+        rotation.rotate(_imageRotation);
+        auto rotated = flipped.transformed(rotation);
+
+        auto scaled = rotated.scaled(rotated.width() * _imageScale, rotated.height() * _imageScale);
         QPoint position{(image.width() - scaled.width()) / 2, (image.height() - scaled.height()) / 2};
+
         painter.drawImage(position, scaled);
     } else if(_keepAspectRatio) {
-        auto scaled = (_image.width() > _image.height() ? _image.scaledToWidth(image.width()) : _image.scaledToHeight(image.height()));
-        auto position = (_image.width() > _image.height() ? QPoint{0, (image.height() - scaled.height()) / 2} : QPoint{(image.width() - scaled.width()) / 2, 0});
+        // As at this time, the target image is quadratic, scaling according the larger dimension is sufficient.
+        auto scaled = (flipped.width() > flipped.height() ? flipped.scaledToWidth(image.width()) : flipped.scaledToHeight(image.height()));
+        auto position = (flipped.width() > flipped.height() ? QPoint{0, (image.height() - scaled.height()) / 2} : QPoint{(image.width() - scaled.width()) / 2, 0});
         painter.drawImage(position, scaled);
     } else {
-        painter.drawImage(QPoint{0, 0}, _image.scaled(image.size()));
+        painter.drawImage(QPoint{0, 0}, flipped.scaled(image.size()));
     }
 
     auto rendered = _grayscale

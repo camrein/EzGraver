@@ -67,6 +67,10 @@ private:
     bool _connected{false};
 
     void _initBindings();
+    void _initSetupBindings();
+    void _initTransformationBindings();
+    void _initLayerBindings();
+
     void _initConversionFlags();
     void _initProtocols();
 

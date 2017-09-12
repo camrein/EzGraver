@@ -7,12 +7,19 @@ class ImageLabel : public ClickLabel {
     Q_OBJECT
     Q_PROPERTY(QImage image READ image WRITE setImage NOTIFY imageChanged)
     Q_PROPERTY(Qt::ImageConversionFlags conversionFlags READ conversionFlags WRITE setConversionFlags NOTIFY conversionFlagsChanged)
+
     Q_PROPERTY(bool grayscale READ grayscale WRITE setGrayscale NOTIFY grayscaleChanged)
     Q_PROPERTY(int layer READ layer WRITE setLayer NOTIFY layerChanged)
     Q_PROPERTY(int layerCount READ layerCount WRITE setLayerCount NOTIFY layerCountChanged)
+
     Q_PROPERTY(bool keepAspectRatio READ keepAspectRatio WRITE setKeepAspectRatio NOTIFY keepAspectRatioChanged)
-    Q_PROPERTY(bool scaled READ scaled WRITE setScaled NOTIFY scaledChanged)
+    Q_PROPERTY(bool flipHorizontally READ flipHorizontally WRITE setFlipHorizontally NOTIFY flipHorizontallyChanged)
+    Q_PROPERTY(bool flipVertically READ flipVertically WRITE setFlipVertically NOTIFY flipVerticallyChanged)
+
+    Q_PROPERTY(bool transformed READ transformed WRITE setTransformed NOTIFY transformedChanged)
     Q_PROPERTY(float imageScale READ imageScale WRITE setImageScale NOTIFY imageScaleChanged)
+    Q_PROPERTY(float imageRotation READ imageRotation WRITE setImageRotation NOTIFY imageRotationChanged)
+
     Q_PROPERTY(bool imageLoaded READ imageLoaded NOTIFY imageLoadedChanged)
 
 public:
@@ -116,18 +123,46 @@ public:
     void setKeepAspectRatio(bool const& keepAspectRatio);
 
     /*!
-     * Gets if the image is being scaled.
+     * Gets the if image should be flipped horizontally.
      *
-     * \return Returns \c true if the image is being scaled.
+     * \return Returns \c true if the image should be flipped horizontally.
      */
-    bool scaled() const;
+    bool flipHorizontally() const;
 
     /*!
-     * Sets if the image is being scaled.
+     * Sets the the the image should be flipped horizontally.
      *
-     * \param scaled \c true if the iamge is being scaled.
+     * \param flipHorizontally \c true if the should be flipped horizontally.
      */
-    void setScaled(bool const& scaled);
+    void setFlipHorizontally(bool const& flipHorizontally);
+
+    /*!
+     * Gets the if image should be flipped vertically.
+     *
+     * \return Returns \c true if the image should be flipped vertically.
+     */
+    bool flipVertically() const;
+
+    /*!
+     * Sets the the the image should be flipped vertically.
+     *
+     * \param flipHorizontally \c true if the should be flipped vertically.
+     */
+    void setFlipVertically(bool const& flipVertically);
+
+    /*!
+     * Gets if the image is being transformed.
+     *
+     * \return Returns \c true if the image is being transformed.
+     */
+    bool transformed() const;
+
+    /*!
+     * Sets if the image is being transformed.
+     *
+     * \param transformed \c true if the image is being transformed.
+     */
+    void setTransformed(bool const& transformed);
 
     /*!
      * Gets the current image scale.
@@ -139,9 +174,23 @@ public:
     /*!
      * Sets the image scale of the image.
      *
-     * \param imageScale The image sacle. 1.0 equals to 100% (origina size).
+     * \param imageScale The image scale. 1.0 equals to 100% (original size).
      */
     void setImageScale(float const& imageScale);
+
+    /*!
+     * Gets the current image rotation.
+     *
+     * \return The image rotation in degrees.
+     */
+    int imageRotation() const;
+
+    /*!
+     * Sets the image rotation of the image.
+     *
+     * \param imageRotation The image rotation in degrees.
+     */
+    void setImageRotation(int const& imageRotation);
 
     /*!
      * Gets if an image has been loaded.
@@ -201,11 +250,25 @@ signals:
     void keepAspectRatioChanged(bool const& keepAspectRatio);
 
     /*!
-     * Fired as soon as the image is being scaled.
+     * Fired as soon as the image is flipped horizontally.
      *
-     * \param scaled \c true if the image is being scaled.
+     * \param flipHorizontally \c true if the image is flipped horizontally.
      */
-    void scaledChanged(float const& imageScale);
+    void flipHorizontallyChanged(bool const& flipHorizontally);
+
+    /*!
+     * Fired as soon as the image is flipped vertically.
+     *
+     * \param flipVertically \c true if the image is flipped vertically.
+     */
+    void flipVerticallyChanged(bool const& flipVertically);
+
+    /*!
+     * Fired as soon as the image is being transformed.
+     *
+     * \param transformed \c true if the image is being transformed.
+     */
+    void transformedChanged(bool const& transformed);
 
     /*!
      * Fired as soon as the image scale changed.
@@ -213,6 +276,13 @@ signals:
      * \param imageScale The current image scale. 1.0 equals to 100%.
      */
     void imageScaleChanged(float const& imageScale);
+
+    /*!
+     * Fired as soon as the image rotation changed.
+     *
+     * \param imageRotation The current image rotation in degrees.
+     */
+    void imageRotationChanged(int const& imageRotation);
 
     /*!
      * Fired as soon as an image has been loaded.
@@ -226,9 +296,14 @@ private:
     bool _grayscale{false};
     int _layer{0};
     int _layerCount{3};
+
     bool _keepAspectRatio{false};
-    bool _scaled{false};
+    bool _flipHorizontally{false};
+    bool _flipVertically{false};
+
+    bool _transformed{false};
     float _imageScale{1.0};
+    int _imageRotation{0};
 
     void updateDisplayedImage();
     QImage _createGrayscaleImage(QImage const& original) const;

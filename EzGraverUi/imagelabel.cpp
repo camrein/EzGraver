@@ -72,6 +72,26 @@ void ImageLabel::setKeepAspectRatio(bool const& keepAspectRatio) {
     emit keepAspectRatioChanged(keepAspectRatio);
 }
 
+bool ImageLabel::flipHorizontally() const {
+    return _flipHorizontally;
+}
+
+void ImageLabel::setFlipHorizontally(bool const& flipHorizontally) {
+    _flipHorizontally = flipHorizontally;
+    updateDisplayedImage();
+    emit flipHorizontallyChanged(flipHorizontally);
+}
+
+bool ImageLabel::flipVertically() const {
+    return _flipVertically;
+}
+
+void ImageLabel::setFlipVertically(bool const& flipVertically) {
+    _flipVertically = flipVertically;
+    updateDisplayedImage();
+    emit flipVerticallyChanged(flipVertically);
+}
+
 bool ImageLabel::transformed() const {
     return _transformed;
 }

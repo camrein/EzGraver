@@ -7,13 +7,19 @@ class ImageLabel : public ClickLabel {
     Q_OBJECT
     Q_PROPERTY(QImage image READ image WRITE setImage NOTIFY imageChanged)
     Q_PROPERTY(Qt::ImageConversionFlags conversionFlags READ conversionFlags WRITE setConversionFlags NOTIFY conversionFlagsChanged)
+
     Q_PROPERTY(bool grayscale READ grayscale WRITE setGrayscale NOTIFY grayscaleChanged)
     Q_PROPERTY(int layer READ layer WRITE setLayer NOTIFY layerChanged)
     Q_PROPERTY(int layerCount READ layerCount WRITE setLayerCount NOTIFY layerCountChanged)
+
     Q_PROPERTY(bool keepAspectRatio READ keepAspectRatio WRITE setKeepAspectRatio NOTIFY keepAspectRatioChanged)
+    Q_PROPERTY(bool flipHorizontally READ flipHorizontally WRITE setFlipHorizontally NOTIFY flipHorizontallyChanged)
+    Q_PROPERTY(bool flipVertically READ flipVertically WRITE setFlipVertically NOTIFY flipVerticallyChanged)
+
     Q_PROPERTY(bool transformed READ transformed WRITE setTransformed NOTIFY transformedChanged)
     Q_PROPERTY(float imageScale READ imageScale WRITE setImageScale NOTIFY imageScaleChanged)
     Q_PROPERTY(float imageRotation READ imageRotation WRITE setImageRotation NOTIFY imageRotationChanged)
+
     Q_PROPERTY(bool imageLoaded READ imageLoaded NOTIFY imageLoadedChanged)
 
 public:
@@ -117,6 +123,34 @@ public:
     void setKeepAspectRatio(bool const& keepAspectRatio);
 
     /*!
+     * Gets the if image should be flipped horizontally.
+     *
+     * \return Returns \c true if the image should be flipped horizontally.
+     */
+    bool flipHorizontally() const;
+
+    /*!
+     * Sets the the the image should be flipped horizontally.
+     *
+     * \param flipHorizontally \c true if the should be flipped horizontally.
+     */
+    void setFlipHorizontally(bool const& flipHorizontally);
+
+    /*!
+     * Gets the if image should be flipped vertically.
+     *
+     * \return Returns \c true if the image should be flipped vertically.
+     */
+    bool flipVertically() const;
+
+    /*!
+     * Sets the the the image should be flipped vertically.
+     *
+     * \param flipHorizontally \c true if the should be flipped vertically.
+     */
+    void setFlipVertically(bool const& flipVertically);
+
+    /*!
      * Gets if the image is being transformed.
      *
      * \return Returns \c true if the image is being transformed.
@@ -216,6 +250,20 @@ signals:
     void keepAspectRatioChanged(bool const& keepAspectRatio);
 
     /*!
+     * Fired as soon as the image is flipped horizontally.
+     *
+     * \param flipHorizontally \c true if the image is flipped horizontally.
+     */
+    void flipHorizontallyChanged(bool const& flipHorizontally);
+
+    /*!
+     * Fired as soon as the image is flipped vertically.
+     *
+     * \param flipVertically \c true if the image is flipped vertically.
+     */
+    void flipVerticallyChanged(bool const& flipVertically);
+
+    /*!
      * Fired as soon as the image is being transformed.
      *
      * \param transformed \c true if the image is being transformed.
@@ -248,7 +296,11 @@ private:
     bool _grayscale{false};
     int _layer{0};
     int _layerCount{3};
+
     bool _keepAspectRatio{false};
+    bool _flipHorizontally{false};
+    bool _flipVertically{false};
+
     bool _transformed{false};
     float _imageScale{1.0};
     int _imageRotation{0};

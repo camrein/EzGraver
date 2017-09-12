@@ -42,8 +42,6 @@ MainWindow::~MainWindow() {
 }
 
 void MainWindow::_initBindings() {
-    connect(_ui->burnTime, &QSlider::valueChanged, [this](int const& v) { _ui->burnTimeLabel->setText(QString::number(v)); });
-
     connect(this, &MainWindow::connectedChanged, _ui->ports, &QComboBox::setDisabled);
     connect(this, &MainWindow::connectedChanged, _ui->connect, &QPushButton::setDisabled);
     connect(this, &MainWindow::connectedChanged, _ui->disconnect, &QPushButton::setEnabled);
@@ -58,9 +56,6 @@ void MainWindow::_initBindings() {
     connect(this, &MainWindow::connectedChanged, _ui->start, &QPushButton::setEnabled);
     connect(this, &MainWindow::connectedChanged, _ui->pause, &QPushButton::setEnabled);
     connect(this, &MainWindow::connectedChanged, _ui->reset, &QPushButton::setEnabled);
-    connect(_ui->conversionFlags, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), [this](int const& index) {
-        _ui->image->setConversionFlags(static_cast<Qt::ImageConversionFlags>(_ui->conversionFlags->itemData(index).toInt()));
-    });
 
     auto uploadEnabled = [this] {
         _ui->upload->setEnabled(_ui->image->imageLoaded() && _connected && (!_ui->layered->isChecked() || _ui->selectedLayer->value() > 0));
@@ -70,15 +65,25 @@ void MainWindow::_initBindings() {
     connect(_ui->layered, &QCheckBox::toggled, uploadEnabled);
     connect(_ui->selectedLayer, static_cast<void(QSpinBox::*)(int)>(&QSpinBox::valueChanged), uploadEnabled);
 
-    connect(_ui->keepAspectRatio, &QCheckBox::toggled, _ui->image, &ImageLabel::setKeepAspectRatio);
-
     connect(this, &MainWindow::connectedChanged, _ui->protocolVersion, &QComboBox::setDisabled);
 
     auto openImageShortcut = new QShortcut{QKeySequence{Qt::CTRL | Qt::Key_O}, this};
     connect(openImageShortcut, &QShortcut::activated, this, &MainWindow::on_image_clicked);
 
+    _initSetupBindings();
     _initTransformationBindings();
     _initLayerBindings();
+}
+
+void MainWindow::_initSetupBindings() {
+    connect(_ui->burnTime, &QSlider::valueChanged, [this](int const& v) { _ui->burnTimeLabel->setText(QString::number(v)); });
+    connect(_ui->conversionFlags, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), [this](int const& index) {
+        _ui->image->setConversionFlags(static_cast<Qt::ImageConversionFlags>(_ui->conversionFlags->itemData(index).toInt()));
+    });
+
+    connect(_ui->keepAspectRatio, &QCheckBox::toggled, _ui->image, &ImageLabel::setKeepAspectRatio);
+    connect(_ui->flipHorizontally, &QCheckBox::toggled, _ui->image, &ImageLabel::setFlipHorizontally);
+    connect(_ui->flipVertically, &QCheckBox::toggled, _ui->image, &ImageLabel::setFlipVertically);
 }
 
 void MainWindow::_initTransformationBindings() {

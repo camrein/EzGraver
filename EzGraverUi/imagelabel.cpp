@@ -92,6 +92,16 @@ void ImageLabel::setImageScale(float const& imageScale) {
     emit imageScaleChanged(imageScale);
 }
 
+int ImageLabel::imageRotation() const {
+    return _imageRotation;
+}
+
+void ImageLabel::setImageRotation(int const& imageRotation) {
+    _imageRotation = imageRotation;
+    updateDisplayedImage();
+    emit imageRotationChanged(imageRotation);
+}
+
 void ImageLabel::updateDisplayedImage() {
     if(!imageLoaded()) {
         return;

@@ -93,7 +93,7 @@ void MainWindow::_initTransformationBindings() {
     connect(_ui->transformed, &QCheckBox::toggled, _ui->imageRotation, &QSlider::setEnabled);
     connect(_ui->transformed, &QCheckBox::toggled, _ui->resetImageRotation, &QSlider::setEnabled);
     connect(_ui->imageRotation, &QSlider::valueChanged, [this](int const& v) { _ui->imageRotationLabel->setText(QString::number(v)); });
-    //connect(_ui->imageRotation, &QSlider::valueChanged, [this](int const& v) { _ui->image->setImageScale(v / 100.0); });
+    connect(_ui->imageRotation, &QSlider::valueChanged, _ui->image, &ImageLabel::setImageRotation);
     connect(_ui->resetImageRotation, &QPushButton::clicked, [this] { _ui->imageRotation->setValue(0); });
 }
 

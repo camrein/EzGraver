@@ -13,6 +13,7 @@ class ImageLabel : public ClickLabel {
     Q_PROPERTY(bool keepAspectRatio READ keepAspectRatio WRITE setKeepAspectRatio NOTIFY keepAspectRatioChanged)
     Q_PROPERTY(bool transformed READ transformed WRITE setTransformed NOTIFY transformedChanged)
     Q_PROPERTY(float imageScale READ imageScale WRITE setImageScale NOTIFY imageScaleChanged)
+    Q_PROPERTY(float imageRotation READ imageRotation WRITE setImageRotation NOTIFY imageRotationChanged)
     Q_PROPERTY(bool imageLoaded READ imageLoaded NOTIFY imageLoadedChanged)
 
 public:
@@ -139,9 +140,23 @@ public:
     /*!
      * Sets the image scale of the image.
      *
-     * \param imageScale The image sacle. 1.0 equals to 100% (origina size).
+     * \param imageScale The image scale. 1.0 equals to 100% (original size).
      */
     void setImageScale(float const& imageScale);
+
+    /*!
+     * Gets the current image rotation.
+     *
+     * \return The image rotation in degrees.
+     */
+    int imageRotation() const;
+
+    /*!
+     * Sets the image rotation of the image.
+     *
+     * \param imageRotation The image rotation in degrees.
+     */
+    void setImageRotation(int const& imageRotation);
 
     /*!
      * Gets if an image has been loaded.
@@ -215,6 +230,13 @@ signals:
     void imageScaleChanged(float const& imageScale);
 
     /*!
+     * Fired as soon as the image rotation changed.
+     *
+     * \param imageRotation The current image rotation in degrees.
+     */
+    void imageRotationChanged(int const& imageRotation);
+
+    /*!
      * Fired as soon as an image has been loaded.
      *
      * \param imageLoaded \c true if an image is loaded.
@@ -229,6 +251,7 @@ private:
     bool _keepAspectRatio{false};
     bool _transformed{false};
     float _imageScale{1.0};
+    int _imageRotation{0};
 
     void updateDisplayedImage();
     QImage _createGrayscaleImage(QImage const& original) const;

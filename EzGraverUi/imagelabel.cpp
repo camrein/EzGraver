@@ -113,8 +113,13 @@ void ImageLabel::updateDisplayedImage() {
     QPainter painter{&image};
 
     if(_transformed) {
-        auto scaled = _image.scaled(_image.width() * _imageScale, _image.height() * _imageScale);
+        QTransform rotation{};
+        rotation.rotate(_imageRotation);
+        auto rotated = _image.transformed(rotation);
+
+        auto scaled = rotated.scaled(rotated.width() * _imageScale, rotated.height() * _imageScale);
         QPoint position{(image.width() - scaled.width()) / 2, (image.height() - scaled.height()) / 2};
+
         painter.drawImage(position, scaled);
     } else if(_keepAspectRatio) {
         // As at this time, the target image is quadratic, scaling according the larger dimension is sufficient.

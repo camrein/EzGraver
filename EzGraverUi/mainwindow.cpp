@@ -10,6 +10,7 @@
 #include <QDebug>
 #include <QImageReader>
 #include <QFileInfo>
+#include <QShortcut>
 
 #include <stdexcept>
 #include <algorithm>
@@ -86,6 +87,9 @@ void MainWindow::_initBindings() {
     connect(_ui->resetImageScale, &QPushButton::clicked, [this] { _ui->imageScale->setValue(100); });
 
     connect(this, &MainWindow::connectedChanged, _ui->protocolVersion, &QComboBox::setDisabled);
+
+    auto openImageShortcut = new QShortcut{QKeySequence{Qt::CTRL | Qt::Key_O}, this};
+    connect(openImageShortcut, &QShortcut::activated, this, &MainWindow::on_image_clicked);
 }
 
 void MainWindow::_initConversionFlags() {

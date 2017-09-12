@@ -11,7 +11,7 @@ class ImageLabel : public ClickLabel {
     Q_PROPERTY(int layer READ layer WRITE setLayer NOTIFY layerChanged)
     Q_PROPERTY(int layerCount READ layerCount WRITE setLayerCount NOTIFY layerCountChanged)
     Q_PROPERTY(bool keepAspectRatio READ keepAspectRatio WRITE setKeepAspectRatio NOTIFY keepAspectRatioChanged)
-    Q_PROPERTY(bool scaled READ scaled WRITE setScaled NOTIFY scaledChanged)
+    Q_PROPERTY(bool transformed READ transformed WRITE setTransformed NOTIFY transformedChanged)
     Q_PROPERTY(float imageScale READ imageScale WRITE setImageScale NOTIFY imageScaleChanged)
     Q_PROPERTY(bool imageLoaded READ imageLoaded NOTIFY imageLoadedChanged)
 
@@ -116,18 +116,18 @@ public:
     void setKeepAspectRatio(bool const& keepAspectRatio);
 
     /*!
-     * Gets if the image is being scaled.
+     * Gets if the image is being transformed.
      *
-     * \return Returns \c true if the image is being scaled.
+     * \return Returns \c true if the image is being transformed.
      */
-    bool scaled() const;
+    bool transformed() const;
 
     /*!
-     * Sets if the image is being scaled.
+     * Sets if the image is being transformed.
      *
-     * \param scaled \c true if the iamge is being scaled.
+     * \param transformed \c true if the image is being transformed.
      */
-    void setScaled(bool const& scaled);
+    void setTransformed(bool const& transformed);
 
     /*!
      * Gets the current image scale.
@@ -201,11 +201,11 @@ signals:
     void keepAspectRatioChanged(bool const& keepAspectRatio);
 
     /*!
-     * Fired as soon as the image is being scaled.
+     * Fired as soon as the image is being transformed.
      *
-     * \param scaled \c true if the image is being scaled.
+     * \param transformed \c true if the image is being transformed.
      */
-    void scaledChanged(float const& imageScale);
+    void transformedChanged(bool const& transformed);
 
     /*!
      * Fired as soon as the image scale changed.
@@ -227,7 +227,7 @@ private:
     int _layer{0};
     int _layerCount{3};
     bool _keepAspectRatio{false};
-    bool _scaled{false};
+    bool _transformed{false};
     float _imageScale{1.0};
 
     void updateDisplayedImage();

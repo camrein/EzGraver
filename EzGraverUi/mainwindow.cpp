@@ -82,16 +82,16 @@ void MainWindow::_initBindings() {
 }
 
 void MainWindow::_initTransformationBindings() {
+    connect(_ui->transformed, &QCheckBox::toggled, _ui->image, &ImageLabel::setTransformed);
+
     connect(_ui->transformed, &QCheckBox::toggled, _ui->imageScale, &QSlider::setEnabled);
     connect(_ui->transformed, &QCheckBox::toggled, _ui->resetImageScale, &QSlider::setEnabled);
-    connect(_ui->transformed, &QCheckBox::toggled, _ui->image, &ImageLabel::setScaled);
     connect(_ui->imageScale, &QSlider::valueChanged, [this](int const& v) { _ui->imageScaleLabel->setText(QString::number(v)); });
     connect(_ui->imageScale, &QSlider::valueChanged, [this](int const& v) { _ui->image->setImageScale(v / 100.0); });
     connect(_ui->resetImageScale, &QPushButton::clicked, [this] { _ui->imageScale->setValue(100); });
 
     connect(_ui->transformed, &QCheckBox::toggled, _ui->imageRotation, &QSlider::setEnabled);
     connect(_ui->transformed, &QCheckBox::toggled, _ui->resetImageRotation, &QSlider::setEnabled);
-    //connect(_ui->transformed, &QCheckBox::toggled, _ui->image, &ImageLabel::setRotated);
     connect(_ui->imageRotation, &QSlider::valueChanged, [this](int const& v) { _ui->imageRotationLabel->setText(QString::number(v)); });
     //connect(_ui->imageRotation, &QSlider::valueChanged, [this](int const& v) { _ui->image->setImageScale(v / 100.0); });
     connect(_ui->resetImageRotation, &QPushButton::clicked, [this] { _ui->imageRotation->setValue(0); });

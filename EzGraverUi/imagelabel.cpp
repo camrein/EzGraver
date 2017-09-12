@@ -72,14 +72,14 @@ void ImageLabel::setKeepAspectRatio(bool const& keepAspectRatio) {
     emit keepAspectRatioChanged(keepAspectRatio);
 }
 
-bool ImageLabel::scaled() const {
-    return _scaled;
+bool ImageLabel::transformed() const {
+    return _transformed;
 }
 
-void ImageLabel::setScaled(bool const& scaled) {
-    _scaled = scaled;
+void ImageLabel::setTransformed(bool const& transformed) {
+    _transformed = transformed;
     updateDisplayedImage();
-    emit scaledChanged(scaled);
+    emit transformedChanged(transformed);
 }
 
 float ImageLabel::imageScale() const {
@@ -102,12 +102,12 @@ void ImageLabel::updateDisplayedImage() {
     image.fill(QColor{Qt::white});
     QPainter painter{&image};
 
-    // As at this time, the target image is quadratic, scaling according the larger dimension is sufficient.
-    if(_scaled) {
+    if(_transformed) {
         auto scaled = _image.scaled(_image.width() * _imageScale, _image.height() * _imageScale);
         QPoint position{(image.width() - scaled.width()) / 2, (image.height() - scaled.height()) / 2};
         painter.drawImage(position, scaled);
     } else if(_keepAspectRatio) {
+        // As at this time, the target image is quadratic, scaling according the larger dimension is sufficient.
         auto scaled = (_image.width() > _image.height() ? _image.scaledToWidth(image.width()) : _image.scaledToHeight(image.height()));
         auto position = (_image.width() > _image.height() ? QPoint{0, (image.height() - scaled.height()) / 2} : QPoint{(image.width() - scaled.width()) / 2, 0});
         painter.drawImage(position, scaled);

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1086</width>
-    <height>692</height>
+    <width>1091</width>
+    <height>741</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -44,22 +44,15 @@
       </item>
       <item>
        <layout class="QGridLayout" name="gridLayout_2">
-        <item row="2" column="0">
-         <widget class="QLabel" name="label_2">
+        <item row="7" column="0">
+         <widget class="QCheckBox" name="layered">
           <property name="text">
-           <string>Burn time</string>
+           <string>Layered</string>
           </property>
          </widget>
         </item>
-        <item row="3" column="1">
+        <item row="7" column="2">
          <layout class="QHBoxLayout" name="horizontalLayout">
-          <item>
-           <widget class="QLabel" name="label_5">
-            <property name="text">
-             <string>Layer Count</string>
-            </property>
-           </widget>
-          </item>
           <item>
            <widget class="QSpinBox" name="layerCount">
             <property name="enabled">
@@ -114,7 +107,95 @@
           </item>
          </layout>
         </item>
-        <item row="2" column="3">
+        <item row="0" column="0">
+         <widget class="QLabel" name="label">
+          <property name="text">
+           <string>Conversion flags</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="3" colspan="2">
+         <widget class="QCheckBox" name="keepAspectRatio">
+          <property name="text">
+           <string>Keep Aspect Ratio</string>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="3">
+         <widget class="QPushButton" name="resetImageRotation">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
+          <property name="text">
+           <string>Reset</string>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="2">
+         <widget class="QSlider" name="imageRotation">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
+          <property name="maximum">
+           <number>360</number>
+          </property>
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="4">
+         <widget class="QLabel" name="imageRotationLabel">
+          <property name="text">
+           <string>0</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="0">
+         <widget class="QCheckBox" name="transformed">
+          <property name="text">
+           <string>Transformed</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="0" colspan="5">
+         <widget class="Line" name="line_2">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="4">
+         <widget class="QLabel" name="imageScaleLabel">
+          <property name="text">
+           <string>100</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="3">
+         <widget class="QPushButton" name="resetImageScale">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
+          <property name="text">
+           <string>Reset</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="0">
+         <widget class="QLabel" name="label_2">
+          <property name="text">
+           <string>Burn time</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="4">
          <widget class="QLabel" name="burnTimeLabel">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
@@ -136,7 +217,21 @@
           </property>
          </widget>
         </item>
-        <item row="0" column="1">
+        <item row="5" column="0" colspan="5">
+         <widget class="Line" name="line_3">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+         </widget>
+        </item>
+        <item row="7" column="1">
+         <widget class="QLabel" name="label_5">
+          <property name="text">
+           <string>Layer Count</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1" colspan="2">
          <widget class="QComboBox" name="conversionFlags">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
@@ -146,28 +241,7 @@
           </property>
          </widget>
         </item>
-        <item row="0" column="0">
-         <widget class="QLabel" name="label">
-          <property name="text">
-           <string>Conversion flags</string>
-          </property>
-         </widget>
-        </item>
-        <item row="3" column="0">
-         <widget class="QCheckBox" name="layered">
-          <property name="text">
-           <string>Layered</string>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="2" colspan="2">
-         <widget class="QCheckBox" name="keepAspectRatio">
-          <property name="text">
-           <string>Keep Aspect Ratio</string>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="1" colspan="2">
+        <item row="1" column="1" colspan="3">
          <widget class="QSlider" name="burnTime">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
@@ -189,7 +263,14 @@
           </property>
          </widget>
         </item>
-        <item row="1" column="1">
+        <item row="3" column="1">
+         <widget class="QLabel" name="label_4">
+          <property name="text">
+           <string>Rotation</string>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="2">
          <widget class="QSlider" name="imageScale">
           <property name="enabled">
            <bool>false</bool>
@@ -208,30 +289,10 @@
           </property>
          </widget>
         </item>
-        <item row="1" column="2">
-         <widget class="QPushButton" name="resetImageScale">
-          <property name="enabled">
-           <bool>false</bool>
-          </property>
+        <item row="4" column="1">
+         <widget class="QLabel" name="label_6">
           <property name="text">
-           <string>Reset</string>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="3">
-         <widget class="QLabel" name="imageScaleLabel">
-          <property name="text">
-           <string>100</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="0">
-         <widget class="QCheckBox" name="scaled">
-          <property name="text">
-           <string>Scaled</string>
+           <string>Scale</string>
           </property>
          </widget>
         </item>
@@ -568,7 +629,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1086</width>
+     <width>1091</width>
      <height>21</height>
     </rect>
    </property>

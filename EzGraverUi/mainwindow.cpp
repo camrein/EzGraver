@@ -62,34 +62,48 @@ void MainWindow::_initBindings() {
         _ui->image->setConversionFlags(static_cast<Qt::ImageConversionFlags>(_ui->conversionFlags->itemData(index).toInt()));
     });
 
+    auto uploadEnabled = [this] {
+        _ui->upload->setEnabled(_ui->image->imageLoaded() && _connected && (!_ui->layered->isChecked() || _ui->selectedLayer->value() > 0));
+    };
+    connect(this, &MainWindow::connectedChanged, uploadEnabled);
+    connect(_ui->image, &ImageLabel::imageLoadedChanged, uploadEnabled);
+    connect(_ui->layered, &QCheckBox::toggled, uploadEnabled);
+    connect(_ui->selectedLayer, static_cast<void(QSpinBox::*)(int)>(&QSpinBox::valueChanged), uploadEnabled);
+
+    connect(_ui->keepAspectRatio, &QCheckBox::toggled, _ui->image, &ImageLabel::setKeepAspectRatio);
+
+    connect(this, &MainWindow::connectedChanged, _ui->protocolVersion, &QComboBox::setDisabled);
+
+    auto openImageShortcut = new QShortcut{QKeySequence{Qt::CTRL | Qt::Key_O}, this};
+    connect(openImageShortcut, &QShortcut::activated, this, &MainWindow::on_image_clicked);
+
+    _initTransformationBindings();
+    _initLayerBindings();
+}
+
+void MainWindow::_initTransformationBindings() {
+    connect(_ui->transformed, &QCheckBox::toggled, _ui->imageScale, &QSlider::setEnabled);
+    connect(_ui->transformed, &QCheckBox::toggled, _ui->resetImageScale, &QSlider::setEnabled);
+    connect(_ui->transformed, &QCheckBox::toggled, _ui->image, &ImageLabel::setScaled);
+    connect(_ui->imageScale, &QSlider::valueChanged, [this](int const& v) { _ui->imageScaleLabel->setText(QString::number(v)); });
+    connect(_ui->imageScale, &QSlider::valueChanged, [this](int const& v) { _ui->image->setImageScale(v / 100.0); });
+    connect(_ui->resetImageScale, &QPushButton::clicked, [this] { _ui->imageScale->setValue(100); });
+
+    connect(_ui->transformed, &QCheckBox::toggled, _ui->imageRotation, &QSlider::setEnabled);
+    connect(_ui->transformed, &QCheckBox::toggled, _ui->resetImageRotation, &QSlider::setEnabled);
+    //connect(_ui->transformed, &QCheckBox::toggled, _ui->image, &ImageLabel::setRotated);
+    connect(_ui->imageRotation, &QSlider::valueChanged, [this](int const& v) { _ui->imageRotationLabel->setText(QString::number(v)); });
+    //connect(_ui->imageRotation, &QSlider::valueChanged, [this](int const& v) { _ui->image->setImageScale(v / 100.0); });
+    connect(_ui->resetImageRotation, &QPushButton::clicked, [this] { _ui->imageRotation->setValue(0); });
+}
+
+void MainWindow::_initLayerBindings() {
     connect(_ui->layered, &QCheckBox::toggled, _ui->selectedLayer, &QSpinBox::setEnabled);
     connect(_ui->layered, &QCheckBox::toggled, _ui->layerCount, &QSpinBox::setEnabled);
     connect(_ui->layered, &QCheckBox::toggled, _ui->image, &ImageLabel::setGrayscale);
     connect(_ui->layerCount, static_cast<void(QSpinBox::*)(int)>(&QSpinBox::valueChanged), _ui->image, &ImageLabel::setLayerCount);
     connect(_ui->layerCount, static_cast<void(QSpinBox::*)(int)>(&QSpinBox::valueChanged), _ui->selectedLayer, &QSpinBox::setMaximum);
     connect(_ui->selectedLayer, static_cast<void(QSpinBox::*)(int)>(&QSpinBox::valueChanged), _ui->image, &ImageLabel::setLayer);
-
-    auto uploadEnabled = [this] {
-        _ui->upload->setEnabled(_ui->image->imageLoaded() && _connected && (!_ui->layered->isChecked() || _ui->selectedLayer->value() > 0));
-    };
-    connect(this, &MainWindow::connectedChanged, uploadEnabled);
-    connect(_ui->image, &ImageLabel::imageLoadedChanged, uploadEnabled);
-    connect(_ui->selectedLayer, static_cast<void(QSpinBox::*)(int)>(&QSpinBox::valueChanged), uploadEnabled);
-    connect(_ui->layered, &QCheckBox::toggled, uploadEnabled);
-
-    connect(_ui->keepAspectRatio, &QCheckBox::toggled, _ui->image, &ImageLabel::setKeepAspectRatio);
-
-    connect(_ui->scaled, &QCheckBox::toggled, _ui->imageScale, &QSlider::setEnabled);
-    connect(_ui->scaled, &QCheckBox::toggled, _ui->resetImageScale, &QSlider::setEnabled);
-    connect(_ui->scaled, &QCheckBox::toggled, _ui->image, &ImageLabel::setScaled);
-    connect(_ui->imageScale, &QSlider::valueChanged, [this](int const& v) { _ui->imageScaleLabel->setText(QString::number(v)); });
-    connect(_ui->imageScale, &QSlider::valueChanged, [this](int const& v) { _ui->image->setImageScale(v / 100.0); });
-    connect(_ui->resetImageScale, &QPushButton::clicked, [this] { _ui->imageScale->setValue(100); });
-
-    connect(this, &MainWindow::connectedChanged, _ui->protocolVersion, &QComboBox::setDisabled);
-
-    auto openImageShortcut = new QShortcut{QKeySequence{Qt::CTRL | Qt::Key_O}, this};
-    connect(openImageShortcut, &QShortcut::activated, this, &MainWindow::on_image_clicked);
 }
 
 void MainWindow::_initConversionFlags() {

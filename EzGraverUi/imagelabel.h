@@ -353,7 +353,8 @@ private:
     float _imageScale{1.0};
     int _imageRotation{0};
 
-    void updateDisplayedImage();
+    void _updateEngraveImage();
+    void _updateDisplayedImage();
     QImage _createGrayscaleImage(QImage const& original) const;
     QVector<QRgb> _createColorTable() const;
 };

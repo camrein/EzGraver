@@ -17,7 +17,7 @@ QImage ImageLabel::image() const {
 
 void ImageLabel::setImage(QImage const& image) {
     _image = image;
-    updateDisplayedImage();
+    _updateEngraveImage();
     emit imageLoadedChanged(true);
     emit imageChanged(image);
 }
@@ -28,6 +28,7 @@ QImage ImageLabel::engraveImage() const {
 
 void ImageLabel::setEngraveImage(QImage const& engraveImage) {
     _engraveImage = engraveImage;
+    _updateDisplayedImage();
     emit engraveImageChanged(engraveImage);
 }
 
@@ -37,6 +38,7 @@ QImage ImageLabel::progressImage() const {
 
 void ImageLabel::setProgressImage(QImage const& progressImage) {
     _progressImage = progressImage;
+    _updateDisplayedImage();
     emit progressImageChanged(progressImage);
 }
 
@@ -46,7 +48,7 @@ Qt::ImageConversionFlags ImageLabel::conversionFlags() const {
 
 void ImageLabel::setConversionFlags(Qt::ImageConversionFlags const& flags) {
     _flags = flags;
-    updateDisplayedImage();
+    _updateEngraveImage();
     emit conversionFlagsChanged(flags);
 }
 
@@ -56,7 +58,7 @@ bool ImageLabel::grayscale() const {
 
 void ImageLabel::setGrayscale(bool const& enabled) {
     _grayscale = enabled;
-    updateDisplayedImage();
+    _updateEngraveImage();
     emit grayscaleChanged(enabled);
 }
 
@@ -66,7 +68,7 @@ int ImageLabel::layer() const {
 
 void ImageLabel::setLayer(int const& layer) {
     _layer = layer;
-    updateDisplayedImage();
+    _updateEngraveImage();
     emit layerChanged(layer);
 }
 
@@ -76,7 +78,7 @@ int ImageLabel::layerCount() const {
 
 void ImageLabel::setLayerCount(int const& layerCount) {
     _layerCount = layerCount;
-    updateDisplayedImage();
+    _updateEngraveImage();
     emit layerCountChanged(layerCount);
 }
 
@@ -86,7 +88,7 @@ bool ImageLabel::keepAspectRatio() const {
 
 void ImageLabel::setKeepAspectRatio(bool const& keepAspectRatio) {
     _keepAspectRatio = keepAspectRatio;
-    updateDisplayedImage();
+    _updateEngraveImage();
     emit keepAspectRatioChanged(keepAspectRatio);
 }
 
@@ -96,7 +98,7 @@ bool ImageLabel::flipHorizontally() const {
 
 void ImageLabel::setFlipHorizontally(bool const& flipHorizontally) {
     _flipHorizontally = flipHorizontally;
-    updateDisplayedImage();
+    _updateEngraveImage();
     emit flipHorizontallyChanged(flipHorizontally);
 }
 
@@ -106,7 +108,7 @@ bool ImageLabel::flipVertically() const {
 
 void ImageLabel::setFlipVertically(bool const& flipVertically) {
     _flipVertically = flipVertically;
-    updateDisplayedImage();
+    _updateEngraveImage();
     emit flipVerticallyChanged(flipVertically);
 }
 
@@ -116,7 +118,7 @@ bool ImageLabel::transformed() const {
 
 void ImageLabel::setTransformed(bool const& transformed) {
     _transformed = transformed;
-    updateDisplayedImage();
+    _updateEngraveImage();
     emit transformedChanged(transformed);
 }
 
@@ -126,7 +128,7 @@ float ImageLabel::imageScale() const {
 
 void ImageLabel::setImageScale(float const& imageScale) {
     _imageScale = imageScale;
-    updateDisplayedImage();
+    _updateEngraveImage();
     emit imageScaleChanged(imageScale);
 }
 
@@ -136,11 +138,11 @@ int ImageLabel::imageRotation() const {
 
 void ImageLabel::setImageRotation(int const& imageRotation) {
     _imageRotation = imageRotation;
-    updateDisplayedImage();
+    _updateEngraveImage();
     emit imageRotationChanged(imageRotation);
 }
 
-void ImageLabel::updateDisplayedImage() {
+void ImageLabel::_updateEngraveImage() {
     if(!imageLoaded()) {
         return;
     }
@@ -148,7 +150,7 @@ void ImageLabel::updateDisplayedImage() {
     // Draw white background, otherwise transparency is converted to black.
     QImage image{QSize{Ez::Specifications::ImageWidth, Ez::Specifications::ImageHeight}, QImage::Format_ARGB32};
     image.fill(QColor{Qt::white});
-    QPainter targetPainter{&image};
+    QPainter painter{&image};
 
     QImage flipped{_image.mirrored(_flipHorizontally, _flipVertically)};
 
@@ -160,22 +162,25 @@ void ImageLabel::updateDisplayedImage() {
         auto scaled = rotated.scaled(rotated.width() * _imageScale, rotated.height() * _imageScale);
         QPoint position{(image.width() - scaled.width()) / 2, (image.height() - scaled.height()) / 2};
 
-        targetPainter.drawImage(position, scaled);
+        painter.drawImage(position, scaled);
     } else if(_keepAspectRatio) {
         // As at this time, the target image is quadratic, scaling according the larger dimension is sufficient.
         auto scaled = (flipped.width() > flipped.height() ? flipped.scaledToWidth(image.width()) : flipped.scaledToHeight(image.height()));
         auto position = (flipped.width() > flipped.height() ? QPoint{0, (image.height() - scaled.height()) / 2} : QPoint{(image.width() - scaled.width()) / 2, 0});
-        targetPainter.drawImage(position, scaled);
+        painter.drawImage(position, scaled);
     } else {
-        targetPainter.drawImage(QPoint{}, flipped.scaled(image.size()));
+        painter.drawImage(QPoint{}, flipped.scaled(image.size()));
     }
 
     auto targetImage = _grayscale ? _createGrayscaleImage(image) : image.convertToFormat(QImage::Format_Mono, _flags);
     setEngraveImage(targetImage);
+}
 
-    QPainter overlayPainter{&targetImage};
-    overlayPainter.drawImage(QPoint{}, _progressImage);
-    setPixmap(QPixmap::fromImage(targetImage));
+void ImageLabel::_updateDisplayedImage() {
+    auto rendered = _engraveImage;
+    QPainter painter{&rendered};
+    painter.drawImage(QPoint{}, _progressImage);
+    setPixmap(QPixmap::fromImage(rendered));
 }
 
 QImage ImageLabel::_createGrayscaleImage(QImage const& original) const {

@@ -6,6 +6,9 @@
 class ImageLabel : public ClickLabel {
     Q_OBJECT
     Q_PROPERTY(QImage image READ image WRITE setImage NOTIFY imageChanged)
+    Q_PROPERTY(QPixmap engravePixmap READ engravePixmap WRITE setEngravePixmap NOTIFY engravePixmapChanged)
+    Q_PROPERTY(QImage progressImage READ progressImage WRITE setProgressImage NOTIFY progressImageChanged)
+
     Q_PROPERTY(Qt::ImageConversionFlags conversionFlags READ conversionFlags WRITE setConversionFlags NOTIFY conversionFlagsChanged)
 
     Q_PROPERTY(bool grayscale READ grayscale WRITE setGrayscale NOTIFY grayscaleChanged)
@@ -50,6 +53,34 @@ public:
      * \param image The image to load.
      */
     void setImage(QImage const& image);
+
+    /*!
+     * Gets the currently active engraving pixmap.
+     *
+     * \return The current engraving pixmap.
+     */
+    QPixmap engravePixmap() const;
+
+    /*!
+     * Changes the currently active engraving pixmap.
+     *
+     * \param engravePixmap The pixmap that is used for engraving.
+     */
+    void setEngravePixmap(QPixmap const& engravePixmap);
+
+    /*!
+     * Gets the image that represents the current engraving progress.
+     *
+     * \return The image representing the current progress.
+     */
+    QImage progressImage() const;
+
+    /*!
+     * Gets the image that represents the current engraving progress.
+     *
+     * \param progressImage An image that represents the current engraving progress.
+     */
+    void setProgressImage(QImage const& progressImage);
 
     /*!
      * Gets the currently selected conversion flags.
@@ -215,6 +246,20 @@ signals:
     void imageChanged(QImage const& image);
 
     /*!
+     * Fired as soon as the engraving pixmap changed.
+     *
+     * \param engravePixmap The pixmap representing the current image to engrave.
+     */
+    void engravePixmapChanged(QPixmap const& engravePixmap);
+
+    /*!
+     * Fired as soon as the progress image changed.
+     *
+     * \param progressImage The image representing the current engraving progress.
+     */
+    void progressImageChanged(QImage const& progressImage);
+
+    /*!
      * Fired as soon as the conversion flags hav been changed.
      *
      * \param flags The newly applied conversion flags.
@@ -292,6 +337,9 @@ signals:
     void imageLoadedChanged(bool imageLoaded);
 private:
     QImage _image{};
+    QPixmap _engravePixmap{};
+    QImage _progressImage{};
+
     Qt::ImageConversionFlags _flags{Qt::DiffuseDither};
     bool _grayscale{false};
     int _layer{0};

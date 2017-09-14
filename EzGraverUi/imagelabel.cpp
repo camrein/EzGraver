@@ -22,6 +22,24 @@ void ImageLabel::setImage(QImage const& image) {
     emit imageChanged(image);
 }
 
+QPixmap ImageLabel::engravePixmap() const {
+    return _engravePixmap;
+}
+
+void ImageLabel::setEngravePixmap(QPixmap const& engravePixmap) {
+    _engravePixmap = engravePixmap;
+    emit engravePixmapChanged(engravePixmap);
+}
+
+QImage ImageLabel::progressImage() const {
+    return _progressImage;
+}
+
+void ImageLabel::setProgressImage(QImage const& progressImage) {
+    _progressImage = progressImage;
+    emit progressImageChanged(progressImage);
+}
+
 Qt::ImageConversionFlags ImageLabel::conversionFlags() const {
     return _flags;
 }
@@ -155,6 +173,9 @@ void ImageLabel::updateDisplayedImage() {
     auto rendered = _grayscale
             ? QPixmap::fromImage(_createGrayscaleImage(image))
             : QPixmap::fromImage(image.convertToFormat(QImage::Format_Mono, _flags));
+    setEngravePixmap(rendered);
+
+    // TODO add progress overlay
     setPixmap(rendered);
 }
 

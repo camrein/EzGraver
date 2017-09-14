@@ -45,7 +45,7 @@ void ImageLabel::setProgressImage(QImage const& progressImage) {
 
 void ImageLabel::resetProgressImage() {
     QImage image{QSize{Ez::Specifications::ImageWidth, Ez::Specifications::ImageHeight}, QImage::Format_ARGB32};
-    image.fill(QColor::fromRgb(0, 0, 0, 0));
+    image.fill(qRgba(0, 0, 0, 0));
     setProgressImage(image);
 }
 

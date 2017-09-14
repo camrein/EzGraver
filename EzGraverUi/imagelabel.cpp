@@ -5,9 +5,10 @@
 #include <algorithm>
 
 #include "ezgraver.h"
-#include "specifications.h"
 
-ImageLabel::ImageLabel(QWidget* parent) : ClickLabel{parent} {}
+ImageLabel::ImageLabel(QWidget* parent) : ClickLabel{parent} {
+    resetProgressImage();
+}
 
 ImageLabel::~ImageLabel() {}
 
@@ -40,6 +41,12 @@ void ImageLabel::setProgressImage(QImage const& progressImage) {
     _progressImage = progressImage;
     _updateDisplayedImage();
     emit progressImageChanged(progressImage);
+}
+
+void ImageLabel::resetProgressImage() {
+    QImage image{QSize{Ez::Specifications::ImageWidth, Ez::Specifications::ImageHeight}, QImage::Format_ARGB32};
+    image.fill(QColor::fromRgb(0, 0, 0, 0));
+    setProgressImage(image);
 }
 
 Qt::ImageConversionFlags ImageLabel::conversionFlags() const {
@@ -177,10 +184,11 @@ void ImageLabel::_updateEngraveImage() {
 }
 
 void ImageLabel::_updateDisplayedImage() {
-    auto rendered = _engraveImage;
-    QPainter painter{&rendered};
+    QImage image{QSize{Ez::Specifications::ImageWidth, Ez::Specifications::ImageHeight}, QImage::Format_ARGB32};
+    QPainter painter{&image};
+    painter.drawImage(QPoint{}, _engraveImage);
     painter.drawImage(QPoint{}, _progressImage);
-    setPixmap(QPixmap::fromImage(rendered));
+    setPixmap(QPixmap::fromImage(image));
 }
 
 QImage ImageLabel::_createGrayscaleImage(QImage const& original) const {

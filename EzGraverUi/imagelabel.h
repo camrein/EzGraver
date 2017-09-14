@@ -3,11 +3,13 @@
 
 #include "clicklabel.h"
 
+#include "specifications.h"
+
 class ImageLabel : public ClickLabel {
     Q_OBJECT
     Q_PROPERTY(QImage image READ image WRITE setImage NOTIFY imageChanged)
     Q_PROPERTY(QImage engraveImage READ engraveImage WRITE setEngraveImage NOTIFY engraveImageChanged)
-    Q_PROPERTY(QImage progressImage READ progressImage WRITE setProgressImage NOTIFY progressImageChanged)
+    Q_PROPERTY(QImage progressImage READ progressImage WRITE setProgressImage RESET resetProgressImage NOTIFY progressImageChanged)
 
     Q_PROPERTY(Qt::ImageConversionFlags conversionFlags READ conversionFlags WRITE setConversionFlags NOTIFY conversionFlagsChanged)
 
@@ -81,6 +83,11 @@ public:
      * \param progressImage An image that represents the current engraving progress.
      */
     void setProgressImage(QImage const& progressImage);
+
+    /*!
+     * Resets the image that represents the current engraving progress to its initial (empty) state.
+     */
+    void resetProgressImage();
 
     /*!
      * Gets the currently selected conversion flags.

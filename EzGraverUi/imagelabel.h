@@ -6,7 +6,7 @@
 class ImageLabel : public ClickLabel {
     Q_OBJECT
     Q_PROPERTY(QImage image READ image WRITE setImage NOTIFY imageChanged)
-    Q_PROPERTY(QPixmap engravePixmap READ engravePixmap WRITE setEngravePixmap NOTIFY engravePixmapChanged)
+    Q_PROPERTY(QImage engraveImage READ engraveImage WRITE setEngraveImage NOTIFY engraveImageChanged)
     Q_PROPERTY(QImage progressImage READ progressImage WRITE setProgressImage NOTIFY progressImageChanged)
 
     Q_PROPERTY(Qt::ImageConversionFlags conversionFlags READ conversionFlags WRITE setConversionFlags NOTIFY conversionFlagsChanged)
@@ -55,18 +55,18 @@ public:
     void setImage(QImage const& image);
 
     /*!
-     * Gets the currently active engraving pixmap.
+     * Gets the currently active engraving image.
      *
-     * \return The current engraving pixmap.
+     * \return The current engraving image.
      */
-    QPixmap engravePixmap() const;
+    QImage engraveImage() const;
 
     /*!
-     * Changes the currently active engraving pixmap.
+     * Changes the currently active engraving image.
      *
-     * \param engravePixmap The pixmap that is used for engraving.
+     * \param engravePixmap The image that is used for engraving.
      */
-    void setEngravePixmap(QPixmap const& engravePixmap);
+    void setEngraveImage(QImage const& engraveImage);
 
     /*!
      * Gets the image that represents the current engraving progress.
@@ -250,7 +250,7 @@ signals:
      *
      * \param engravePixmap The pixmap representing the current image to engrave.
      */
-    void engravePixmapChanged(QPixmap const& engravePixmap);
+    void engraveImageChanged(QImage const& engraveImage);
 
     /*!
      * Fired as soon as the progress image changed.
@@ -337,7 +337,7 @@ signals:
     void imageLoadedChanged(bool imageLoaded);
 private:
     QImage _image{};
-    QPixmap _engravePixmap{};
+    QImage _engraveImage{};
     QImage _progressImage{};
 
     Qt::ImageConversionFlags _flags{Qt::DiffuseDither};

@@ -22,13 +22,13 @@ void ImageLabel::setImage(QImage const& image) {
     emit imageChanged(image);
 }
 
-QPixmap ImageLabel::engravePixmap() const {
-    return _engravePixmap;
+QImage ImageLabel::engraveImage() const {
+    return _engraveImage;
 }
 
-void ImageLabel::setEngravePixmap(QPixmap const& engravePixmap) {
-    _engravePixmap = engravePixmap;
-    emit engravePixmapChanged(engravePixmap);
+void ImageLabel::setEngraveImage(QImage const& engraveImage) {
+    _engraveImage = engraveImage;
+    emit engraveImageChanged(engraveImage);
 }
 
 QImage ImageLabel::progressImage() const {
@@ -148,7 +148,7 @@ void ImageLabel::updateDisplayedImage() {
     // Draw white background, otherwise transparency is converted to black.
     QImage image{QSize{Ez::Specifications::ImageWidth, Ez::Specifications::ImageHeight}, QImage::Format_ARGB32};
     image.fill(QColor{Qt::white});
-    QPainter painter{&image};
+    QPainter targetPainter{&image};
 
     QImage flipped{_image.mirrored(_flipHorizontally, _flipVertically)};
 
@@ -160,23 +160,22 @@ void ImageLabel::updateDisplayedImage() {
         auto scaled = rotated.scaled(rotated.width() * _imageScale, rotated.height() * _imageScale);
         QPoint position{(image.width() - scaled.width()) / 2, (image.height() - scaled.height()) / 2};
 
-        painter.drawImage(position, scaled);
+        targetPainter.drawImage(position, scaled);
     } else if(_keepAspectRatio) {
         // As at this time, the target image is quadratic, scaling according the larger dimension is sufficient.
         auto scaled = (flipped.width() > flipped.height() ? flipped.scaledToWidth(image.width()) : flipped.scaledToHeight(image.height()));
         auto position = (flipped.width() > flipped.height() ? QPoint{0, (image.height() - scaled.height()) / 2} : QPoint{(image.width() - scaled.width()) / 2, 0});
-        painter.drawImage(position, scaled);
+        targetPainter.drawImage(position, scaled);
     } else {
-        painter.drawImage(QPoint{0, 0}, flipped.scaled(image.size()));
+        targetPainter.drawImage(QPoint{}, flipped.scaled(image.size()));
     }
 
-    auto rendered = _grayscale
-            ? QPixmap::fromImage(_createGrayscaleImage(image))
-            : QPixmap::fromImage(image.convertToFormat(QImage::Format_Mono, _flags));
-    setEngravePixmap(rendered);
+    auto targetImage = _grayscale ? _createGrayscaleImage(image) : image.convertToFormat(QImage::Format_Mono, _flags);
+    setEngraveImage(targetImage);
 
-    // TODO add progress overlay
-    setPixmap(rendered);
+    QPainter overlayPainter{&targetImage};
+    overlayPainter.drawImage(QPoint{}, _progressImage);
+    setPixmap(QPixmap::fromImage(targetImage));
 }
 
 QImage ImageLabel::_createGrayscaleImage(QImage const& original) const {

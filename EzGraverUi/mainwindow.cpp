@@ -228,7 +228,7 @@ void MainWindow::on_upload_clicked() {
     _printVerbose("erasing EEPROM");
     _ezGraver->erase();
 
-    QImage image{_ui->image->pixmap()->toImage()};
+    QImage image{_ui->image->engraveImage()};
     QTimer* eraseProgressTimer{new QTimer{this}};
     _ui->progress->setValue(0);
     _ui->progress->setMaximum(Ez::Specifications::EraseTimeMs);

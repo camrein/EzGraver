@@ -184,7 +184,7 @@ void MainWindow::updateProgress(qint64 bytes) {
 
 void MainWindow::updateEngraveProgress() {
     // Based on suggestion: https://github.com/camrein/EzGraver/issues/18#issuecomment-293070214
-    auto data = _ezGraver->serialPort()->read(8);
+    auto data = _ezGraver->serialPort()->read(16);
     qDebug() << "received" << data.size() << "bytes:" << data.toHex();
 
     if((data.size() == 5) && (data[0] == (char)0xFF)) {

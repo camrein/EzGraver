@@ -190,7 +190,7 @@ void MainWindow::updateEngraveProgress() {
     if((data.size() == 5) && (data[0] == (char)0xFF)) {
         int x{data[1]*100 + data[2]};
         int y{data[3]*100 + data[4]};
-        _ui->image->progressImage().setPixelColor(x, y, QColor{Qt::red});
+        _ui->image->setPixelEngraved(QPoint{x, y});
     }
 }
 

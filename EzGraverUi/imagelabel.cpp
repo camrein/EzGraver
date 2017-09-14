@@ -33,6 +33,12 @@ void ImageLabel::setEngraveImage(QImage const& engraveImage) {
     emit engraveImageChanged(engraveImage);
 }
 
+void ImageLabel::setPixelEngraved(QPoint const& location) {
+    _progressImage.setPixelColor(location, QColor{Qt::red});
+    _updateDisplayedImage();
+    emit progressImageChanged(_progressImage);
+}
+
 QImage ImageLabel::progressImage() const {
     return _progressImage;
 }

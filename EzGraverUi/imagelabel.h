@@ -78,11 +78,18 @@ public:
     QImage progressImage() const;
 
     /*!
-     * Gets the image that represents the current engraving progress.
+     * Sets the image that represents the current engraving progress.
      *
      * \param progressImage An image that represents the current engraving progress.
      */
     void setProgressImage(QImage const& progressImage);
+
+    /*!
+     * Marks the pixel at the specified point as engraved.
+     *
+     * \param location The location of the pixel to mark as engraved.
+     */
+    void setPixelEngraved(QPoint const& location);
 
     /*!
      * Resets the image that represents the current engraving progress to its initial (empty) state.

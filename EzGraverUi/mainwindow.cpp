@@ -182,6 +182,18 @@ void MainWindow::updateProgress(qint64 bytes) {
     }
 }
 
+void MainWindow::updateEngraveProgress() {
+    // Based on suggestion: https://github.com/camrein/EzGraver/issues/18#issuecomment-293070214
+    auto data = _ezGraver->serialPort()->read(8);
+    qDebug() << "received" << data.size() << "bytes:" << data.toHex();
+
+    if((data.size() == 5) && (data[0] == (char)0xFF)) {
+        int x{data[1]*100 + data[2]};
+        int y{data[3]*100 + data[4]};
+        _ui->image->progressImage().setPixelColor(x, y, QColor{Qt::red});
+    }
+}
+
 void MainWindow::on_connect_clicked() {
     try {
         auto protocol = _ui->protocolVersion->currentData().toInt();
@@ -193,6 +205,7 @@ void MainWindow::on_connect_clicked() {
         _settings.setValue(ProtocolSetting, protocol);
 
         connect(_ezGraver->serialPort().get(), &QSerialPort::bytesWritten, this, &MainWindow::bytesWritten);
+        connect(_ezGraver->serialPort().get(), &QSerialPort::readyRead, this, &MainWindow::updateEngraveProgress);
     } catch(std::exception const& e) {
         _printVerbose(QString{"Error: %1"}.arg(e.what()));
     }
@@ -236,6 +249,8 @@ void MainWindow::on_upload_clicked() {
     auto eraseProgress = std::bind(&MainWindow::_eraseProgressed, this, eraseProgressTimer, image);
     connect(eraseProgressTimer, &QTimer::timeout, eraseProgress);
     eraseProgressTimer->start(EraseProgressDelay);
+
+    _ui->image->resetProgressImage();
 }
 
 void MainWindow::_eraseProgressed(QTimer* eraseProgressTimer, QImage const& image) {
@@ -275,6 +290,7 @@ void MainWindow::on_pause_clicked() {
 void MainWindow::on_reset_clicked() {
     _printVerbose("resetting engraver");
     _ezGraver->reset();
+    _ui->image->resetProgressImage();
 }
 
 void MainWindow::on_disconnect_clicked() {

@@ -40,7 +40,6 @@ void ImageLabel::setPixelEngraved(QPoint const& location) {
     }
 
     _progressImage.setPixel(location, qRgb(255, 0, 0));
-    //_updateDisplayedImage();
     emit progressImageChanged(_progressImage);
 }
 

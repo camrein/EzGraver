@@ -359,7 +359,6 @@ private:
     // Used to reduce the stress on the UI when updating the progress.
     // All other actions lead to an immediate update.
     static int const ImageRefreshIntervalDelay{500};
-
     QTimer _refreshTimer{};
 
     QImage _image{};

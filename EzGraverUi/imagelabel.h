@@ -1,6 +1,11 @@
 #ifndef IMAGELABEL_H
 #define IMAGELABEL_H
 
+#include <QImage>
+#include <QPixmap>
+#include <QTimer>
+#include <QVector>
+
 #include "clicklabel.h"
 
 #include "specifications.h"
@@ -350,6 +355,13 @@ signals:
      */
     void imageLoadedChanged(bool imageLoaded);
 private:
+    // The delay between refreshing the image.
+    // Used to reduce the stress on the UI when updating the progress.
+    // All other actions lead to an immediate update.
+    static int const ImageRefreshIntervalDelay{500};
+
+    QTimer _refreshTimer{};
+
     QImage _image{};
     QImage _engraveImage{};
     QImage _progressImage{};

@@ -8,6 +8,7 @@
 
 ImageLabel::ImageLabel(QWidget* parent) : ClickLabel{parent} {
     resetProgressImage();
+    connect(&_refreshTimer, &QTimer::timeout, this, &ImageLabel::_updateDisplayedImage);
 }
 
 ImageLabel::~ImageLabel() {}
@@ -34,8 +35,12 @@ void ImageLabel::setEngraveImage(QImage const& engraveImage) {
 }
 
 void ImageLabel::setPixelEngraved(QPoint const& location) {
+    if(!_refreshTimer.isActive()) {
+        _refreshTimer.start(ImageRefreshIntervalDelay);
+    }
+
     _progressImage.setPixel(location, qRgb(255, 0, 0));
-    _updateDisplayedImage();
+    //_updateDisplayedImage();
     emit progressImageChanged(_progressImage);
 }
 

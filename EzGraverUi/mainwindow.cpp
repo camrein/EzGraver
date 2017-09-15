@@ -42,6 +42,17 @@ MainWindow::~MainWindow() {
 }
 
 void MainWindow::_initBindings() {
+    _initUploadBindings();
+    _initConnectionBindings();
+    _initSetupBindings();
+    _initTransformationBindings();
+    _initLayerBindings();
+
+    auto openImageShortcut = new QShortcut{QKeySequence{Qt::CTRL | Qt::Key_O}, this};
+    connect(openImageShortcut, &QShortcut::activated, this, &MainWindow::on_image_clicked);
+}
+
+void MainWindow::_initConnectionBindings() {
     connect(this, &MainWindow::connectedChanged, _ui->ports, &QComboBox::setDisabled);
     connect(this, &MainWindow::connectedChanged, _ui->connect, &QPushButton::setDisabled);
     connect(this, &MainWindow::connectedChanged, _ui->disconnect, &QPushButton::setEnabled);
@@ -56,7 +67,12 @@ void MainWindow::_initBindings() {
     connect(this, &MainWindow::connectedChanged, _ui->start, &QPushButton::setEnabled);
     connect(this, &MainWindow::connectedChanged, _ui->pause, &QPushButton::setEnabled);
     connect(this, &MainWindow::connectedChanged, _ui->reset, &QPushButton::setEnabled);
+    connect(this, &MainWindow::connectedChanged, _ui->reset, &QPushButton::setEnabled);
 
+    connect(this, &MainWindow::connectedChanged, _ui->protocolVersion, &QComboBox::setDisabled);
+}
+
+void MainWindow::_initUploadBindings() {
     auto uploadEnabled = [this] {
         _ui->upload->setEnabled(_ui->image->imageLoaded() && _connected && (!_ui->layered->isChecked() || _ui->selectedLayer->value() > 0));
     };
@@ -64,15 +80,6 @@ void MainWindow::_initBindings() {
     connect(_ui->image, &ImageLabel::imageLoadedChanged, uploadEnabled);
     connect(_ui->layered, &QCheckBox::toggled, uploadEnabled);
     connect(_ui->selectedLayer, static_cast<void(QSpinBox::*)(int)>(&QSpinBox::valueChanged), uploadEnabled);
-
-    connect(this, &MainWindow::connectedChanged, _ui->protocolVersion, &QComboBox::setDisabled);
-
-    auto openImageShortcut = new QShortcut{QKeySequence{Qt::CTRL | Qt::Key_O}, this};
-    connect(openImageShortcut, &QShortcut::activated, this, &MainWindow::on_image_clicked);
-
-    _initSetupBindings();
-    _initTransformationBindings();
-    _initLayerBindings();
 }
 
 void MainWindow::_initSetupBindings() {

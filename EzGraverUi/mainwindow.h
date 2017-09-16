@@ -46,6 +46,7 @@ private slots:
     void updatePorts();
     void bytesWritten(qint64 bytes);
     void updateProgress(qint64 bytes);
+    void updateEngraveProgress();
 
 protected:
     void dragEnterEvent(QDragEnterEvent* event);
@@ -67,6 +68,8 @@ private:
     bool _connected{false};
 
     void _initBindings();
+    void _initUploadBindings();
+    void _initConnectionBindings();
     void _initSetupBindings();
     void _initTransformationBindings();
     void _initLayerBindings();

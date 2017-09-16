@@ -1,11 +1,21 @@
 #ifndef IMAGELABEL_H
 #define IMAGELABEL_H
 
+#include <QImage>
+#include <QPixmap>
+#include <QTimer>
+#include <QVector>
+
 #include "clicklabel.h"
+
+#include "specifications.h"
 
 class ImageLabel : public ClickLabel {
     Q_OBJECT
     Q_PROPERTY(QImage image READ image WRITE setImage NOTIFY imageChanged)
+    Q_PROPERTY(QImage engraveImage READ engraveImage WRITE setEngraveImage NOTIFY engraveImageChanged)
+    Q_PROPERTY(QImage progressImage READ progressImage WRITE setProgressImage RESET resetProgressImage NOTIFY progressImageChanged)
+
     Q_PROPERTY(Qt::ImageConversionFlags conversionFlags READ conversionFlags WRITE setConversionFlags NOTIFY conversionFlagsChanged)
 
     Q_PROPERTY(bool grayscale READ grayscale WRITE setGrayscale NOTIFY grayscaleChanged)
@@ -50,6 +60,46 @@ public:
      * \param image The image to load.
      */
     void setImage(QImage const& image);
+
+    /*!
+     * Gets the currently active engraving image.
+     *
+     * \return The current engraving image.
+     */
+    QImage engraveImage() const;
+
+    /*!
+     * Changes the currently active engraving image.
+     *
+     * \param engravePixmap The image that is used for engraving.
+     */
+    void setEngraveImage(QImage const& engraveImage);
+
+    /*!
+     * Gets the image that represents the current engraving progress.
+     *
+     * \return The image representing the current progress.
+     */
+    QImage progressImage() const;
+
+    /*!
+     * Sets the image that represents the current engraving progress.
+     *
+     * \param progressImage An image that represents the current engraving progress.
+     */
+    void setProgressImage(QImage const& progressImage);
+
+    /*!
+     * Marks the pixel at the specified point as engraved.
+     *
+     * \param location The location of the pixel to mark as engraved.
+     */
+    void setPixelEngraved(QPoint const& location);
+
+    /*!
+     * Resets the image that represents the current engraving progress to its initial (empty) state.
+     */
+    void resetProgressImage();
 
     /*!
      * Gets the currently selected conversion flags.
@@ -215,6 +265,20 @@ signals:
     void imageChanged(QImage const& image);
 
     /*!
+     * Fired as soon as the engraving pixmap changed.
+     *
+     * \param engravePixmap The pixmap representing the current image to engrave.
+     */
+    void engraveImageChanged(QImage const& engraveImage);
+
+    /*!
+     * Fired as soon as the progress image changed.
+     *
+     * \param progressImage The image representing the current engraving progress.
+     */
+    void progressImageChanged(QImage const& progressImage);
+
+    /*!
      * Fired as soon as the conversion flags hav been changed.
      *
      * \param flags The newly applied conversion flags.
@@ -291,7 +355,16 @@ signals:
      */
     void imageLoadedChanged(bool imageLoaded);
 private:
+    // The delay between refreshing the image.
+    // Used to reduce the stress on the UI when updating the progress.
+    // All other actions lead to an immediate update.
+    static int const ImageRefreshIntervalDelay{500};
+    QTimer _refreshTimer{};
+
     QImage _image{};
+    QImage _engraveImage{};
+    QImage _progressImage{};
+
     Qt::ImageConversionFlags _flags{Qt::DiffuseDither};
     bool _grayscale{false};
     int _layer{0};
@@ -305,7 +378,8 @@ private:
     float _imageScale{1.0};
     int _imageRotation{0};
 
-    void updateDisplayedImage();
+    void _updateEngraveImage();
+    void _updateDisplayedImage();
     QImage _createGrayscaleImage(QImage const& original) const;
     QVector<QRgb> _createColorTable() const;
 };

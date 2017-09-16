@@ -42,6 +42,17 @@ MainWindow::~MainWindow() {
 }
 
 void MainWindow::_initBindings() {
+    _initUploadBindings();
+    _initConnectionBindings();
+    _initSetupBindings();
+    _initTransformationBindings();
+    _initLayerBindings();
+
+    auto openImageShortcut = new QShortcut{QKeySequence{Qt::CTRL | Qt::Key_O}, this};
+    connect(openImageShortcut, &QShortcut::activated, this, &MainWindow::on_image_clicked);
+}
+
+void MainWindow::_initConnectionBindings() {
     connect(this, &MainWindow::connectedChanged, _ui->ports, &QComboBox::setDisabled);
     connect(this, &MainWindow::connectedChanged, _ui->connect, &QPushButton::setDisabled);
     connect(this, &MainWindow::connectedChanged, _ui->disconnect, &QPushButton::setEnabled);
@@ -56,7 +67,12 @@ void MainWindow::_initBindings() {
     connect(this, &MainWindow::connectedChanged, _ui->start, &QPushButton::setEnabled);
     connect(this, &MainWindow::connectedChanged, _ui->pause, &QPushButton::setEnabled);
     connect(this, &MainWindow::connectedChanged, _ui->reset, &QPushButton::setEnabled);
+    connect(this, &MainWindow::connectedChanged, _ui->reset, &QPushButton::setEnabled);
 
+    connect(this, &MainWindow::connectedChanged, _ui->protocolVersion, &QComboBox::setDisabled);
+}
+
+void MainWindow::_initUploadBindings() {
     auto uploadEnabled = [this] {
         _ui->upload->setEnabled(_ui->image->imageLoaded() && _connected && (!_ui->layered->isChecked() || _ui->selectedLayer->value() > 0));
     };
@@ -64,15 +80,6 @@ void MainWindow::_initBindings() {
     connect(_ui->image, &ImageLabel::imageLoadedChanged, uploadEnabled);
     connect(_ui->layered, &QCheckBox::toggled, uploadEnabled);
     connect(_ui->selectedLayer, static_cast<void(QSpinBox::*)(int)>(&QSpinBox::valueChanged), uploadEnabled);
-
-    connect(this, &MainWindow::connectedChanged, _ui->protocolVersion, &QComboBox::setDisabled);
-
-    auto openImageShortcut = new QShortcut{QKeySequence{Qt::CTRL | Qt::Key_O}, this};
-    connect(openImageShortcut, &QShortcut::activated, this, &MainWindow::on_image_clicked);
-
-    _initSetupBindings();
-    _initTransformationBindings();
-    _initLayerBindings();
 }
 
 void MainWindow::_initSetupBindings() {
@@ -182,6 +189,18 @@ void MainWindow::updateProgress(qint64 bytes) {
     }
 }
 
+void MainWindow::updateEngraveProgress() {
+    // Based on suggestion: https://github.com/camrein/EzGraver/issues/18#issuecomment-293070214
+    auto data = _ezGraver->serialPort()->read(16);
+    qDebug() << "received" << data.size() << "bytes:" << data.toHex();
+
+    if((data.size() == 5) && (data[0] == (char)0xFF)) {
+        int x{data[1]*100 + data[2]};
+        int y{data[3]*100 + data[4]};
+        _ui->image->setPixelEngraved(QPoint{x, y});
+    }
+}
+
 void MainWindow::on_connect_clicked() {
     try {
         auto protocol = _ui->protocolVersion->currentData().toInt();
@@ -193,6 +212,7 @@ void MainWindow::on_connect_clicked() {
         _settings.setValue(ProtocolSetting, protocol);
 
         connect(_ezGraver->serialPort().get(), &QSerialPort::bytesWritten, this, &MainWindow::bytesWritten);
+        connect(_ezGraver->serialPort().get(), &QSerialPort::readyRead, this, &MainWindow::updateEngraveProgress);
     } catch(std::exception const& e) {
         _printVerbose(QString{"Error: %1"}.arg(e.what()));
     }
@@ -228,7 +248,7 @@ void MainWindow::on_upload_clicked() {
     _printVerbose("erasing EEPROM");
     _ezGraver->erase();
 
-    QImage image{_ui->image->pixmap()->toImage()};
+    QImage image{_ui->image->engraveImage()};
     QTimer* eraseProgressTimer{new QTimer{this}};
     _ui->progress->setValue(0);
     _ui->progress->setMaximum(Ez::Specifications::EraseTimeMs);
@@ -236,6 +256,8 @@ void MainWindow::on_upload_clicked() {
     auto eraseProgress = std::bind(&MainWindow::_eraseProgressed, this, eraseProgressTimer, image);
     connect(eraseProgressTimer, &QTimer::timeout, eraseProgress);
     eraseProgressTimer->start(EraseProgressDelay);
+
+    _ui->image->resetProgressImage();
 }
 
 void MainWindow::_eraseProgressed(QTimer* eraseProgressTimer, QImage const& image) {
@@ -275,6 +297,7 @@ void MainWindow::on_pause_clicked() {
 void MainWindow::on_reset_clicked() {
     _printVerbose("resetting engraver");
     _ezGraver->reset();
+    _ui->image->resetProgressImage();
 }
 
 void MainWindow::on_disconnect_clicked() {

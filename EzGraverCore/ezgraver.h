@@ -27,25 +27,25 @@ struct EZGRAVERCORESHARED_EXPORT EzGraver {
      *
      * \param burnTime The burn time to use in milliseconds.
      */
-    void start(unsigned char const& burnTime);
+    virtual void start(unsigned char const& burnTime);
 
     /*!
      * Pauses the engraving process at the given location. The process
      * can be continued by invoking start.
      */
-    void pause();
+    virtual void pause();
 
     /*! Resets the engraver. */
-    void reset();
+    virtual void reset();
 
     /*! Moves the engraver to the home position. */
-    void home();
+    virtual void home();
 
     /*! Moves the engraver to the center. */
-    void center();
+    virtual void center();
 
     /*! Draws a preview of the currently loaded image. */
-    void preview();
+    virtual void preview();
 
     /*! Moves the engraver up. */
     virtual void up() = 0;

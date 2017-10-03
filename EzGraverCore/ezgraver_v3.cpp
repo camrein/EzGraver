@@ -15,7 +15,7 @@ void EzGraverV3::_setBurnTime(unsigned char const& burnTime) {
     if(burnTime < 0x01 || burnTime > 0xF0) {
         throw new std::out_of_range("burntime out of range");
     }
-    qDebug() << "setting burn time to:" << qPrintable(burnTime);
+    qDebug() << "setting burn time to:" << static_cast<int>(burnTime);
 
     QByteArray payload{"\xFF\x05?\x00", 4};
     payload[2] = burnTime;

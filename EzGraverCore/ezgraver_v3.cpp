@@ -17,9 +17,9 @@ void EzGraverV3::_setBurnTime(unsigned char const& burnTime) {
     }
     qDebug() << "setting burn time to:" << qPrintable(burnTime);
 
-    char payload[5] = "\xFF\x05?\x00";
+    QByteArray payload{"\xFF\x05?\x00", 4};
     payload[2] = burnTime;
-    _transmit(QByteArray{payload, 4});
+    _transmit(payload);
 }
 
 void EzGraverV3::pause() {

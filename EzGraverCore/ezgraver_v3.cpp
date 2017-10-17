@@ -2,6 +2,9 @@
 
 #include <QDebug>
 #include <QByteArray>
+#include <QBuffer>
+
+#include "specifications.h"
 
 namespace Ez {
 
@@ -65,6 +68,26 @@ void EzGraverV3::left() {
 void EzGraverV3::right() {
     qDebug() << "moving right";
     _transmit(QByteArray::fromRawData("\xFF\x03\x04\x00", 4));
+}
+
+int EzGraverV3::erase() {
+    qDebug() << "erasing EEPROM";
+    _transmit(QByteArray::fromRawData("\xFF\x06\x01\x00", 4));
+    return 50;
+}
+
+int EzGraverV3::uploadImage(QImage const& originalImage) {
+    qDebug() << "converting image to bitmap";
+    QImage image{originalImage
+            .scaled(Ez::Specifications::ImageWidth, Ez::Specifications::ImageHeight)
+            .mirrored()
+            .convertToFormat(QImage::Format_Mono)};
+    QByteArray bytes{};
+    QBuffer buffer{&bytes};
+    image.save(&buffer, "BMP");
+
+    // protocol v3 neither needs the BMP header nor the invertion of the pixels.
+    return EzGraver::uploadImage(bytes.mid(62));
 }
 
 }

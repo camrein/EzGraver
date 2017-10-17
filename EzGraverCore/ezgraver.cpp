@@ -55,9 +55,10 @@ void EzGraver::preview() {
     _transmit(0xF4);
 }
 
-void EzGraver::erase() {
+int EzGraver::erase() {
     qDebug() << "erasing EEPROM";
     _transmit(QByteArray{8, '\xFE'});
+    return 6000;
 }
 
 int EzGraver::uploadImage(QImage const& originalImage) {

@@ -49,9 +49,9 @@ void uploadImage(std::shared_ptr<Ez::EzGraver>& engraver, QList<QString> const& 
     }
 
     std::cout << "erasing EEPROM\n";
-    engraver->erase();
+    auto waitTimeMs = engraver->erase();
     engraver->awaitTransmission();
-    QThread::msleep(Ez::Specifications::EraseTimeMs);
+    QThread::msleep(waitTimeMs);
 
     std::cout << "uploading image to EEPROM\n";
     engraver->uploadImage(image);

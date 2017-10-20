@@ -17,7 +17,7 @@ struct EzGraverV3 : EzGraver {
      *
      * \param burnTime The burn time to use in milliseconds.
      */
-    void start(unsigned char const& burnTime);
+    void start(unsigned char const& burnTime) override;
 
     /*!
      * Pauses the engraving process at the given location. The process

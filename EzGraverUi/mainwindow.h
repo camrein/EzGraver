@@ -80,7 +80,7 @@ private:
     void _setConnected(bool connected);
     void _printVerbose(QString const& verbose);
     void _loadImage(QString const& fileName);
-    void _eraseProgressed(QTimer* eraseProgressTimer, QImage const& image);
+    void _eraseProgressed(QTimer* eraseProgressTimer, QImage const& image, int const& waitTimeMs);
     void _uploadImage(QImage const& image);
 };
 

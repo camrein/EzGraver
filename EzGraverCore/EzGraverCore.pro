@@ -11,14 +11,16 @@ DEFINES += EZGRAVERCORE_LIBRARY
 SOURCES += ezgraver.cpp \
     ezgraver_v1.cpp \
     ezgraver_v2.cpp \
-    factory.cpp
+    factory.cpp \
+    ezgraver_v3.cpp
 
 HEADERS += ezgraver.h\
         ezgravercore_global.h \
     ezgraver_v1.h \
     ezgraver_v2.h \
     specifications.h \
-    factory.h
+    factory.h \
+    ezgraver_v3.h
 
 unix {
     target.path = /usr/lib

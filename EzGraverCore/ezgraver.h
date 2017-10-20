@@ -27,25 +27,25 @@ struct EZGRAVERCORESHARED_EXPORT EzGraver {
      *
      * \param burnTime The burn time to use in milliseconds.
      */
-    void start(unsigned char const& burnTime);
+    virtual void start(unsigned char const& burnTime);
 
     /*!
      * Pauses the engraving process at the given location. The process
      * can be continued by invoking start.
      */
-    void pause();
+    virtual void pause();
 
     /*! Resets the engraver. */
-    void reset();
+    virtual void reset();
 
     /*! Moves the engraver to the home position. */
-    void home();
+    virtual void home();
 
     /*! Moves the engraver to the center. */
-    void center();
+    virtual void center();
 
     /*! Draws a preview of the currently loaded image. */
-    void preview();
+    virtual void preview();
 
     /*! Moves the engraver up. */
     virtual void up() = 0;
@@ -65,8 +65,10 @@ struct EZGRAVERCORESHARED_EXPORT EzGraver {
      * Erasing the EEPROM takes a while. Sending image data to early causes
      * that some of the leading pixels are lost. Waiting for about 5 seconds
      * seems to be sufficient.
+     *
+     * \return The recommended time in ms to wait until uploading the image.
      */
-    void erase();
+    virtual int erase();
 
     /*!
      * Uploads the given \a image to the EEPROM. It is mandatory to use \a erase()
@@ -76,7 +78,7 @@ struct EZGRAVERCORESHARED_EXPORT EzGraver {
      * \param image The image to upload to the EEPROM for engraving.
      * \return The number of bytes being sent to the device.
      */
-    int uploadImage(QImage const& image);
+    virtual int uploadImage(QImage const& image);
 
     /*!
      * Uploads any given \a image byte array to the EEPROM. It has to be a monochrome

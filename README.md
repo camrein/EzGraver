@@ -91,7 +91,6 @@ However, if you feel like showing your appreciation in a different way, [PayPal 
 # Acknowledgment
 Many thanks to:
 
-* [Frederik Andersson](https://github.com/Na1w) for reverse engineering the low-level protocol.
-* [AlexNk](https://github.com/AlexNk) for provididing updated control codes.
-
-
+* [Frederik Andersson](https://github.com/Na1w) for providing the control codes for protocol v1.
+* [AlexNk](https://github.com/AlexNk) for providing the control codes for protocol v2.
+* [maturz](https://github.com/maturz) and [Richard Kircheis](https://github.com/tinyisland) for providing data and help to support the protocol v3.

@@ -73,7 +73,7 @@ void EzGraverV3::right() {
 int EzGraverV3::erase() {
     qDebug() << "erasing EEPROM";
     _transmit(QByteArray::fromRawData("\xFF\x06\x01\x00", 4));
-    return 50;
+    return 500;
 }
 
 int EzGraverV3::uploadImage(QImage const& originalImage) {

@@ -194,9 +194,14 @@ void MainWindow::updateEngraveProgress() {
     auto data = _ezGraver->serialPort()->read(16);
     qDebug() << "received" << data.size() << "bytes:" << data.toHex();
 
+    // TODO state information is protocol specific since v3. Move to core.
     if((data.size() == 5) && (data[0] == (char)0xFF)) {
         int x{data[1]*100 + data[2]};
         int y{data[3]*100 + data[4]};
+        _ui->image->setPixelEngraved(QPoint{x, y});
+    } else if((data.size() == 8) && (data[0] == (char)0xFF) && (data[4] == (char)0xFF)) {
+        int x{data[2]*100 + data[3]};
+        int y{data[6]*100 + data[7]};
         _ui->image->setPixelEngraved(QPoint{x, y});
     }
 }

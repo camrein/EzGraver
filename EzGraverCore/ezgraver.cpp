@@ -61,6 +61,25 @@ int EzGraver::erase() {
     return 6000;
 }
 
+int EzGraver::_setAnswer(QByteArray const& data) {
+    qDebug() << "set answer" << data.size() << "bytes:" << data.toHex();
+    _Answer.append(data);
+    return data.size();
+}
+
+int EzGraver::_checkAnswer(QByteArray const& data) {
+    if (data == _Answer) {
+        qDebug() << "GOT MATCH" << data.toHex();
+        _Answer.truncate(0);
+    }
+    else {
+        qDebug() << "check response" << data.toHex() << "!=" << _Answer.toHex();
+    }
+
+    return _Answer.size();
+}
+
+
 int EzGraver::uploadImage(QImage const& originalImage) {
     qDebug() << "converting image to bitmap";
     QImage image{originalImage

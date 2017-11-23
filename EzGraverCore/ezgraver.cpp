@@ -63,6 +63,8 @@ int EzGraver::erase() {
 
 int EzGraver::_setAnswer(QByteArray const& data) {
     qDebug() << "set answer" << data.size() << "bytes:" << data.toHex();
+    _clear();
+    _Answer.truncate(0);
     _Answer.append(data);
     return data.size();
 }
@@ -75,7 +77,10 @@ int EzGraver::_checkAnswer(QByteArray const& data) {
     else {
         qDebug() << "check response" << data.toHex() << "!=" << _Answer.toHex();
     }
+    return _Answer.size();
+}
 
+int EzGraver::_getAnswerLength() {
     return _Answer.size();
 }
 
@@ -111,6 +116,10 @@ std::shared_ptr<QSerialPort> EzGraver::serialPort() {
 
 void EzGraver::_transmit(unsigned char const& data) {
     _transmit(QByteArray{1, static_cast<char>(data)});
+}
+
+void EzGraver::_clear() {
+    _serial->clear();
 }
 
 void EzGraver::_transmit(QByteArray const& data) {

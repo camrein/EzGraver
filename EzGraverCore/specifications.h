@@ -10,6 +10,7 @@ int const ImageWidth{512};
 /*! The image height */
 int const ImageHeight{512};
 
+int const EraseTimeMs{500};
 }
 }
 

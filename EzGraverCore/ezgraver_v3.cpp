@@ -37,12 +37,22 @@ void EzGraverV3::reset() {
 
 void EzGraverV3::home() {
     qDebug() << "moving to home";
-    _transmit(0xF3);
+    _transmit(QByteArray::fromRawData("\xFF\x0A\x00\x00\xFF\x0B\x00\x00", 8));
 }
 
 void EzGraverV3::center() {
-    qDebug() << "moving to center";
-    _transmit(QByteArray::fromRawData("\xFF\x02\x01\x00", 4));
+    /*
+     * does not work, when laser was moved before with up/down/right/left
+     * so we set to middle
+     */
+//    _transmit(QByteArray::fromRawData("\xFF\x02\x01\x00", 4));
+    QByteArray tocenter{"\xFF\x0A??\xFF\x0B??", 8};
+    tocenter[2] = Ez::Specifications::ImageWidth >> 8;
+    tocenter[3] = Ez::Specifications::ImageWidth && 0xFF;
+    tocenter[6] = Ez::Specifications::ImageHeight >> 8;
+    tocenter[7] = Ez::Specifications::ImageHeight && 0xFF;
+    qDebug() << "moving to center: " << tocenter.toHex();
+    _transmit(tocenter);
 }
 
 void EzGraverV3::preview() {
@@ -92,6 +102,7 @@ int EzGraverV3::uploadImage(QImage const& originalImage) {
     image.save(&buffer, "BMP");
 
     // protocol v3 neither needs the BMP header nor the invertion of the pixels.
+    _setAnswer(QByteArray::fromRawData("\xFF\x0b\x00\x00", 4));
     return EzGraver::uploadImage(bytes.mid(62));
 }
 

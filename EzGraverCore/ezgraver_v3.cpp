@@ -88,7 +88,7 @@ int EzGraverV3::erase() {
 */
     _setAnswer(QByteArray::fromRawData("\xFF\x05\x01\x00", 4));
     _transmit(QByteArray::fromRawData("\xFF\x06\x01\x00", 4));
-    return 5000;
+    return 500;
 }
 
 int EzGraverV3::uploadImage(QImage const& originalImage) {

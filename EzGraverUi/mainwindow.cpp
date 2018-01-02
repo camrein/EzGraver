@@ -269,8 +269,7 @@ void MainWindow::on_upload_clicked() {
     QImage image{_ui->image->engraveImage()};
     QTimer* eraseProgressTimer{new QTimer{this}};
     _ui->progress->setValue(0);
-//    _ui->progress->setMaximum(waitTimeMs);
-    _ui->progress->setMaximum(Ez::Specifications::EraseTimeMs);
+    _ui->progress->setMaximum(waitTimeMs);
     auto eraseProgress = std::bind(&MainWindow::_eraseProgressed, this, eraseProgressTimer, image, waitTimeMs);
     connect(eraseProgressTimer, &QTimer::timeout, eraseProgress);
     eraseProgressTimer->start(EraseProgressDelay < waitTimeMs ? EraseProgressDelay : waitTimeMs);
@@ -281,7 +280,7 @@ void MainWindow::on_upload_clicked() {
 void MainWindow::_eraseProgressed(QTimer* eraseProgressTimer, QImage const& image, int const& waitTimeMs) {
     auto value = _ui->progress->value() + EraseProgressDelay;
     _ui->progress->setValue(value);
-    if(value < Ez::Specifications::EraseTimeMs) {
+    if(value < waitTimeMs) {
         return;
     }
     eraseProgressTimer->stop();

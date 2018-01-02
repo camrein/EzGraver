@@ -195,12 +195,12 @@ void MainWindow::updateEngraveProgress() {
     // TODO state information is protocol specific since v3. Move to core.
 
 
-    auto readLength = _ezGraver->_getAnswerLength();
+    auto readLength = _ezGraver->expectedResponseLength();
 
     if (readLength != 0) {
         auto data = _ezGraver->serialPort()->read(readLength);
         qDebug() << "received possible Answer " << data.size() << "bytes:" << data.toHex();
-        _ezGraver->_checkAnswer(data);
+        _ezGraver->checkExpectedResponseWithReset(data);
     }
     else {
         auto data = _ezGraver->serialPort()->read(8);

@@ -61,29 +61,25 @@ int EzGraver::erase() {
     return 6000;
 }
 
-int EzGraver::_setAnswer(QByteArray const& data) {
-    qDebug() << "set answer" << data.size() << "bytes:" << data.toHex();
+void EzGraver::setExpectedResponse(QByteArray const& expectedResponse) {
+    qDebug() << "set answer" << expectedResponse.size() << "bytes:" << expectedResponse.toHex();
     _clear();
-    _Answer.truncate(0);
-    _Answer.append(data);
-    return data.size();
+    _expectedResponse = expectedResponse;
 }
 
-int EzGraver::_checkAnswer(QByteArray const& data) {
-    if (data == _Answer) {
-        qDebug() << "GOT MATCH" << data.toHex();
-        _Answer.truncate(0);
+void EzGraver::checkExpectedResponseWithReset(QByteArray const& response) {
+    if (response == _expectedResponse) {
+        qDebug() << "GOT MATCH" << response.toHex();
+        _expectedResponse.clear();
     }
     else {
-        qDebug() << "check response" << data.toHex() << "!=" << _Answer.toHex();
+        qDebug() << "check response" << response.toHex() << "!=" << _expectedResponse.toHex();
     }
-    return _Answer.size();
 }
 
-int EzGraver::_getAnswerLength() {
-    return _Answer.size();
+int EzGraver::expectedResponseLength() const {
+    return _expectedResponse.size();
 }
-
 
 int EzGraver::uploadImage(QImage const& originalImage) {
     qDebug() << "converting image to bitmap";

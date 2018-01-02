@@ -103,14 +103,30 @@ struct EZGRAVERCORESHARED_EXPORT EzGraver {
      */
     std::shared_ptr<QSerialPort> serialPort();
 
+    /*!
+     * Sets the response to be expected from the engraver.
+     *
+     * \param expectedResponse The response to expect.
+     */
+    void setExpectedResponse(QByteArray const& expectedResponse);
+
+    /*!
+     * Checks if teh response matches the expected one. If the response matches,
+     * the expected response is reset.
+     *
+     * \param response The response to check.
+     */
+    void checkExpectedResponseWithReset(QByteArray const& response);
+
+    /*!
+     * Gets the length of the expected response.
+     *
+     * \param The length of the expected response.
+     */
+    int expectedResponseLength() const;
+
     EzGraver() = delete;
     virtual ~EzGraver();
-
-public:
-    int _setAnswer(QByteArray const& data);
-    int _checkAnswer(QByteArray const& data);
-    int _getAnswerLength();
-    int _waitForAnswer();
 
 protected:
     void _clear();
@@ -120,10 +136,9 @@ protected:
 
 private:
     std::shared_ptr<QSerialPort> _serial;
+    QByteArray _expectedResponse{};
 
     void _setBurnTime(unsigned char const& burnTime);
-
-    QByteArray _Answer{};
 };
 
 }

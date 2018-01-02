@@ -83,7 +83,7 @@ int EzGraverV3::erase() {
 /*    _transmit(QByteArray::fromRawData("\xFF\x06\x01\x00", 4));
     return 500;
 */
-    _setAnswer(QByteArray::fromRawData("\xFF\x05\x01\x00", 4));
+    setExpectedResponse(QByteArray::fromRawData("\xFF\x05\x01\x00", 4));
     _transmit(QByteArray::fromRawData("\xFF\x06\x01\x00", 4));
     return 500;
 }
@@ -99,7 +99,7 @@ int EzGraverV3::uploadImage(QImage const& originalImage) {
     image.save(&buffer, "BMP");
 
     // protocol v3 neither needs the BMP header nor the invertion of the pixels.
-    _setAnswer(QByteArray::fromRawData("\xFF\x0b\x00\x00", 4));
+    setExpectedResponse(QByteArray::fromRawData("\xFF\x0b\x00\x00", 4));
     return EzGraver::uploadImage(bytes.mid(62));
 }
 

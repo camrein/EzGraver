@@ -199,10 +199,9 @@ void MainWindow::updateEngraveProgress() {
 
     if (readLength != 0) {
         auto data = _ezGraver->serialPort()->read(readLength);
-        qDebug() << "received possible Answer " << data.size() << "bytes:" << data.toHex();
+        qDebug() << "received possible Answer" << data.size() << "bytes:" << data.toHex();
         _ezGraver->checkExpectedResponseWithReset(data);
-    }
-    else {
+    } else {
         auto data = _ezGraver->serialPort()->read(8);
         if((data.size() == 5) && (data[0] == (char)0xFF)) {
             int x{data[1]*100 + data[2]};
@@ -213,10 +212,10 @@ void MainWindow::updateEngraveProgress() {
             int y{data[6]*100 + data[7]};
             _ui->image->setPixelEngraved(QPoint{x, y});
             qDebug() << "received " << data.size() << "bytes:" << data.toHex() << " (x,y) = (" << x << ", " << y << ")";
-        } else
+        } else {
             qDebug() << "received " << data.size() << "bytes:" << data.toHex();
+        }
     }
-
 }
 
 void MainWindow::on_connect_clicked() {

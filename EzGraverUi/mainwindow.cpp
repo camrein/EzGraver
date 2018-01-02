@@ -191,19 +191,32 @@ void MainWindow::updateProgress(qint64 bytes) {
 
 void MainWindow::updateEngraveProgress() {
     // Based on suggestion: https://github.com/camrein/EzGraver/issues/18#issuecomment-293070214
-    auto data = _ezGraver->serialPort()->read(16);
-    qDebug() << "received" << data.size() << "bytes:" << data.toHex();
 
     // TODO state information is protocol specific since v3. Move to core.
-    if((data.size() == 5) && (data[0] == (char)0xFF)) {
-        int x{data[1]*100 + data[2]};
-        int y{data[3]*100 + data[4]};
-        _ui->image->setPixelEngraved(QPoint{x, y});
-    } else if((data.size() == 8) && (data[0] == (char)0xFF) && (data[4] == (char)0xFF)) {
-        int x{data[2]*100 + data[3]};
-        int y{data[6]*100 + data[7]};
-        _ui->image->setPixelEngraved(QPoint{x, y});
+
+
+    auto readLength = _ezGraver->_getAnswerLength();
+
+    if (readLength != 0) {
+        auto data = _ezGraver->serialPort()->read(readLength);
+        qDebug() << "received possible Answer " << data.size() << "bytes:" << data.toHex();
+        _ezGraver->_checkAnswer(data);
     }
+    else {
+        auto data = _ezGraver->serialPort()->read(8);
+        if((data.size() == 5) && (data[0] == (char)0xFF)) {
+            int x{data[1]*100 + data[2]};
+            int y{data[3]*100 + data[4]};
+            _ui->image->setPixelEngraved(QPoint{x, y});
+        } else if((data.size() == 8) && (data[0] == (char)0xFF) && (data[4] == (char)0xFF)) {
+            int x{data[2]*100 + data[3]};
+            int y{data[6]*100 + data[7]};
+            _ui->image->setPixelEngraved(QPoint{x, y});
+            qDebug() << "received " << data.size() << "bytes:" << data.toHex() << " (x,y) = (" << x << ", " << y << ")";
+        } else
+            qDebug() << "received " << data.size() << "bytes:" << data.toHex();
+    }
+
 }
 
 void MainWindow::on_connect_clicked() {
@@ -256,8 +269,8 @@ void MainWindow::on_upload_clicked() {
     QImage image{_ui->image->engraveImage()};
     QTimer* eraseProgressTimer{new QTimer{this}};
     _ui->progress->setValue(0);
-    _ui->progress->setMaximum(waitTimeMs);
-
+//    _ui->progress->setMaximum(waitTimeMs);
+    _ui->progress->setMaximum(Ez::Specifications::EraseTimeMs);
     auto eraseProgress = std::bind(&MainWindow::_eraseProgressed, this, eraseProgressTimer, image, waitTimeMs);
     connect(eraseProgressTimer, &QTimer::timeout, eraseProgress);
     eraseProgressTimer->start(EraseProgressDelay < waitTimeMs ? EraseProgressDelay : waitTimeMs);
@@ -268,7 +281,7 @@ void MainWindow::on_upload_clicked() {
 void MainWindow::_eraseProgressed(QTimer* eraseProgressTimer, QImage const& image, int const& waitTimeMs) {
     auto value = _ui->progress->value() + EraseProgressDelay;
     _ui->progress->setValue(value);
-    if(value < waitTimeMs) {
+    if(value < Ez::Specifications::EraseTimeMs) {
         return;
     }
     eraseProgressTimer->stop();

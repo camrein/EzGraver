@@ -56,7 +56,7 @@ private:
     /*! The delay between each port list update. */
     static int const PortUpdateDelay{1000};
     /*! The delay between each progress update while erasing the EEPROM. */
-    static int const EraseProgressDelay{100};
+    static int const EraseProgressDelay{20};
 
     Ui::MainWindow* _ui;
     QTimer _portTimer{};

@@ -61,6 +61,30 @@ int EzGraver::erase() {
     return 6000;
 }
 
+int EzGraver::_setAnswer(QByteArray const& data) {
+    qDebug() << "set answer" << data.size() << "bytes:" << data.toHex();
+    _clear();
+    _Answer.truncate(0);
+    _Answer.append(data);
+    return data.size();
+}
+
+int EzGraver::_checkAnswer(QByteArray const& data) {
+    if (data == _Answer) {
+        qDebug() << "GOT MATCH" << data.toHex();
+        _Answer.truncate(0);
+    }
+    else {
+        qDebug() << "check response" << data.toHex() << "!=" << _Answer.toHex();
+    }
+    return _Answer.size();
+}
+
+int EzGraver::_getAnswerLength() {
+    return _Answer.size();
+}
+
+
 int EzGraver::uploadImage(QImage const& originalImage) {
     qDebug() << "converting image to bitmap";
     QImage image{originalImage
@@ -92,6 +116,10 @@ std::shared_ptr<QSerialPort> EzGraver::serialPort() {
 
 void EzGraver::_transmit(unsigned char const& data) {
     _transmit(QByteArray{1, static_cast<char>(data)});
+}
+
+void EzGraver::_clear() {
+    _serial->clear();
 }
 
 void EzGraver::_transmit(QByteArray const& data) {

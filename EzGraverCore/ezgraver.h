@@ -106,7 +106,14 @@ struct EZGRAVERCORESHARED_EXPORT EzGraver {
     EzGraver() = delete;
     virtual ~EzGraver();
 
+public:
+    int _setAnswer(QByteArray const& data);
+    int _checkAnswer(QByteArray const& data);
+    int _getAnswerLength();
+    int _waitForAnswer();
+
 protected:
+    void _clear();
     void _transmit(unsigned char const& data);
     void _transmit(QByteArray const& data);
     void _transmit(QByteArray const& data, int chunkSize);
@@ -115,6 +122,8 @@ private:
     std::shared_ptr<QSerialPort> _serial;
 
     void _setBurnTime(unsigned char const& burnTime);
+
+    QByteArray _Answer{};
 };
 
 }

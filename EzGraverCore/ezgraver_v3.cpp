@@ -41,11 +41,8 @@ void EzGraverV3::home() {
 }
 
 void EzGraverV3::center() {
-    /*
-     * does not work, when laser was moved before with up/down/right/left
-     * so we set to middle
-     */
-//    _transmit(QByteArray::fromRawData("\xFF\x02\x01\x00", 4));
+    // The center command '\xFF\x02\x01\x00' does not work when moved with
+    // up/down/right/left, thus it is manually move to the center of the image.
     QByteArray tocenter{"\xFF\x0A??\xFF\x0B??", 8};
     tocenter[2] = Ez::Specifications::ImageWidth >> 8;
     tocenter[3] = Ez::Specifications::ImageWidth && 0xFF;

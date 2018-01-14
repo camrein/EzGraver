@@ -191,16 +191,15 @@ void MainWindow::updateProgress(qint64 bytes) {
 
 void MainWindow::updateEngraveProgress() {
     // Based on suggestion: https://github.com/camrein/EzGraver/issues/18#issuecomment-293070214
-
     // TODO state information is protocol specific since v3. Move to core.
-
-
     auto readLength = _ezGraver->expectedResponseLength();
-
     if (readLength != 0) {
         auto data = _ezGraver->serialPort()->read(readLength);
         qDebug() << "received possible Answer" << data.size() << "bytes:" << data.toHex();
-        _ezGraver->checkExpectedResponseWithReset(data);
+        _printVerbose(QString{"received answer from engraver length (%1): %2"}.arg(data.size()).arg(QString{data.toHex()}));
+        if(_ezGraver->checkExpectedResponseWithReset(data)) {
+            _uploadImage(_ui->image->engraveImage());
+        }
     } else {
         auto data = _ezGraver->serialPort()->read(8);
         if((data.size() == 5) && (data[0] == (char)0xFF)) {
@@ -211,9 +210,9 @@ void MainWindow::updateEngraveProgress() {
             int x{data[2]*100 + data[3]};
             int y{data[6]*100 + data[7]};
             _ui->image->setPixelEngraved(QPoint{x, y});
-            qDebug() << "received " << data.size() << "bytes:" << data.toHex() << " (x,y) = (" << x << ", " << y << ")";
+            qDebug() << "received" << data.size() << "bytes:" << data.toHex() << " (x,y) = (" << x << ", " << y << ")";
         } else {
-            qDebug() << "received " << data.size() << "bytes:" << data.toHex();
+            qDebug() << "received" << data.size() << "bytes:" << data.toHex();
         }
     }
 }
@@ -284,7 +283,13 @@ void MainWindow::_eraseProgressed(QTimer* eraseProgressTimer, QImage const& imag
     }
     eraseProgressTimer->stop();
 
-    _uploadImage(image);
+    // TODO move erase->upload switch to protocol specific implementations
+    auto protocol = _ui->protocolVersion->currentData().toInt();
+    if(protocol == 3) {
+        _printVerbose("erase timeout reached for protocol v3 without receiving response from device");
+    } else {
+        _uploadImage(image);
+    }
 }
 
 void MainWindow::_uploadImage(QImage const& image) {

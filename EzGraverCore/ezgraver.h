@@ -115,8 +115,9 @@ struct EZGRAVERCORESHARED_EXPORT EzGraver {
      * the expected response is reset.
      *
      * \param response The response to check.
+     * \return \c true if the response matched the expected.
      */
-    void checkExpectedResponseWithReset(QByteArray const& response);
+    bool checkExpectedResponseWithReset(QByteArray const& response);
 
     /*!
      * Gets the length of the expected response.

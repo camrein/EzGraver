@@ -67,14 +67,15 @@ void EzGraver::setExpectedResponse(QByteArray const& expectedResponse) {
     _expectedResponse = expectedResponse;
 }
 
-void EzGraver::checkExpectedResponseWithReset(QByteArray const& response) {
+bool EzGraver::checkExpectedResponseWithReset(QByteArray const& response) {
     if (response == _expectedResponse) {
         qDebug() << "GOT MATCH" << response.toHex();
         _expectedResponse.clear();
+        return true;
     }
-    else {
-        qDebug() << "check response" << response.toHex() << "!=" << _expectedResponse.toHex();
-    }
+
+    qDebug() << "check response" << response.toHex() << "!=" << _expectedResponse.toHex();
+    return false;
 }
 
 int EzGraver::expectedResponseLength() const {

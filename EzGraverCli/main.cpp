@@ -1,5 +1,6 @@
 #include <QCoreApplication>
 #include <QThread>
+#include <QTimer>
 
 #include <iterator>
 #include <algorithm>
@@ -50,14 +51,21 @@ void uploadImage(std::shared_ptr<Ez::EzGraver>& engraver, QList<QString> const& 
 
     std::cout << "erasing EEPROM\n";
     auto waitTimeMs = engraver->erase();
-    engraver->awaitTransmission();
     QThread::msleep(waitTimeMs);
 
     std::cout << "uploading image to EEPROM\n";
     engraver->uploadImage(image);
 }
 
-void processCommand(char const& command, QList<QString> const& arguments) {
+void awaitTransmission(QCoreApplication& app, std::shared_ptr<Ez::EzGraver> engraver) {
+    if(engraver->serialPort()->bytesToWrite() > 0) {
+        QTimer::singleShot(100, [&app, engraver]{ awaitTransmission(app, engraver );});
+    } else {
+        app.quit();
+    }
+}
+
+void processCommand(QCoreApplication& app, char const& command, QList<QString> const& arguments) {
     try {
         auto engraver = Ez::create(arguments[0]);
 
@@ -84,16 +92,18 @@ void processCommand(char const& command, QList<QString> const& arguments) {
             std::cout << "Unknown command: '" << command << "'\n";
             showHelp();
         }
-
-        engraver->awaitTransmission();
+        awaitTransmission(app, engraver);
     } catch(std::exception const& e) {
         std::cout << "Error: " << e.what() << '\n';
+        app.quit();
     }
 }
 
-void handleArguments(QStringList const& arguments) {
+void handleArguments(QCoreApplication& app) {
+    auto arguments = app.arguments();
     if(arguments.size() < 2) {
         showHelp();
+        app.quit();
         return;
     }
 
@@ -101,24 +111,25 @@ void handleArguments(QStringList const& arguments) {
     switch(command) {
     case 'a':
         showAvailablePorts();
+        app.quit();
         return;
     case 'v':
         std::cout << "EzGraver " << EZ_VERSION << '\n';
+        app.quit();
         return;
     }
 
     if(arguments.size() < 3) {
         showHelp();
+        app.quit();
         return;
     }
 
-    processCommand(command, arguments.mid(2));
+    processCommand(app, command, arguments.mid(2));
 }
 
 int main(int argc, char* argv[]) {
     QCoreApplication app{argc, argv};
-
-    QStringList arguments{};
-    std::copy(argv, argv+argc, std::back_inserter(arguments));
-    handleArguments(arguments);
+    QTimer::singleShot(0, [&app]{ handleArguments(app); });
+    return app.exec();
 }

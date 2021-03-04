@@ -3,6 +3,10 @@
 |-------------|---------|---------|-----------|
 |[![Travis Build Status](https://travis-ci.org/camrein/EzGraver.svg?branch=master)](https://travis-ci.org/camrein/EzGraver)|[![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/g98wrysmliq4t8d9/branch/master?svg=true)](https://ci.appveyor.com/project/camrein/ezgraver)|[![Latest GitHub Release](https://img.shields.io/github/release/camrein/EzGraver.svg)](https://github.com/camrein/EzGraver/releases/latest)|[![Total Downloads](https://img.shields.io/github/downloads/camrein/EzGraver/total.svg)](https://github.com/camrein/EzGraver/releases/latest)|
 
+# Archived
+
+EzGraver is no longer be actively maintained. Therefore, the repository has been archived.
+
 # About
 EzGraver is an open source software allowing users to use with laser engravers by NEJE. It supports Linux, OSX, and Windows. It provides both a command-line interface and a graphical user interface. The latest release is available on the [releases page](https://github.com/camrein/EzGraver/releases/latest).
 
@@ -85,8 +89,6 @@ make install
 # Support EzGraver
 Knowing that people enjoy EzGraver is a great honor. If you like to support it, stars are appreciated and will help others getting aware of EzGraver.
 Feature requests, bug reports, general feedback, and code contributions are always welcome and will support further improvements of EzGraver.
-
-However, if you feel like showing your appreciation in a different way, [PayPal donations](https://www.paypal.me/camrein) are happily received as well.
 
 # Acknowledgment
 Many thanks to:
